@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CarcassTwwo.Models;
+using System.Collections.Generic;
 
 namespace CarcassTwwo.Hubs
 {
@@ -6,7 +7,7 @@ namespace CarcassTwwo.Hubs
     {
         void AddConnection(string username, string connectionId);
         void RemoveConnection(string connectionId);
-        HashSet<string> GetConnections(string username);
+        HashSet<Client> GetConnections(string username);
         IEnumerable<string> OnlineUsers { get; }
     }
 }

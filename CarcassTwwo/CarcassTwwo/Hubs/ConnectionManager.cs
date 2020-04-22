@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using CarcassTwwo.Models;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace CarcassTwwo.Hubs
 {
     public class ConnectionManager : IConnectionManager
     {
-        private static Dictionary<string, HashSet<string>> userMap = new Dictionary<string, HashSet<string>>();
+        private static Dictionary<string, HashSet<Client>> userMap = new Dictionary<string, HashSet<Client>>();
         public IEnumerable<string> OnlineUsers{ get { return userMap.Keys; }}
         IHubContext<LobbyHub> _hubContext { get; }
 
@@ -23,15 +24,15 @@ namespace CarcassTwwo.Hubs
             {
                 if (!userMap.ContainsKey(username))
                 {
-                    userMap[username] = new HashSet<string>();
+                    userMap[username] = new HashSet<Client>();
                 }
-                userMap[username].Add(connectionId);
+                userMap[username].Add(new Client { ConnectionId = connectionId, Name = username, IsPlaying = false });
             }
         }
 
-        public HashSet<string> GetConnections(string username)
+        public HashSet<Client> GetConnections(string username)
         {
-            var conn = new HashSet<string>();
+            var conn = new HashSet<Client>();
             try
             {
                 lock (userMap)
@@ -54,10 +55,13 @@ namespace CarcassTwwo.Hubs
                 {
                     if (userMap.ContainsKey(username))
                     {
-                        if (userMap[username].Contains(connectionId))
+                        foreach(var client in userMap[username])
                         {
-                            userMap.Remove(connectionId);
-                            break;
+                            if(client.ConnectionId == connectionId)
+                            {
+                                userMap.Remove(connectionId);
+                                break;
+                            }
                         }
                     }
                 }
