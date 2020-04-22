@@ -46,6 +46,7 @@ namespace CarcassTwwo
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<LobbyHub>("/lobby");
             });
         }
     }
