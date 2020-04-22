@@ -14,5 +14,6 @@ namespace CarcassTwwo.Models
         public bool IsPlaying { get; set; }
         public bool IsWaitingForMove { get; set; }
         public string ConnectionId { get; set; }
+        public int Points { get; set; }
     }
 }
