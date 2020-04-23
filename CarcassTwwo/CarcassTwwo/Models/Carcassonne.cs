@@ -8,6 +8,7 @@ namespace CarcassTwwo.Models
     public class Carcassonne
     {
         public bool IsOver { get; set; }
+        public bool IsStarted { get; set; }
         public int RoundsLeft { get; set; }
         public Client Player1 { get; set; }
         public Client Player2 { get; set; }
