@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using CarcassTwwo.Models;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace CarcassTwwo.Hubs
 
         public async Task<Task> SendNotification(string username)
         {
-            HashSet<string> connections = _connectionManager.GetConnections(username);
+            HashSet<Client> connections = _connectionManager.GetConnections(username);
 
             try
             {
@@ -39,7 +40,7 @@ namespace CarcassTwwo.Hubs
                     {
                         try
                         {
-                            await _hubContext.Clients.Clients(conn).SendAsync("socket", null);
+                            await _hubContext.Clients.Clients(conn.Name).SendAsync("socket", null);
                         }
                         catch
                         {
