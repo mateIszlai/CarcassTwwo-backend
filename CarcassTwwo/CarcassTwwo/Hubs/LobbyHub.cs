@@ -51,19 +51,50 @@ namespace CarcassTwwo.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task AddToGroup(string groupName)
+        public async Task AddToGroup(string groupName, string userName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            var user = Context.UserIdentifier;
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has joined the group {groupName}.");
+            
+            if (!groups.ContainsKey(groupName))
+            {
+                groups.Add(groupName, new LocalGroup { Name = groupName, OwnerName = userName });
+            } 
+
+            groups[groupName].Members.Add(new Client { Name = userName, ConnectionId = Context.ConnectionId });
+            
+            await Clients.Group(groupName).SendAsync(
+                "Send", 
+                $"{Context.ConnectionId} has joined the group {groupName}.", 
+                groups[groupName].Members
+                );
         }
 
-        public async Task RemoveFromGroup(string groupName)
+        public async Task RemoveFromGroup(string groupName, string userName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            foreach(var client in groups[groupName].Members)
+            {
+                if(client.Name == userName)
+                {
+                    groups[groupName].Members.Remove(client);
+                }
+            }
 
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has left the group {groupName}.");
+            await Clients.Group(groupName).SendAsync(
+                "Send", 
+                $"{Context.ConnectionId} has left the group {groupName}.", 
+                groups[groupName].Members);
     
+        }
+
+        public void RemoveGroup(string groupName)
+        {
+            groups.Remove(groupName);
+        }
+
+        public List<Client> GetGroupMembers(string groupName)
+        {
+            return groups[groupName].Members;
         }
 
         public string GetConnectionId()
