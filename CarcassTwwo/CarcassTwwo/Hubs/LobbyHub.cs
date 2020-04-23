@@ -105,5 +105,11 @@ namespace CarcassTwwo.Hubs
 
             return Context.ConnectionId;
         }
+
+        public async Task<Carcassonne> StartGame(string groupName)
+        {
+            Carcassonne game = new Carcassonne(groups[groupName]);
+            return game;
+        }
     }
 }
