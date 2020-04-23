@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using CarcassTwwo.Models;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace CarcassTwwo.Hubs
         private IConnectionManager _manager;
 
         public HashSet<string> _roomCodes { get; private set; }
+        public Dictionary<string, LocalGroup> groups = new Dictionary<string, LocalGroup>();
 
         public LobbyHub(IConnectionManager manager)
         {
@@ -18,10 +20,10 @@ namespace CarcassTwwo.Hubs
             _roomCodes = new HashSet<string>();
         }
 
-        public async Task<string> CreateGroup()
+        public async Task<string> CreateGroup(string username)
         {
             var groupName = GenerateRoomString();
-            await AddToGroup(groupName);
+            await AddToGroup(groupName,username);
             return groupName;
         }
 
