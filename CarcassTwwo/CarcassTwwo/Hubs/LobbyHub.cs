@@ -57,7 +57,7 @@ namespace CarcassTwwo.Hubs
             
             if (!groups.ContainsKey(groupName))
             {
-                groups.Add(groupName, new LocalGroup { Name = groupName, OwnerName = userName });
+                groups.Add(groupName, new LocalGroup { Name = groupName, OwnerName = userName, Members=new List<Client>() });
             } 
 
             groups[groupName].Members.Add(new Client { Name = userName, ConnectionId = Context.ConnectionId });
