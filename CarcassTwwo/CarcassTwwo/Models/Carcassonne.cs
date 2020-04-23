@@ -10,12 +10,15 @@ namespace CarcassTwwo.Models
         public bool IsOver { get; set; }
         public bool IsStarted { get; set; }
         public int RoundsLeft { get; set; }
-        public Client Player1 { get; set; }
-        public Client Player2 { get; set; }
-        public Client Player3 { get; set; }
-        public Client Player4 { get; set; }
-        public Client Player5 { get; set; }
+        public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
+
+        public Carcassonne(LocalGroup group)
+        {
+            Players = group.Members;
+            IsOver = false;
+            IsStarted = true;
+        }
 
         public void Play()
         {
