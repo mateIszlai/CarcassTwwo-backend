@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarcassTwwo.Hubs
@@ -7,9 +9,33 @@ namespace CarcassTwwo.Hubs
     public class LobbyHub : Hub
     {
         private IConnectionManager _manager;
+
+        public HashSet<string> _roomCodes { get; private set; }
+
         public LobbyHub(IConnectionManager manager)
         {
             _manager = manager;
+        }
+
+        public async Task<string> CreateGroup()
+        {
+            var groupName = GenerateRoomString();
+            await AddToGroup(groupName);
+            return groupName;
+        }
+
+        public string GenerateRoomString()
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const int length = 6;
+            string roomCode;
+            do
+            {
+                roomCode = new string(Enumerable.Repeat(chars, length)
+                  .Select(s => s[random.Next(s.Length)]).ToArray());
+            } while (_roomCodes.Contains(roomCode));
+            return roomCode;
         }
 
         public override Task OnConnectedAsync()
@@ -34,6 +60,7 @@ namespace CarcassTwwo.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
 
             await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has left the group {groupName}.");
+    
         }
 
         public string GetConnectionId()
