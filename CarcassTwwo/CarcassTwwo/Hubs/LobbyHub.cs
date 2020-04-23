@@ -15,6 +15,7 @@ namespace CarcassTwwo.Hubs
         public LobbyHub(IConnectionManager manager)
         {
             _manager = manager;
+            _roomCodes = new HashSet<string>();
         }
 
         public async Task<string> CreateGroup()
