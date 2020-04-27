@@ -7,14 +7,20 @@ namespace CarcassTwwo.Models
 {
     public class Carcassonne
     {
+        public int GameId { get; set; }
         public bool IsOver { get; set; }
         public bool IsStarted { get; set; }
         public int RoundsLeft { get; set; }
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
 
+        public Client NextPlayer { get; set; }
+        public Card NextCard { get; set; }
+        public Board GameBoard { get; set; }
+
         public Carcassonne(HashSet<Client> players)
         {
+            GameBoard = new Board();
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
