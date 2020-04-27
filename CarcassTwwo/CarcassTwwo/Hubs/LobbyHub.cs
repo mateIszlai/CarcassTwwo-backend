@@ -29,7 +29,7 @@ namespace CarcassTwwo.Hubs
             {
                 roomCode = new string(Enumerable.Repeat(chars, length)
                   .Select(s => s[random.Next(s.Length)]).ToArray());
-            } while (_manager.GetGroupIds().Contains(roomCode));
+            } while (_manager.GetGroupNames().Contains(roomCode));
             return roomCode;
         }
 

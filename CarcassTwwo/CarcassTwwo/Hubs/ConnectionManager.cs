@@ -35,7 +35,7 @@ namespace CarcassTwwo.Hubs
             return new HashSet<Client>();
         }
 
-        public HashSet<string> GetGroupIds()
+        public HashSet<string> GetGroupNames()
         {
             return _groups.Keys.ToHashSet();
         }
@@ -45,11 +45,11 @@ namespace CarcassTwwo.Hubs
             lock (_groups)
             {
 
-                foreach(var groupId in _groups.Keys)
+                foreach(var groupName in _groups.Keys)
                 {
-                    _groups[groupId].RemoveWhere(client => client.ConnectionId == connectionId);
-                    if (_groups[groupId].Count == 0)
-                        _groups.Remove(groupId);
+                    _groups[groupName].RemoveWhere(client => client.ConnectionId == connectionId);
+                    if (_groups[groupName].Count == 0)
+                        _groups.Remove(groupName);
                 }
             }
         }

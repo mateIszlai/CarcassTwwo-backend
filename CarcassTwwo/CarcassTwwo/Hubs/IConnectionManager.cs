@@ -8,7 +8,7 @@ namespace CarcassTwwo.Hubs
         void AddConnection(string groupName, string username, bool isOwner, string connectionId);
         void RemoveConnection(string connectionId);
         HashSet<Client> GetConnections(string groupName);
-        HashSet<string> GetGroupIds();
+        HashSet<string> GetGroupNames();
         void RemoveGroup(string groupName);
     }
 }
