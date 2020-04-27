@@ -13,9 +13,9 @@ namespace CarcassTwwo.Models
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
 
-        public Carcassonne(LocalGroup group)
+        public Carcassonne(HashSet<Client> players)
         {
-            Players = group.Members;
+            Players = players.ToList();
             IsOver = false;
             IsStarted = true;
         }
