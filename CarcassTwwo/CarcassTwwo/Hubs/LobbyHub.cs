@@ -9,21 +9,13 @@ namespace CarcassTwwo.Hubs
 {
     public class LobbyHub : Hub
     {
-        private IConnectionManager _manager;
+        private static readonly IConnectionManager _manager = new ConnectionManager();
 
-        public HashSet<string> _roomCodes { get; private set; }
-        public Dictionary<string, LocalGroup> groups = new Dictionary<string, LocalGroup>();
-
-        public LobbyHub(IConnectionManager manager)
-        {
-            _manager = manager;
-            _roomCodes = new HashSet<string>();
-        }
 
         public async Task<string> CreateGroup(string username)
         {
             var groupName = GenerateRoomString();
-            await AddToGroup(groupName,username);
+            await AddToGroup(groupName, username, true);
             return groupName;
         }
 
@@ -37,7 +29,7 @@ namespace CarcassTwwo.Hubs
             {
                 roomCode = new string(Enumerable.Repeat(chars, length)
                   .Select(s => s[random.Next(s.Length)]).ToArray());
-            } while (_roomCodes.Contains(roomCode));
+            } while (_manager.GetGroupIds().Contains(roomCode));
             return roomCode;
         }
 
@@ -51,64 +43,39 @@ namespace CarcassTwwo.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task AddToGroup(string groupName, string userName)
+        public async Task AddToGroup(string groupName, string userName, bool isOwner)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            
-            if (!groups.ContainsKey(groupName))
-            {
-                groups.Add(groupName, new LocalGroup { Name = groupName, OwnerName = userName, Members=new List<Client>() });
-            } 
 
-            groups[groupName].Members.Add(new Client { Name = userName, ConnectionId = Context.ConnectionId });
-            
+            _manager.AddConnection(groupName, userName, isOwner, Context.ConnectionId);
             await Clients.Group(groupName).SendAsync(
-                "Send", 
-                $"{Context.ConnectionId} has joined the group {groupName}.", 
-                groups[groupName].Members
-                );
+                "Send",
+                $"{Context.ConnectionId} has joined the group {groupName}.",
+                _manager.GetConnections(groupName).Select(c => c.Name)
+                ) ;
         }
 
-        public async Task RemoveFromGroup(string groupName, string userName)
+        public async Task RemoveFromGroup(string groupName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-            foreach(var client in groups[groupName].Members)
-            {
-                if(client.Name == userName)
-                {
-                    groups[groupName].Members.Remove(client);
-                }
-            }
+
+            _manager.RemoveConnection(Context.ConnectionId);
 
             await Clients.Group(groupName).SendAsync(
                 "Send", 
                 $"{Context.ConnectionId} has left the group {groupName}.", 
-                groups[groupName].Members);
+                _manager.GetConnections(groupName).Select(c => c.Name));
     
         }
 
         public void RemoveGroup(string groupName)
         {
-            groups.Remove(groupName);
-        }
-
-        public List<Client> GetGroupMembers(string groupName)
-        {
-            return groups[groupName].Members;
-        }
-
-        public string GetConnectionId()
-        {
-            var httpContext = Context.GetHttpContext();
-            var username = httpContext.Request.Query["username"];
-            _manager.AddConnection(username, Context.ConnectionId);
-
-            return Context.ConnectionId;
+            _manager.RemoveGroup(groupName);
         }
 
         public Carcassonne StartGame(string groupName)
         {
-            Carcassonne game = new Carcassonne(groups[groupName]);
+            Carcassonne game = new Carcassonne(_manager.GetConnections(groupName));
             return game;
         }
     }

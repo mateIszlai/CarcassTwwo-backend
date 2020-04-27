@@ -9,64 +9,54 @@ namespace CarcassTwwo.Hubs
 {
     public class ConnectionManager : IConnectionManager
     {
-        private static Dictionary<string, HashSet<Client>> userMap = new Dictionary<string, HashSet<Client>>();
-        public IEnumerable<string> OnlineUsers{ get { return userMap.Keys; }}
-        IHubContext<LobbyHub> _hubContext { get; }
+        private readonly Dictionary<string, HashSet<Client>> _groups = new Dictionary<string, HashSet<Client>>();
 
-        public ConnectionManager(IHubContext<LobbyHub> context)
-        {
-            _hubContext = context;
-        }
 
-        public void AddConnection(string username, string connectionId)
+        public void AddConnection(string groupName, string username, bool isOwner, string connectionId)
         {
-            lock (userMap)
+            lock (_groups)
             {
-                if (!userMap.ContainsKey(username))
+                if (!_groups.ContainsKey(groupName))
                 {
-                    userMap[username] = new HashSet<Client>();
+                    _groups[groupName] = new HashSet<Client>();
                 }
-                userMap[username].Add(new Client { ConnectionId = connectionId, Name = username, IsPlaying = false });
+                _groups[groupName].Add(new Client { ConnectionId = connectionId, Name = username, IsOwner = isOwner, IsPlaying = false });
             }
         }
 
-        public HashSet<Client> GetConnections(string username)
+        public HashSet<Client> GetConnections(string groupName)
         {
-            var conn = new HashSet<Client>();
-            try
+            HashSet<Client> connections;
+            if (_groups.TryGetValue(groupName, out connections))
             {
-                lock (userMap)
-                {
-                    conn = userMap[username];
-                }
+                return connections;
             }
-            catch
-            {
-                conn = null;
-            }
-            return conn;
+
+            return new HashSet<Client>();
+        }
+
+        public HashSet<string> GetGroupIds()
+        {
+            return _groups.Keys.ToHashSet();
         }
 
         public void RemoveConnection(string connectionId)
         {
-            lock (userMap)
+            lock (_groups)
             {
-                foreach(var username in userMap.Keys)
+
+                foreach(var groupId in _groups.Keys)
                 {
-                    if (userMap.ContainsKey(username))
-                    {
-                        foreach(var client in userMap[username])
-                        {
-                            if(client.ConnectionId == connectionId)
-                            {
-                                userMap.Remove(connectionId);
-                                break;
-                            }
-                        }
-                    }
+                    _groups[groupId].RemoveWhere(client => client.ConnectionId == connectionId);
+                    if (_groups[groupId].Count == 0)
+                        _groups.Remove(groupId);
                 }
             }
         }
 
+        public void RemoveGroup(string groupName)
+        {
+            _groups.Remove(groupName);
+        }
     }
 }

@@ -5,9 +5,10 @@ namespace CarcassTwwo.Hubs
 {
     public interface IConnectionManager
     {
-        void AddConnection(string username, string connectionId);
+        void AddConnection(string groupName, string username, bool isOwner, string connectionId);
         void RemoveConnection(string connectionId);
-        HashSet<Client> GetConnections(string username);
-        IEnumerable<string> OnlineUsers { get; }
+        HashSet<Client> GetConnections(string groupName);
+        HashSet<string> GetGroupIds();
+        void RemoveGroup(string groupName);
     }
 }
