@@ -7,9 +7,12 @@ namespace CarcassTwwo.Models
 {
     public class Board
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
-        
-        //TODO
+        public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
+    }
+
+    public struct Coordinate
+    {
+        public int x { get; set; }
+        public int y { get; set; }
     }
 }
