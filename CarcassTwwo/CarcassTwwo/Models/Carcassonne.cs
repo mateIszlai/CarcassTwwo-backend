@@ -45,5 +45,26 @@ namespace CarcassTwwo.Models
                 }
             }
         }
+
+        public Client PickRandomPlayer()
+        {
+            //TODO: NextPlayer = ?
+
+            return NextPlayer;
+        }
+
+        public Card PickRandomCard()
+        {
+            //TODO This will use the remaining tiles to create a new NextCard
+
+            return NextCard;
+        }
+
+        public void PlaceCard(Coordinate coordinate, Card card)
+        {
+            GameBoard.CardCoordinates.Add(coordinate, card);
+            card.Coordinate = coordinate;
+            //card.SetSideOccupation(sideA, sideB, sideC, sideD); or something
+        }
     }
 }
