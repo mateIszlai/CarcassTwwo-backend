@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models
 {
-    public class Carcassonne
+    public class Game
     {
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -18,7 +18,7 @@ namespace CarcassTwwo.Models
         public Card NextCard { get; set; }
         public Board GameBoard { get; set; }
 
-        public Carcassonne(HashSet<Client> players)
+        public Game(HashSet<Client> players)
         {
             GameBoard = new Board();
             Players = players.ToList();
