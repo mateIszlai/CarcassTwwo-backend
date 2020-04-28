@@ -73,6 +73,12 @@ namespace CarcassTwwo.Hubs
             _manager.RemoveGroup(groupName);
         }
 
+        public async void GetGroupMembers(string groupName)
+        {
+            await Clients.Group(groupName).SendAsync("GroupNames",
+                _manager.GetConnections(groupName));
+        }
+
         public Carcassonne StartGame(string groupName)
         {
             Carcassonne game = new Carcassonne(_manager.GetConnections(groupName));
