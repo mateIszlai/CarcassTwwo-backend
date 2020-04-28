@@ -14,7 +14,7 @@ namespace CarcassTwwo.Models
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
 
-        public Client NextPlayer { get; set; }
+        public Client LastPlayer { get; set; }
         public Card NextCard { get; set; }
         public Board GameBoard { get; set; }
 
@@ -46,11 +46,17 @@ namespace CarcassTwwo.Models
             }
         }
 
-        public Client PickRandomPlayer()
+        public Client PickPlayer()
         {
             //TODO: NextPlayer = ?
+            var lastPlayerIndex = Players.FindIndex(c => c.Equals(LastPlayer));
 
-            return NextPlayer;
+            if (lastPlayerIndex == Players.Count - 1)
+                LastPlayer = Players[0];
+            else
+                LastPlayer = Players[lastPlayerIndex + 1];
+
+            return LastPlayer;
         }
 
         public Card PickRandomCard()
