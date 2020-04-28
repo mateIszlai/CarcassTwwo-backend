@@ -67,6 +67,12 @@ namespace CarcassTwwo.Hubs
     
         }
 
+        public async void GetGroupMembers(string groupName)
+        {
+            await Clients.Group(groupName).SendAsync("GroupNames",
+                _manager.GetConnections(groupName));
+        }
+
         public void RemoveGroup(string groupName)
         {
             _manager.RemoveGroup(groupName);
