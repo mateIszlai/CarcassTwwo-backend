@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int GameId { get; set; }
-        public Carcassonne Game { get; set; }
+        public Game Game { get; set; }
         public Tile Tile { get; set; }
         public int MeepleField { get; set; }
         public Coordinate Coordinate { get; set; }
