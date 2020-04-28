@@ -65,6 +65,13 @@ namespace CarcassTwwo.Models
             GameBoard.CardCoordinates.Add(coordinate, card);
             card.Coordinate = coordinate;
             //card.SetSideOccupation(sideA, sideB, sideC, sideD); or something
+            //only place card where it's available! 
+        }
+
+        public void PlaceFirstCard()
+        {
+            //card: 20th card
+            //coordinate: 0,0
         }
     }
 }
