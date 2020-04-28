@@ -73,9 +73,9 @@ namespace CarcassTwwo.Hubs
             _manager.RemoveGroup(groupName);
         }
 
-        public Carcassonne StartGame(string groupName)
+        public Game StartGame(string groupName)
         {
-            Carcassonne game = new Carcassonne(_manager.GetConnections(groupName));
+            Game game = new Game(_manager.GetConnections(groupName));
             return game;
         }
     }
