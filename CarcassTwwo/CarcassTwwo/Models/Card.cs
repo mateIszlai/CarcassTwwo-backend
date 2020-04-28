@@ -4,9 +4,11 @@
     {
         public int Id { get; set; }
         public int GameId { get; set; }
-        public Carcassonne Game { get; set; }
+        public Game Game { get; set; }
         public Tile Tile { get; set; }
-        public int MeepleField { get; set; }
+        public Coordinate MeepleField { get; set; }
+        public string MeepleType { get; set; }
+        public bool HasMeeple { get; set; }
         public Coordinate Coordinate { get; set; }
 
         public LandType Top { get; set; }
