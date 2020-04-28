@@ -17,10 +17,7 @@ namespace CarcassTwwo.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        //public DbSet<Carcassonne> Games { get; set; }
-        //public DbSet<Client> Clients { get; set; }
         public DbSet<Tile> Tiles { get; set; }
         public DbSet<LandType> LandTypes { get; set; }
-        public DbSet<Card> Cards { get; set; }
     }
 }
