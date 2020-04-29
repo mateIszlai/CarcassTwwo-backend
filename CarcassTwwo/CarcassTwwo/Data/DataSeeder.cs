@@ -9,35 +9,33 @@ namespace CarcassTwwo
 {
     public class DataSeeder
     {
-        public static void SeedLandTypes(CarcassTwwoDbContext context)
+        public static List<LandType> landTypes;
+        public static List<Tile> tiles;
+        public static void SeedLandTypes()
         {
-            if (!context.LandTypes.Any())
+            if (!landTypes.Any())
             {
-                var landTypes = new List<LandType>
+                landTypes = new List<LandType>
                 {
                     new LandType{ Name = "Land", Meeple = "Peasant" },
                     new LandType{ Name = "City", Meeple = "Knight" },
                     new LandType{ Name = "Road", Meeple = "Highwayman" },
                     new LandType{ Name = "Monastery", Meeple = "Monk" },
                 };
-
-                context.AddRange(landTypes);
-                context.SaveChanges();
             }
         }
 
-        public static void SeedTiles(CarcassTwwoDbContext context)
+        public static void SeedTiles()
         {
-            List<LandType> landtypes = context.LandTypes.ToList();
-            LandType land = landtypes[0];
-            LandType city = landtypes[1];
-            LandType road = landtypes[2];
-            LandType monastery = landtypes[3];
+            LandType land = landTypes[0];
+            LandType city = landTypes[1];
+            LandType road = landTypes[2];
+            LandType monastery = landTypes[3];
 
-            if (!context.Tiles.Any())
+            if (!tiles.Any())
             {
                 var tiles = new List<Tile>
-            {
+                {
                 //1
                 new Tile { Field1 =  new Field{LandType = land },
                             Field2 = new Field{LandType = land },
@@ -376,9 +374,7 @@ namespace CarcassTwwo
                             Remaining = 1,
                             Image = "../wwwroot/image/24_1.png",
                             HasCrest = false},
-            };
-                context.AddRange(tiles);
-                context.SaveChanges();
+                };
             }
         }
 
