@@ -32,14 +32,55 @@
             HasCrest = Tile.HasCrest;
         }
 
-        public void SetSideOccupation(bool top, bool bottom, bool left, bool right)
+        public void SetSideOccupation(Card card, Board board)
         {
-            TopIsFree = top;
-            BottomIsFree = bottom;
-            LeftIsFree = left;
-            RightIsFree = right;
-
-            //TODO: this will change the occupation of a side from free to taken
+            Coordinate newCoord = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
+            if (!board.CardCoordinates.ContainsKey(newCoord))
+            {
+                card.TopIsFree = true;
+            } else
+            {
+                card.TopIsFree = false;
+                board.CardCoordinates[newCoord].BottomIsFree = false;
+                //SetSideOccupation(board.CardCoordinates[newCoord], board);
+            }
+                        
+            newCoord.y = card.Coordinate.y - 1;
+            if (!board.CardCoordinates.ContainsKey(newCoord))
+            {
+                card.BottomIsFree = true;
+            }
+            else
+            {
+                card.BottomIsFree = false;
+                board.CardCoordinates[newCoord].TopIsFree = false;
+                //SetSideOccupation(board.CardCoordinates[newCoord], board);
+            }
+            
+            newCoord.x = card.Coordinate.x + 1;
+            newCoord.y = card.Coordinate.y;
+            if (!board.CardCoordinates.ContainsKey(newCoord))
+            {
+                card.RightIsFree = true;
+            }
+            else
+            {
+                card.RightIsFree = false;
+                board.CardCoordinates[newCoord].LeftIsFree = false;
+                //SetSideOccupation(board.CardCoordinates[newCoord], board);
+            }
+            
+            newCoord.x = card.Coordinate.x - 1;
+            if (!board.CardCoordinates.ContainsKey(newCoord))
+            {
+                card.LeftIsFree = true;
+            }
+            else
+            {
+                card.LeftIsFree = false;
+                board.CardCoordinates[newCoord].RightIsFree = false;
+                //SetSideOccupation(board.CardCoordinates[newCoord], board);
+            }
         }
 
         public void PlaceMeeple(Field field)
