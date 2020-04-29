@@ -9,8 +9,7 @@ namespace CarcassTwwo.Hubs
 {
     public class LobbyHub : Hub
     {
-        private static readonly IConnectionManager _manager = new ConnectionManager();
-
+        private static readonly ConnectionManager _manager = new ConnectionManager();
 
         public async Task<string> CreateGroup(string username)
         {
@@ -68,21 +67,34 @@ namespace CarcassTwwo.Hubs
     
         }
 
-        public void RemoveGroup(string groupName)
-        {
-            _manager.RemoveGroup(groupName);
-        }
-
         public async void GetGroupMembers(string groupName)
         {
             await Clients.Group(groupName).SendAsync("GroupNames",
                 _manager.GetConnections(groupName));
         }
 
-        public Carcassonne StartGame(string groupName)
+        public void RemoveGroup(string groupName)
         {
-            Carcassonne game = new Carcassonne(_manager.GetConnections(groupName));
-            return game;
+            _manager.RemoveGroup(groupName);
+        }
+
+        public async void StartGame(string groupName)
+        {
+            _manager.StartGame(groupName);
+            await Clients.Group(groupName).SendAsync("StartGame", "The game is started");
+            StartTurn(groupName);
+        }
+
+        public async void StartTurn(string groupName)
+        {
+            var group = _manager.GetGroup(groupName);
+            var player = group.Game.PickPlayer();
+            await Clients.Client(player.ConnectionId).SendAsync("Turn", "This is your turn", true);
+        }
+        public async void EndTurn(string groupName)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("EndTurn", "Your turn is ended, waiting for the others", false);
+            StartTurn(groupName);
         }
     }
 }
