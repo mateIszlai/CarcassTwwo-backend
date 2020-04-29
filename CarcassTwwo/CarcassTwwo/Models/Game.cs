@@ -59,19 +59,27 @@ namespace CarcassTwwo.Models
 
             return NextCard;
         }
+        public void PlaceFirstCard()
+        {
+            //card: 20th card
+            //coordinate: 0,0
+        }
 
         public void PlaceCard(Coordinate coordinate, Card card)
         {
             GameBoard.CardCoordinates.Add(coordinate, card);
             card.Coordinate = coordinate;
-            //card.SetSideOccupation(sideA, sideB, sideC, sideD); or something
-            //only place card where it's available! 
+
+            GameBoard.RemoveFromAvailableCoordinates(coordinate);
+            card.SetSideOccupation(card, GameBoard);
+            GameBoard.AddAvailableCoordinates(card); 
         }
 
-        public void PlaceFirstCard()
+
+        public List<Coordinate> GetPossiblePlacements()
         {
-            //card: 20th card
-            //coordinate: 0,0
+            return GameBoard.AvailableCoordinates;
+            //this will check if the card can be placed. later.
         }
     }
 }
