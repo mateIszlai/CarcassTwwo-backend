@@ -50,7 +50,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 4,
                             Remaining = 4,
-                            Image = null,
+                            Image = "../wwwroot/image/1_4.png",
                             HasCrest = false},
                 //2
                 new Tile { Field1 = new Field{LandType = land },
@@ -64,7 +64,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 2,
                             Remaining = 2,
-                            Image = null,
+                            Image = "../wwwroot/image/2_2.png",
                             HasCrest = false},
                 //3
                 new Tile { Field1 = new Field{LandType = city },
@@ -78,7 +78,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = city },
                             Amount = 1,
                             Remaining = 1,
-                            Image = null,
+                            Image = "../wwwroot/image/3_1.png",
                             HasCrest = true},
                  //4
                 new Tile { Field1 = new Field{LandType = city },
@@ -92,7 +92,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/4_3.png",
                             HasCrest = false},
                 //5
                 new Tile { Field1 = new Field{LandType = city },
@@ -106,7 +106,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 1,
                             Remaining = 1,
-                            Image = null,
+                            Image = "../wwwroot/image/5_1.png",
                             HasCrest = true},
                 //6
                 new Tile { Field1 = new Field{LandType = city },
@@ -120,7 +120,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 1,
                             Remaining = 1,
-                            Image = null,
+                            Image = "../wwwroot/image/6_1.png",
                             HasCrest = false},
                 //7
                 new Tile { Field1 = new Field{LandType = city },
@@ -134,7 +134,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 2,
                             Remaining = 2,
-                            Image = null,
+                            Image = "../wwwroot/image/7_2.png",
                             HasCrest = true},
                 //8
                 new Tile { Field1 = new Field{LandType = city },
@@ -148,7 +148,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/8_3.png",
                             HasCrest = false},
                 //9
                 new Tile { Field1 = new Field{LandType = city },
@@ -162,7 +162,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 2,
                             Remaining = 2,
-                            Image = null,
+                            Image = "../wwwroot/image/9_2.png",
                             HasCrest = true},
                 //10
                 new Tile { Field1 = new Field{LandType = city },
@@ -176,7 +176,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/10_3.png",
                             HasCrest = false},
                 //11
                 new Tile { Field1 = new Field{LandType = city },
@@ -190,7 +190,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 2,
                             Remaining = 2,
-                            Image = null,
+                            Image = "../wwwroot/image/11_2.png",
                             HasCrest = true},
 
                 //12
@@ -205,7 +205,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 1,
                             Remaining = 1,
-                            Image = null,
+                            Image = "../wwwroot/image/12_1.png",
                             HasCrest = false},
                 //13
                 new Tile { Field1 = new Field{LandType = land },
@@ -219,7 +219,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 2,
                             Remaining = 2,
-                            Image = null,
+                            Image = "../wwwroot/image/13_2.png",
                             HasCrest = true},
                 //14
                 new Tile { Field1 = new Field{LandType = city },
@@ -233,7 +233,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 2,
                             Remaining = 2,
-                            Image = null,
+                            Image = "../wwwroot/image/14_2.png",
                             HasCrest = false},
                 //15
                 new Tile { Field1 = new Field{LandType = land },
@@ -247,7 +247,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/15_3.png",
                             HasCrest = false},
                 //16
                 new Tile { Field1 = new Field{LandType = land },
@@ -261,7 +261,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 5,
                             Remaining = 5,
-                            Image = null,
+                            Image = "../wwwroot/image/16_5.png",
                             HasCrest = false},
                 
                 //17
@@ -276,7 +276,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/17_3.png",
                             HasCrest = false},
                 //18
                 new Tile { Field1 = new Field{LandType = land },
@@ -290,7 +290,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/18_3.png",
                             HasCrest = false},
                 //19
                 new Tile { Field1 = new Field{LandType = land },
@@ -304,7 +304,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 3,
                             Remaining = 3,
-                            Image = null,
+                            Image = "../wwwroot/image/19_3.png",
                             HasCrest = false},
                 //20 - first  card
                 new Tile { Field1 = new Field{LandType = land },
@@ -318,7 +318,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 4,
                             Remaining = 4,
-                            Image = null,
+                            Image = "../wwwroot/image/20_4.png",
                             HasCrest = false},
                 //21
                 new Tile { Field1 = new Field{LandType = land },
@@ -332,7 +332,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 8,
                             Remaining = 8,
-                            Image = null,
+                            Image = "../wwwroot/image/21_8.png",
                             HasCrest = false},
                 //22
                 new Tile { Field1 = new Field{LandType = land },
@@ -346,7 +346,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 9,
                             Remaining = 9,
-                            Image = null,
+                            Image = "../wwwroot/image/22_9.png",
                             HasCrest = false},
                 //23
                 new Tile { Field1 = new Field{LandType = land },
@@ -360,7 +360,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 4,
                             Remaining = 4,
-                            Image = null,
+                            Image = "../wwwroot/image/23_4.png",
                             HasCrest = false},
                 //24
                 new Tile { Field1 = new Field{LandType = land },
@@ -374,7 +374,7 @@ namespace CarcassTwwo
                             Field9 = new Field{LandType = land },
                             Amount = 1,
                             Remaining = 1,
-                            Image = null,
+                            Image = "../wwwroot/image/24_1.png",
                             HasCrest = false},
             };
                 context.AddRange(tiles);
