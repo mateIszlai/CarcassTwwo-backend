@@ -86,7 +86,7 @@ namespace CarcassTwwo.Models
         }
 
 
-        public List<Coordinate> GetPossiblePlacements()
+        public HashSet<Coordinate> GetPossiblePlacements()
         {
             return GameBoard.AvailableCoordinates;
             //this will check if the card can be placed. later.

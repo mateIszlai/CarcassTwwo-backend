@@ -8,7 +8,7 @@ namespace CarcassTwwo.Models
     public class Board
     {
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
-        public List<Coordinate> AvailableCoordinates { get; set; }
+        public HashSet<Coordinate> AvailableCoordinates { get; set; }
         public void AddAvailableCoordinates(Card card)
         {
             if (card.TopIsFree)
