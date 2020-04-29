@@ -10,5 +10,6 @@ namespace CarcassTwwo.Hubs
         HashSet<Client> GetConnections(string groupName);
         HashSet<string> GetGroupNames();
         void RemoveGroup(string groupName);
+        Group GetGroup(string groupName);
     }
 }
