@@ -82,6 +82,7 @@ namespace CarcassTwwo.Hubs
         {
             _manager.StartGame(groupName);
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started");
+            StartTurn(groupName);
         }
 
         public async void StartTurn(string groupName)
