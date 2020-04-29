@@ -9,15 +9,34 @@ namespace CarcassTwwo.Models
     {
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
         public List<Coordinate> AvailableCoordinates { get; set; }
-        public void AddAvailableCoordinate(Coordinate coordinate)
+        public void AddAvailableCoordinates(Card card)
         {
-            AvailableCoordinates.Add(coordinate);
+            if (card.TopIsFree)
+            {
+                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 });
+            }
+
+            if (card.BottomIsFree)
+            {
+                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 });
+            }
+
+            if (card.LeftIsFree)
+            {
+                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y });
+            }
+
+            if (card.RightIsFree)
+            {
+                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y });
+            }
         }
 
-        public void RemoveFromCoordinates(Coordinate coordinate)
+        public void RemoveFromAvailableCoordinates(Coordinate coordinate)
         {
             AvailableCoordinates.Remove(coordinate);
         }
+
     }
 
 
