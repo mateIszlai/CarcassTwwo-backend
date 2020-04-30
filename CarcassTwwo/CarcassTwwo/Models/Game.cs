@@ -28,7 +28,22 @@ namespace CarcassTwwo.Models
             IsOver = false;
             IsStarted = true;
             LastPlayer = Players[Players.Count - 1];
-            // _cards = adatbázisból kikérni a kártyákat.
+            DataSeeder.SeedLandTypes();
+            DataSeeder.SeedTiles();
+            _cards = GenerateDeck();
+        }
+
+        private List<Card> GenerateDeck()
+        {
+            List<Card> cards = new List<Card>();
+            foreach(var tile in DataSeeder.tiles)
+            {
+                for(int i = 0; i< tile.Amount; i++)
+                {
+                    cards.Add(new Card(tile));
+                }
+            }
+            return cards;
         }
 
         public void Play()
