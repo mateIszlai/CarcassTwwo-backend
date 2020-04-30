@@ -34,7 +34,7 @@ namespace CarcassTwwo
 
             if (!tiles.Any())
             {
-                var tiles = new List<Tile>
+                tiles = new List<Tile>
                 {
                 //1
                 new Tile { Field1 =  new Field{LandType = land },
