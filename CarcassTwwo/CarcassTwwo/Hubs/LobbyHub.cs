@@ -81,14 +81,23 @@ namespace CarcassTwwo.Hubs
         public async void StartGame(string groupName)
         {
             _manager.StartGame(groupName);
+
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started");
-            StartTurn(groupName);
+            StartTurn(groupName, true);
         }
 
-        public async void StartTurn(string groupName)
+        public async void StartTurn(string groupName, bool start = false)
         {
             var group = _manager.GetGroup(groupName);
             var player = group.Game.PickPlayer();
+            if (start)
+            {
+                var card = group.Game.PlaceFirstCard();
+            }
+            else
+            {
+                var card = group.Game.PickRandomCard();
+            }
             await Clients.Client(player.ConnectionId).SendAsync("Turn", "This is your turn", true);
         }
         public async void EndTurn(string groupName)

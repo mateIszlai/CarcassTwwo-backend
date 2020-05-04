@@ -2,9 +2,7 @@
 {
     public class Card
     {
-        public int Id { get; set; }
-        public int GameId { get; set; }
-        public Game Game { get; set; }
+        public int Id { get; private set; }
         public Tile Tile { get; set; }
         public Coordinate MeepleField { get; set; }
         public string MeepleType { get; set; }
@@ -22,8 +20,9 @@
         public bool RightIsFree { get; set; }
         public bool HasCrest { get; set; }
 
-        public Card(Tile tile)
+        public Card(Tile tile, int id)
         {
+            Id = id;
             Tile = tile;
             Top = Tile.Field2.LandType;
             Bottom = Tile.Field8.LandType;
