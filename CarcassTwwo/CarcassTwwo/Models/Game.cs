@@ -118,10 +118,15 @@ namespace CarcassTwwo.Models
         }
 
 
-        public HashSet<Coordinate> GetPossiblePlacements()
+        public Dictionary<RequiredCard, Coordinate> GetPossiblePlacements(Card card)
         {
             return GameBoard.AvailableCoordinates;
-            //this will check if the card can be placed. later.
+            /* this will check if the card can be placed. later.
+            AvailableCoordinates contains ALL coordinates.
+            we will only need those, that our card can be placed on.
+            get those requiredCards, that matches our card 
+             */
+
         }
 
         public Card GetStarterCard()
