@@ -25,7 +25,7 @@ namespace CarcassTwwo.Models
         public int Remaining { get; set; }
         public Tile()
         {
-            Field1.Coordinate = new Coordinate { x = 0, y = 0 };
+            /*Field1.Coordinate = new Coordinate { x = 0, y = 0 };
             Field2.Coordinate = new Coordinate { x = 1, y = 0 };
             Field3.Coordinate = new Coordinate { x = 2, y = 0 };
             Field4.Coordinate = new Coordinate { x = 0, y = 1 };
@@ -33,7 +33,7 @@ namespace CarcassTwwo.Models
             Field6.Coordinate = new Coordinate { x = 2, y = 1 };
             Field7.Coordinate = new Coordinate { x = 0, y = 2 };
             Field8.Coordinate = new Coordinate { x = 1, y = 2 };
-            Field9.Coordinate = new Coordinate { x = 2, y = 2 };
+            Field9.Coordinate = new Coordinate { x = 2, y = 2 };*/
         }
     }
 }

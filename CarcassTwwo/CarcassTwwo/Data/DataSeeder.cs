@@ -13,7 +13,7 @@ namespace CarcassTwwo
         public static List<Tile> tiles;
         public static void SeedLandTypes()
         {
-            if (!landTypes.Any())
+            if (landTypes == null)
             {
                 landTypes = new List<LandType>
                 {
@@ -32,7 +32,7 @@ namespace CarcassTwwo
             LandType road = landTypes[2];
             LandType monastery = landTypes[3];
 
-            if (!tiles.Any())
+            if (tiles == null)
             {
                 tiles = new List<Tile>
                 {

@@ -40,6 +40,7 @@ namespace CarcassTwwo.Hubs
             if (_groups.TryGetValue(groupName, out group))
             {
                 group.Game = new Game(group.Members);
+                group.Game.ShuffleCards(5);
             }
         }
 
