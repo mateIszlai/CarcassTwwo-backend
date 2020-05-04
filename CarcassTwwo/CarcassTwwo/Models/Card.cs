@@ -41,7 +41,6 @@
             {
                 card.TopIsFree = false;
                 board.CardCoordinates[newCoord].BottomIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
             }
                         
             newCoord.y = card.Coordinate.y - 1;
@@ -53,7 +52,6 @@
             {
                 card.BottomIsFree = false;
                 board.CardCoordinates[newCoord].TopIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
             }
             
             newCoord.x = card.Coordinate.x + 1;
@@ -66,7 +64,6 @@
             {
                 card.RightIsFree = false;
                 board.CardCoordinates[newCoord].LeftIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
             }
             
             newCoord.x = card.Coordinate.x - 1;
@@ -78,7 +75,6 @@
             {
                 card.LeftIsFree = false;
                 board.CardCoordinates[newCoord].RightIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
             }
         }
 
