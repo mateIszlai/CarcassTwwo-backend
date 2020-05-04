@@ -126,7 +126,7 @@ namespace CarcassTwwo.Models
 
         public Card GetStarterCard()
         {
-            return _cards.First(c => c.Id == 20);
+            return _cards.First(c => c.Tile.Id == 20);
         }
 
         public Card GetFirstCard()
