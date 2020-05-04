@@ -375,6 +375,11 @@ namespace CarcassTwwo
                             Image = "../wwwroot/image/24_1.png",
                             HasCrest = false},
                 };
+
+                for(int i = 1; i <= tiles.Count; i++)
+                {
+                    tiles[i].Id = i;
+                }
             }
         }
 
