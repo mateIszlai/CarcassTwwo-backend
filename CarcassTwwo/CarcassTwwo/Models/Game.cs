@@ -1,8 +1,6 @@
-﻿using CarcassTwwo.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models
 {
@@ -18,7 +16,6 @@ namespace CarcassTwwo.Models
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
         public Client LastPlayer { get; set; }
-        public Card NextCard { get; set; }
         public Board GameBoard { get; set; }
 
         public Game(HashSet<Client> players)
@@ -33,14 +30,32 @@ namespace CarcassTwwo.Models
             _cards = GenerateDeck();
         }
 
+        public void ShuffleCards(int times)
+        {
+            for(int i = 0; i < times; i++)
+            {
+                var n = _cards.Count;
+                while (n > 1)
+                {
+                    int k = rng.Next(n);
+                    n--;
+                    var card = _cards[k];
+                    _cards[k] = _cards[n];
+                    _cards[n] = card;
+                }
+            }
+        }
+
         private List<Card> GenerateDeck()
         {
             List<Card> cards = new List<Card>();
+            var id = 1;
             foreach(var tile in DataSeeder.tiles)
             {
                 for(int i = 0; i< tile.Amount; i++)
                 {
-                    cards.Add(new Card(tile));
+                    cards.Add(new Card(tile, id));
+                    id++;
                 }
             }
             return cards;
@@ -84,10 +99,12 @@ namespace CarcassTwwo.Models
             _cards.Remove(card);
             return card;
         }
-        public void PlaceFirstCard()
+        public Card PlaceFirstCard()
         {
-            //card: 20th card
-            //coordinate: 0,0
+            var card = GetStarterCard();
+            _cards.Remove(card);
+            PlaceCard(new Coordinate { x = 0, y = 0 }, card);
+            return card;
         }
 
         public void PlaceCard(Coordinate coordinate, Card card)
@@ -105,6 +122,16 @@ namespace CarcassTwwo.Models
         {
             return GameBoard.AvailableCoordinates;
             //this will check if the card can be placed. later.
+        }
+
+        public Card GetStarterCard()
+        {
+            return _cards.First(c => c.Id == 20);
+        }
+
+        public Card GetFirstCard()
+        {
+            return _cards[0];
         }
     }
 }
