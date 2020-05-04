@@ -8,66 +8,48 @@ namespace CarcassTwwo.Models
     public class Board
     {
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
-        public HashSet<Coordinate> AvailableCoordinates { get; set; }
-        public Dictionary<Coordinate, RequiredCard> AvailableCoordinatesR { get; set; }
+        public Dictionary<RequiredCard, Coordinate> AvailableCoordinates { get; set; }
+
         public void AddAvailableCoordinates(Card card)
         {
-            /*
-             * 1. We need to check all the available coordinates around the card.
-             * 2. Create a Required card to that coordinate
-             * 3. If there are existing coordinates around the required, we need to update it
-             * e.g. we have one on the left and one on the bottom, then we have data for the 
-             * required card's left and bottom (by the other cards' right and top)
-             * 4. update the required card sides
-             * This needs to be finished!!! It's not enought to create a required card with one side! 
-             * We need to check every side!
-             * e.g. this method calls the Update method everytime a new card is created. 
-             * So to make this easier, I need to create the coordinate, and give it the method as a parameter
-             * so making "new sg" wont be enough. 
-             */
             if (card.TopIsFree)
             {
-                AvailableCoordinatesR.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 }, 
-                                                            new RequiredCard(null, card.Top, null, null));
-
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 });
+                var top = new RequiredCard(null, card.Top, null, null);
+                top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
+                AvailableCoordinates.Add(top, top.Coordinate);
+                top.UpdateRequiredCard(CardCoordinates);
             }
 
             if (card.BottomIsFree)
             {
-                AvailableCoordinatesR.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 },
-                                                            new RequiredCard(card.Bottom, null, null, null));
-
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 });
+                var bottom = new RequiredCard(card.Bottom, null, null, null);
+                bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
+                AvailableCoordinates.Add(bottom, bottom.Coordinate);
+                bottom.UpdateRequiredCard(CardCoordinates);
             }
 
             if (card.LeftIsFree)
             {
-                AvailableCoordinatesR.Add(new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y },
-                                                            new RequiredCard(null, null, null, card.Left));
-
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y });
+                var left = new RequiredCard(null, null, null, card.Left);
+                left.Coordinate = new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y };
+                AvailableCoordinates.Add(left, left.Coordinate);
+                left.UpdateRequiredCard(CardCoordinates);
             }
 
             if (card.RightIsFree)
             {
-                AvailableCoordinatesR.Add(new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y },
-                                                               new RequiredCard(null, null, card.Right, null));
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y });
+                var right = new RequiredCard(null, null, card.Right, null);
+                right.Coordinate = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
+                AvailableCoordinates.Add(right, right.Coordinate);
+                right.UpdateRequiredCard(CardCoordinates);
             }
-        }
-
-        public void UpdateRequiredCard()
-        {
-            //TODO
-            /*e.g.: this method gets a a required card, and checks every side of it. then refreshes.
-             * this may be very time and resource consuming
-             */
         }
 
         public void RemoveFromAvailableCoordinates(Coordinate coordinate)
         {
-            AvailableCoordinates.Remove(coordinate);
+            var item = AvailableCoordinates.First(kvp => kvp.Value.Equals(coordinate));
+
+            AvailableCoordinates.Remove(item.Key);
         }
 
     }
