@@ -7,7 +7,7 @@ namespace CarcassTwwo.Models
     public class Game
     {
         private List<Card> _cards;
-        private static Random rng = new Random();
+        private static Random rnd = new Random();
 
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -37,7 +37,7 @@ namespace CarcassTwwo.Models
                 var n = _cards.Count;
                 while (n > 1)
                 {
-                    int k = rng.Next(n);
+                    int k = rnd.Next(n);
                     n--;
                     var card = _cards[k];
                     _cards[k] = _cards[n];
@@ -95,7 +95,7 @@ namespace CarcassTwwo.Models
 
         public Card PickRandomCard()
         {
-            var card = _cards[rng.Next(_cards.Count)];
+            var card = _cards[rnd.Next(_cards.Count)];
             _cards.Remove(card);
             return card;
         }
