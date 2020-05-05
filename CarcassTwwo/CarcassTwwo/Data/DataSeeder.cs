@@ -378,7 +378,7 @@ namespace CarcassTwwo
 
                 for(int i = 1; i <= tiles.Count; i++)
                 {
-                    tiles[i].Id = i;
+                    tiles[i - 1].Id = i;
                 }
             }
         }
