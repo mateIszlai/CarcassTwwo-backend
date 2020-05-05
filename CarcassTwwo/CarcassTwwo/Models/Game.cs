@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarcassTwwo.Models.Requests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -95,26 +96,25 @@ namespace CarcassTwwo.Models
 
         public Card PickRandomCard()
         {
-            var card = _cards[rnd.Next(_cards.Count)];
-            _cards.Remove(card);
-            return card;
+            return _cards[rnd.Next(_cards.Count)];
         }
         public Card PlaceFirstCard()
         {
             var card = GetStarterCard();
-            _cards.Remove(card);
-            PlaceCard(new Coordinate { x = 0, y = 0 }, card);
+            PlaceCard(new Coordinate { x = 0, y = 0 }, card.Id);
             return card;
         }
 
-        public void PlaceCard(Coordinate coordinate, Card card)
+        public void PlaceCard(Coordinate coordinate, int cardId)
         {
+            var card = _cards.First(c => c.Id == cardId);
             GameBoard.CardCoordinates.Add(coordinate, card);
             card.Coordinate = coordinate;
 
             GameBoard.RemoveFromAvailableCoordinates(coordinate);
             card.SetSideOccupation(card, GameBoard);
-            GameBoard.AddAvailableCoordinates(card); 
+            GameBoard.AddAvailableCoordinates(card);
+            _cards.Remove(card);
         }
 
 
@@ -127,6 +127,17 @@ namespace CarcassTwwo.Models
             get those requiredCards, that matches our card 
              */
 
+        }
+
+        public CardToSend GenerateCardToSend(Card card)
+        {
+            CardToSend cardToSend = new CardToSend(card.Tile.Id);
+            // Ezt még meg kell csinálni, itt adná hozzá a megfelelő helyeket és forgatásokat.
+            foreach(var coordinate in GameBoard.AvailableCoordinates)
+            {
+                cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = coordinate.Value, Rotations = new List<int> { 0, 90, 180, 270 } });
+            }
+            return cardToSend;
         }
 
         public Card GetStarterCard()
