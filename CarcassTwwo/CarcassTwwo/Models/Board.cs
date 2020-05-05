@@ -10,6 +10,12 @@ namespace CarcassTwwo.Models
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
         public Dictionary<RequiredCard, Coordinate> AvailableCoordinates { get; set; }
 
+        public Board()
+        {
+            CardCoordinates = new Dictionary<Coordinate, Card>();
+            AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
+        }
+
         public void AddAvailableCoordinates(Card card)
         {
             if (card.TopIsFree)
@@ -47,9 +53,9 @@ namespace CarcassTwwo.Models
 
         public void RemoveFromAvailableCoordinates(Coordinate coordinate)
         {
-            var item = AvailableCoordinates.First(kvp => kvp.Value.Equals(coordinate));
-
-            AvailableCoordinates.Remove(item.Key);
+            var item = AvailableCoordinates.FirstOrDefault(kvp => kvp.Value.Equals(coordinate));
+            if(!item.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
+                AvailableCoordinates.Remove(item.Key);
         }
 
     }
