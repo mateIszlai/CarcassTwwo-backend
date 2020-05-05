@@ -33,24 +33,22 @@
 
         public void SetSideOccupation(Board board)
         {
-            Coordinate newCoord = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
+            var vertical = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
 
-            TopIsFree = board.CardCoordinates.ContainsKey(newCoord) ? false : true;
-            board.CardCoordinates[newCoord].BottomIsFree = TopIsFree;
+            TopIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
+            board.CardCoordinates[vertical].BottomIsFree = TopIsFree;
                         
-            newCoord.y = Coordinate.y - 1;
-            BottomIsFree = board.CardCoordinates.ContainsKey(newCoord) ? false : true;
-            board.CardCoordinates[newCoord].TopIsFree = BottomIsFree;
-            
-            newCoord.x = Coordinate.x + 1;
-            newCoord.y = Coordinate.y;
-            RightIsFree = board.CardCoordinates.ContainsKey(newCoord) ? false : true;
-            board.CardCoordinates[newCoord].LeftIsFree = RightIsFree;
-            
-            newCoord.x = Coordinate.x - 1;
-            LeftIsFree = board.CardCoordinates.ContainsKey(newCoord) ? false : true;
-            board.CardCoordinates[newCoord].RightIsFree = LeftIsFree;
+            vertical.y = Coordinate.y - 1;
+            BottomIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
+            board.CardCoordinates[vertical].TopIsFree = BottomIsFree;
 
+            var horizontal = new Coordinate { x = Coordinate.x + 1, y = Coordinate.y };
+            RightIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
+            board.CardCoordinates[horizontal].LeftIsFree = RightIsFree;
+            
+            horizontal.x = Coordinate.x - 1;
+            LeftIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
+            board.CardCoordinates[horizontal].RightIsFree = LeftIsFree;
         }
 
         public void PlaceMeeple(Field field)
