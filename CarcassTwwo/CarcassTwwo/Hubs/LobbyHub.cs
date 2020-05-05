@@ -1,4 +1,5 @@
 ﻿using CarcassTwwo.Models;
+using CarcassTwwo.Models.Requests;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -81,28 +82,26 @@ namespace CarcassTwwo.Hubs
         public async void StartGame(string groupName)
         {
             _manager.StartGame(groupName);
-
-            await Clients.Group(groupName).SendAsync("StartGame", "The game is started");
-            StartTurn(groupName, true);
+            var card = _manager.GetGroup(groupName).Game.PlaceFirstCard();
+            var cardToSend = new CardToSend(card.Tile.Id);
+            cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
+            await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
+            StartTurn(groupName);
         }
 
-        public async void StartTurn(string groupName, bool start = false)
+        public async void StartTurn(string groupName)
         {
             var group = _manager.GetGroup(groupName);
             var player = group.Game.PickPlayer();
-            if (start)
-            {
-                var card = group.Game.PlaceFirstCard();
-            }
-            else
-            {
-                var card = group.Game.PickRandomCard();
-            }
-            await Clients.Client(player.ConnectionId).SendAsync("Turn", "This is your turn", true);
+            var card = group.Game.PickRandomCard();
+            var cardToSend = group.Game.GenerateCardToSend(card);
+            await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend, true);
         }
-        public async void EndTurn(string groupName)
+        public async void EndTurn(string groupName, CardToRecieve card)
         {
+            _manager.GetGroup(groupName).Game.PlaceCard(card.Coordinate, card.CardId);
             await Clients.Client(Context.ConnectionId).SendAsync("EndTurn", "Your turn is ended, waiting for the others", false);
+            await Clients.Group(groupName).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
         }
     }
