@@ -108,9 +108,8 @@ namespace CarcassTwwo.Models
         public void PlaceCard(Coordinate coordinate, int cardId)
         {
             var card = _cards.First(c => c.Id == cardId);
-            GameBoard.CardCoordinates.Add(coordinate, card);
             card.Coordinate = coordinate;
-
+            GameBoard.CardCoordinates.Add(coordinate, card);
             GameBoard.RemoveFromAvailableCoordinates(coordinate);
             card.SetSideOccupation(GameBoard);
             GameBoard.AddAvailableCoordinates(card);

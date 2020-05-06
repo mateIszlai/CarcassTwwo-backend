@@ -33,6 +33,7 @@ namespace CarcassTwwo.Models
             Left = Tile.Field4.LandType;
             Right = Tile.Field6.LandType;
             HasCrest = Tile.HasCrest;
+            Rotations = new Dictionary<int, List<LandType>>();
             SetRotations();
         }
 
@@ -41,19 +42,23 @@ namespace CarcassTwwo.Models
             var vertical = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
 
             TopIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
-            board.CardCoordinates[vertical].BottomIsFree = TopIsFree;
+            if (!TopIsFree)
+                board.CardCoordinates[vertical].BottomIsFree = false;
                         
             vertical.y = Coordinate.y - 1;
             BottomIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
-            board.CardCoordinates[vertical].TopIsFree = BottomIsFree;
+            if(!BottomIsFree)
+                board.CardCoordinates[vertical].TopIsFree = false;
 
             var horizontal = new Coordinate { x = Coordinate.x + 1, y = Coordinate.y };
             RightIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
-            board.CardCoordinates[horizontal].LeftIsFree = RightIsFree;
+            if(!RightIsFree)
+                board.CardCoordinates[horizontal].LeftIsFree = false;
             
             horizontal.x = Coordinate.x - 1;
             LeftIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
-            board.CardCoordinates[horizontal].RightIsFree = LeftIsFree;
+            if(!LeftIsFree)
+                board.CardCoordinates[horizontal].RightIsFree = false;
         }
 
         public void SetRotations()
