@@ -37,29 +37,11 @@ namespace CarcassTwwo.Models
             SetRotations();
         }
 
-        public void SetSideOccupation(Board board)
+        public Card()
         {
-            var vertical = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
 
-            TopIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
-            if (!TopIsFree)
-                board.CardCoordinates[vertical].BottomIsFree = false;
-                        
-            vertical.y = Coordinate.y - 1;
-            BottomIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
-            if(!BottomIsFree)
-                board.CardCoordinates[vertical].TopIsFree = false;
-
-            var horizontal = new Coordinate { x = Coordinate.x + 1, y = Coordinate.y };
-            RightIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
-            if(!RightIsFree)
-                board.CardCoordinates[horizontal].LeftIsFree = false;
-            
-            horizontal.x = Coordinate.x - 1;
-            LeftIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
-            if(!LeftIsFree)
-                board.CardCoordinates[horizontal].RightIsFree = false;
         }
+        
 
         public void SetRotations()
         {
