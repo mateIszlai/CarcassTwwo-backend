@@ -1,4 +1,6 @@
-﻿namespace CarcassTwwo.Models
+﻿using System.Collections.Generic;
+
+namespace CarcassTwwo.Models
 {
     public class Card
     {
@@ -13,6 +15,8 @@
         public LandType Bottom { get; set; }
         public LandType Left { get; set; }
         public LandType Right { get; set; }
+
+        public Dictionary<int,List<LandType>> Rotations { get; set; }
 
         public bool TopIsFree { get; set; }
         public bool BottomIsFree { get; set; }
@@ -29,6 +33,7 @@
             Left = Tile.Field4.LandType;
             Right = Tile.Field6.LandType;
             HasCrest = Tile.HasCrest;
+            SetRotations();
         }
 
         public void SetSideOccupation(Board board)
@@ -49,6 +54,14 @@
             horizontal.x = Coordinate.x - 1;
             LeftIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
             board.CardCoordinates[horizontal].RightIsFree = LeftIsFree;
+        }
+
+        public void SetRotations()
+        {
+            Rotations[0] = new List<LandType> { Top, Left, Bottom, Right };
+            Rotations[90] = new List<LandType> { Right, Top, Left, Bottom };
+            Rotations[180] = new List<LandType> { Bottom, Right, Top, Left };
+            Rotations[270] = new List<LandType> { Left, Bottom, Right, Top };
         }
 
         public void PlaceMeeple(Field field)
