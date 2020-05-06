@@ -112,7 +112,7 @@ namespace CarcassTwwo.Models
             card.Coordinate = coordinate;
 
             GameBoard.RemoveFromAvailableCoordinates(coordinate);
-            card.SetSideOccupation(card, GameBoard);
+            card.SetSideOccupation(GameBoard);
             GameBoard.AddAvailableCoordinates(card);
             _cards.Remove(card);
         }
