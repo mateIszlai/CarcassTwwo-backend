@@ -121,10 +121,10 @@ namespace CarcassTwwo.Models
         {
             var placementsWithRotations = new Dictionary<Coordinate,List<int>>();
 
-            var rot0 = card.Rotations[0];
-            var rot90 = card.Rotations[90];
-            var rot180 = card.Rotations[180];
-            var rot270 = card.Rotations[270];
+            var rot0 = card.Rotations["0"];
+            var rot90 = card.Rotations["90"];
+            var rot180 = card.Rotations["180"];
+            var rot270 = card.Rotations["270"];
 
             foreach(var place in GameBoard.AvailableCoordinates)
             {
