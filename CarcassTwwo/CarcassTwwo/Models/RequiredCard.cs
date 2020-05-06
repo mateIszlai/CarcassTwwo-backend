@@ -28,22 +28,10 @@ namespace CarcassTwwo.Models
             var top = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
             var bottom = new Coordinate { x = Coordinate.x, y = Coordinate.y - 1 };
 
-            if (CardCoordinates.ContainsKey(left))
-            {
-                Left = CardCoordinates[left].Right;
-            }
-            if (CardCoordinates.ContainsKey(right))
-            {
-                Right = CardCoordinates[right].Left;
-            }
-            if (CardCoordinates.ContainsKey(top))
-            {
-                Top = CardCoordinates[top].Bottom;
-            }
-            if (CardCoordinates.ContainsKey(bottom))
-            {
-                Bottom = CardCoordinates[bottom].Top;
-            }
+            Left = CardCoordinates.ContainsKey(left) ? CardCoordinates[left].Right : null;
+            Right = CardCoordinates.ContainsKey(right) ? CardCoordinates[right].Left : null;
+            Top = CardCoordinates.ContainsKey(top) ? CardCoordinates[top].Bottom : null;
+            Bottom = CardCoordinates.ContainsKey(bottom) ? CardCoordinates[bottom].Top : null;
         }
     }
 }

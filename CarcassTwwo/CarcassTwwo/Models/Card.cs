@@ -31,51 +31,24 @@
             HasCrest = Tile.HasCrest;
         }
 
-        public void SetSideOccupation(Card card, Board board)
+        public void SetSideOccupation(Board board)
         {
-            Coordinate newCoord = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.TopIsFree = true;
-            } else
-            {
-                card.TopIsFree = false;
-                board.CardCoordinates[newCoord].BottomIsFree = false;
-            }
+            var vertical = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
+
+            TopIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
+            board.CardCoordinates[vertical].BottomIsFree = TopIsFree;
                         
-            newCoord.y = card.Coordinate.y - 1;
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.BottomIsFree = true;
-            }
-            else
-            {
-                card.BottomIsFree = false;
-                board.CardCoordinates[newCoord].TopIsFree = false;
-            }
+            vertical.y = Coordinate.y - 1;
+            BottomIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
+            board.CardCoordinates[vertical].TopIsFree = BottomIsFree;
+
+            var horizontal = new Coordinate { x = Coordinate.x + 1, y = Coordinate.y };
+            RightIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
+            board.CardCoordinates[horizontal].LeftIsFree = RightIsFree;
             
-            newCoord.x = card.Coordinate.x + 1;
-            newCoord.y = card.Coordinate.y;
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.RightIsFree = true;
-            }
-            else
-            {
-                card.RightIsFree = false;
-                board.CardCoordinates[newCoord].LeftIsFree = false;
-            }
-            
-            newCoord.x = card.Coordinate.x - 1;
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.LeftIsFree = true;
-            }
-            else
-            {
-                card.LeftIsFree = false;
-                board.CardCoordinates[newCoord].RightIsFree = false;
-            }
+            horizontal.x = Coordinate.x - 1;
+            LeftIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
+            board.CardCoordinates[horizontal].RightIsFree = LeftIsFree;
         }
 
         public void PlaceMeeple(Field field)
