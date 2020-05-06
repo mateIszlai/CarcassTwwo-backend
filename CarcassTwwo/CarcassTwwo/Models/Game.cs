@@ -118,21 +118,96 @@ namespace CarcassTwwo.Models
         }
 
 
-        public Dictionary<RequiredCard, Coordinate> GetPossiblePlacements(Card card)
+        public Dictionary<Coordinate, List<int>> GetPossiblePlacements(Card card)
         {
-            return GameBoard.AvailableCoordinates;
-            /* this will check if the card can be placed. later.
-            AvailableCoordinates contains ALL coordinates.
-            we will only need those, that our card can be placed on.
-            get those requiredCards, that matches our card 
-             */
+            var placementsWithRotations = new Dictionary<Coordinate,List<int>>();
 
+            var rot0 = card.Rotations[0];
+            var rot90 = card.Rotations[90];
+            var rot180 = card.Rotations[180];
+            var rot270 = card.Rotations[270];
+
+            foreach(var place in GameBoard.AvailableCoordinates)
+            {
+                if(SidesMatches(place.Key, rot0) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(0);
+                    }
+                    placementsWithRotations.Add(place.Value, new List<int> { 0 });
+                }
+
+                if (SidesMatches(place.Key, rot90) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(90);
+                    }
+                    placementsWithRotations.Add(place.Value, new List<int> { 90 });
+                }
+
+                if (SidesMatches(place.Key, rot180) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(180);
+                    }
+                    placementsWithRotations.Add(place.Value, new List<int> { 180 });
+                }
+
+                if (SidesMatches(place.Key, rot270) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(270);
+                    }
+                    placementsWithRotations.Add(place.Value, new List<int> { 270 });
+                }
+            }
+
+            return placementsWithRotations;
+
+        }
+
+        public bool SidesMatches(RequiredCard req, List<LandType> sides)
+        {
+            bool topIsGood, leftIsGood, bottomIsGood, rightIsGood;
+            topIsGood = leftIsGood = bottomIsGood = rightIsGood = true;
+
+            if(req.Top != null)
+            {
+                topIsGood = sides[0] == req.Top ? true : false;
+            }
+            if(req.Left != null)
+            {
+                leftIsGood = sides[1] == req.Left ? true : false;
+            }
+            if (req.Bottom != null)
+            {
+                bottomIsGood = sides[2] == req.Bottom ? true : false;
+            }
+            if (req.Right != null)
+            {
+                rightIsGood = sides[3] == req.Right ? true : false;
+            }
+
+            if(topIsGood == false || leftIsGood == false || bottomIsGood == false || rightIsGood == false)
+            {
+                return false;
+            }
+            return true;
         }
 
         public CardToSend GenerateCardToSend(Card card)
         {
             CardToSend cardToSend = new CardToSend(card.Tile.Id);
             // Ezt még meg kell csinálni, itt adná hozzá a megfelelő helyeket és forgatásokat.
+
+            //TODO:
+            var possiblePlacesOfCard = GetPossiblePlacements(card);
+            //this gives us a dict with coordinates as keys and the possible rotations as values.
+
             foreach(var coordinate in GameBoard.AvailableCoordinates)
             {
                 cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = coordinate.Value, Rotations = new List<int> { 0, 90, 180, 270 } });
