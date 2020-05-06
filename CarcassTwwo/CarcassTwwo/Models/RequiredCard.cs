@@ -13,7 +13,7 @@ namespace CarcassTwwo.Models
         public LandType Right { get; set; }
         public Coordinate Coordinate { get; set; }
 
-        public RequiredCard(LandType top, LandType bottom, LandType left, LandType right)
+        public RequiredCard(LandType top, LandType left, LandType bottom, LandType right)
         {
             Top = top;
             Bottom = bottom;

@@ -20,18 +20,10 @@ namespace CarcassTwwo.Models
         {
             if (card.TopIsFree)
             {
-                var top = new RequiredCard(null, card.Top, null, null);
+                var top = new RequiredCard(null,  null, card.Top, null);
                 top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
                 AvailableCoordinates.Add(top, top.Coordinate);
                 top.UpdateRequiredCard(CardCoordinates);
-            }
-
-            if (card.BottomIsFree)
-            {
-                var bottom = new RequiredCard(card.Bottom, null, null, null);
-                bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
-                AvailableCoordinates.Add(bottom, bottom.Coordinate);
-                bottom.UpdateRequiredCard(CardCoordinates);
             }
 
             if (card.LeftIsFree)
@@ -42,9 +34,18 @@ namespace CarcassTwwo.Models
                 left.UpdateRequiredCard(CardCoordinates);
             }
 
+            if (card.BottomIsFree)
+            {
+                var bottom = new RequiredCard(card.Bottom, null, null, null);
+                bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
+                AvailableCoordinates.Add(bottom, bottom.Coordinate);
+                bottom.UpdateRequiredCard(CardCoordinates);
+            }
+
+
             if (card.RightIsFree)
             {
-                var right = new RequiredCard(null, null, card.Right, null);
+                var right = new RequiredCard(null, card.Right, null, null);
                 right.Coordinate = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
                 AvailableCoordinates.Add(right, right.Coordinate);
                 right.UpdateRequiredCard(CardCoordinates);
