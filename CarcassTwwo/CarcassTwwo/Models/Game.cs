@@ -201,9 +201,7 @@ namespace CarcassTwwo.Models
         public CardToSend GenerateCardToSend(Card card)
         {
             CardToSend cardToSend = new CardToSend(card.Tile.Id);
-            //TODO:
             var possiblePlacesOfCard = GetPossiblePlacements(card);
-            //this gives us a dict with coordinates as keys and the possible rotations as values.
 
             foreach(var placement in possiblePlacesOfCard)
             {
