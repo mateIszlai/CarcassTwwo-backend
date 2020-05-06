@@ -66,7 +66,7 @@ namespace CarcassTwwoTests
         public void GetStarterCard_ReturnsStarterCard_WithoutShuffle()
         {
             var expectedId = 20;
-            var actualId = _game.GetStarterCard().Id;
+            var actualId = _game.GetStarterCard().Tile.Id;
 
             Assert.AreEqual(expectedId, actualId);
         }
@@ -75,7 +75,7 @@ namespace CarcassTwwoTests
         public void GetStarterCard_ReturnsStarterCard_AfterShuffle()
         {
             var expectedId = 20;
-            var actualId = _game.GetStarterCard().Id;
+            var actualId = _game.GetStarterCard().Tile.Id;
 
             Assert.AreEqual(expectedId, actualId);
         }
