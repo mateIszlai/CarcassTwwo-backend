@@ -33,7 +33,7 @@ namespace CarcassTwwoTests
             var actual = false;
             foreach(var name in randomNames)
             {
-                if(randomNames.FindAll(s => s.Equals(name)).Count != 0)
+                if(randomNames.FindAll(s => s.Equals(name)).Count != 1)
                 {
                     actual = true;
                     break;
