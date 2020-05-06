@@ -135,7 +135,8 @@ namespace CarcassTwwo.Models
                     {
                         placementsWithRotations[place.Value].Add(0);
                     }
-                    placementsWithRotations.Add(place.Value, new List<int> { 0 });
+                    else 
+                        placementsWithRotations.Add(place.Value, new List<int> { 0 });
                 }
 
                 if (SidesMatches(place.Key, rot90) == true)
@@ -144,7 +145,8 @@ namespace CarcassTwwo.Models
                     {
                         placementsWithRotations[place.Value].Add(90);
                     }
-                    placementsWithRotations.Add(place.Value, new List<int> { 90 });
+                    else
+                        placementsWithRotations.Add(place.Value, new List<int> { 90 });
                 }
 
                 if (SidesMatches(place.Key, rot180) == true)
@@ -153,7 +155,8 @@ namespace CarcassTwwo.Models
                     {
                         placementsWithRotations[place.Value].Add(180);
                     }
-                    placementsWithRotations.Add(place.Value, new List<int> { 180 });
+                    else
+                        placementsWithRotations.Add(place.Value, new List<int> { 180 });
                 }
 
                 if (SidesMatches(place.Key, rot270) == true)
@@ -162,7 +165,8 @@ namespace CarcassTwwo.Models
                     {
                         placementsWithRotations[place.Value].Add(270);
                     }
-                    placementsWithRotations.Add(place.Value, new List<int> { 270 });
+                    else
+                        placementsWithRotations.Add(place.Value, new List<int> { 270 });
                 }
             }
 
@@ -192,25 +196,19 @@ namespace CarcassTwwo.Models
                 rightIsGood = sides[3] == req.Right ? true : false;
             }
 
-            if(topIsGood == false || leftIsGood == false || bottomIsGood == false || rightIsGood == false)
-            {
-                return false;
-            }
-            return true;
+            return topIsGood && leftIsGood && bottomIsGood && rightIsGood;
         }
 
         public CardToSend GenerateCardToSend(Card card)
         {
             CardToSend cardToSend = new CardToSend(card.Tile.Id);
-            // Ezt még meg kell csinálni, itt adná hozzá a megfelelő helyeket és forgatásokat.
-
             //TODO:
             var possiblePlacesOfCard = GetPossiblePlacements(card);
             //this gives us a dict with coordinates as keys and the possible rotations as values.
 
-            foreach(var coordinate in GameBoard.AvailableCoordinates)
+            foreach(var placement in possiblePlacesOfCard)
             {
-                cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = coordinate.Value, Rotations = new List<int> { 0, 90, 180, 270 } });
+                cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = placement.Key, Rotations = placement.Value});
             }
             return cardToSend;
         }
