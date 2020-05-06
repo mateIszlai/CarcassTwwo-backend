@@ -9,6 +9,7 @@ namespace CarcassTwwo.Models
     {
         private List<Card> _cards;
         private static Random rnd = new Random();
+        private Board _gameboard;
 
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -17,11 +18,10 @@ namespace CarcassTwwo.Models
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
         public Client LastPlayer { get; set; }
-        public Board GameBoard { get; set; }
 
         public Game(HashSet<Client> players)
         {
-            GameBoard = new Board();
+            _gameboard = new Board();
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
@@ -109,10 +109,10 @@ namespace CarcassTwwo.Models
         {
             var card = _cards.First(c => c.Id == cardId);
             card.Coordinate = coordinate;
-            GameBoard.CardCoordinates.Add(coordinate, card);
-            GameBoard.RemoveFromAvailableCoordinates(coordinate);
-            card.SetSideOccupation(GameBoard);
-            GameBoard.AddAvailableCoordinates(card);
+            _gameboard.CardCoordinates.Add(coordinate, card);
+            _gameboard.RemoveFromAvailableCoordinates(coordinate);
+            _gameboard.SetSideOccupation(coordinate);
+            _gameboard.AddAvailableCoordinates(card);
             _cards.Remove(card);
         }
 
@@ -126,7 +126,7 @@ namespace CarcassTwwo.Models
             var rot180 = card.Rotations["180"];
             var rot270 = card.Rotations["270"];
 
-            foreach(var place in GameBoard.AvailableCoordinates)
+            foreach(var place in _gameboard.AvailableCoordinates)
             {
                 if(SidesMatches(place.Key, rot0) == true)
                 {
