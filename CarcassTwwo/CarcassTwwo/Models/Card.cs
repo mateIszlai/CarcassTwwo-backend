@@ -16,7 +16,7 @@ namespace CarcassTwwo.Models
         public LandType Left { get; set; }
         public LandType Right { get; set; }
 
-        public Dictionary<int,List<LandType>> Rotations { get; set; }
+        public Dictionary<string,List<LandType>> Rotations { get; set; }
 
         public bool TopIsFree { get; set; }
         public bool BottomIsFree { get; set; }
@@ -33,7 +33,7 @@ namespace CarcassTwwo.Models
             Left = Tile.Field4.LandType;
             Right = Tile.Field6.LandType;
             HasCrest = Tile.HasCrest;
-            Rotations = new Dictionary<int, List<LandType>>();
+            Rotations = new Dictionary<string, List<LandType>>();
             SetRotations();
         }
 
@@ -63,10 +63,10 @@ namespace CarcassTwwo.Models
 
         public void SetRotations()
         {
-            Rotations[0] = new List<LandType> { Top, Left, Bottom, Right };
-            Rotations[90] = new List<LandType> { Right, Top, Left, Bottom };
-            Rotations[180] = new List<LandType> { Bottom, Right, Top, Left };
-            Rotations[270] = new List<LandType> { Left, Bottom, Right, Top };
+            Rotations["0"] = new List<LandType> { Top, Left, Bottom, Right };
+            Rotations["90"] = new List<LandType> { Right, Top, Left, Bottom };
+            Rotations["180"] = new List<LandType> { Bottom, Right, Top, Left };
+            Rotations["270"] = new List<LandType> { Left, Bottom, Right, Top };
         }
 
         public void PlaceMeeple(Field field)
