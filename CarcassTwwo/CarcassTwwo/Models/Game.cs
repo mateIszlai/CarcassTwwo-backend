@@ -200,7 +200,7 @@ namespace CarcassTwwo.Models
 
         public CardToSend GenerateCardToSend(Card card)
         {
-            CardToSend cardToSend = new CardToSend(card.Tile.Id);
+            CardToSend cardToSend = new CardToSend(card.Tile.Id, card.Id);
             var possiblePlacesOfCard = GetPossiblePlacements(card);
 
             foreach(var placement in possiblePlacesOfCard)
