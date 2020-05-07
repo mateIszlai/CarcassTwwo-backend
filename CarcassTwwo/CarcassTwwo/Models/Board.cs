@@ -59,5 +59,34 @@ namespace CarcassTwwo.Models
                 AvailableCoordinates.Remove(item.Key);
         }
 
+        public void SetSideOccupation(Coordinate coord)
+        {
+            var card = new Card();
+            if(!CardCoordinates.TryGetValue(coord, out card))
+            {
+                throw new ArgumentException();
+            }
+
+            var vertical = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
+
+            card.TopIsFree = CardCoordinates.ContainsKey(vertical) ? false : true;
+            if (!card.TopIsFree)
+                CardCoordinates[vertical].BottomIsFree = false;
+
+            vertical.y = card.Coordinate.y - 1;
+            card.BottomIsFree = CardCoordinates.ContainsKey(vertical) ? false : true;
+            if (!card.BottomIsFree)
+                CardCoordinates[vertical].TopIsFree = false;
+
+            var horizontal = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
+            card.RightIsFree = CardCoordinates.ContainsKey(horizontal) ? false : true;
+            if (!card.RightIsFree)
+                CardCoordinates[horizontal].LeftIsFree = false;
+
+            horizontal.x = card.Coordinate.x - 1;
+            card.LeftIsFree = CardCoordinates.ContainsKey(horizontal) ? false : true;
+            if (!card.LeftIsFree)
+                CardCoordinates[horizontal].RightIsFree = false;
+        }
     }
 }
