@@ -10,5 +10,6 @@ namespace CarcassTwwo.Models.Requests
         public int CardId { get; set; }
         public string Rotation { get; set; }
         public Coordinate Coordinate { get; set; }
+        public int TileId { get; set; }
     }
 }
