@@ -94,8 +94,15 @@ namespace CarcassTwwo.Hubs
             var group = _manager.GetGroup(groupName);
             var player = group.Game.PickPlayer();
             var card = group.Game.PickRandomCard();
-            var cardToSend = group.Game.GenerateCardToSend(card);
-            await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend, true);
+            if(card == null)
+            {
+                await Clients.Group(groupName).SendAsync("GameOver", "Game over!");
+
+            } else
+            {
+                var cardToSend = group.Game.GenerateCardToSend(card);
+                await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend, true);
+            }
         }
         public async void EndTurn(string groupName, CardToRecieve card)
         {
