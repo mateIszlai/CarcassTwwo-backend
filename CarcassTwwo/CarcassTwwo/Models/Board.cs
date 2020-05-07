@@ -8,41 +8,110 @@ namespace CarcassTwwo.Models
     public class Board
     {
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
-        public HashSet<Coordinate> AvailableCoordinates { get; set; }
+        public Dictionary<RequiredCard, Coordinate> AvailableCoordinates { get; set; }
+
+        public Board()
+        {
+            CardCoordinates = new Dictionary<Coordinate, Card>();
+            AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
+        }
+
         public void AddAvailableCoordinates(Card card)
         {
             if (card.TopIsFree)
             {
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 });
-            }
+                var top = new RequiredCard(null,  null, card.Top, null);
+                top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
+                top.UpdateRequiredCard(CardCoordinates);
+                var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(top.Coordinate));
 
-            if (card.BottomIsFree)
-            {
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 });
+                if (!reqCoord.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
+                {
+                    AvailableCoordinates.Remove(reqCoord.Key);
+                }
+                    
+                AvailableCoordinates.Add(top, top.Coordinate);
             }
 
             if (card.LeftIsFree)
             {
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y });
+                var left = new RequiredCard(null, null, null, card.Left);
+                left.Coordinate = new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y };
+                left.UpdateRequiredCard(CardCoordinates);
+                var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(left.Coordinate));
+
+                if (!reqCoord.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
+                {
+                    AvailableCoordinates.Remove(reqCoord.Key);
+                }
+                AvailableCoordinates.Add(left, left.Coordinate);
             }
+
+            if (card.BottomIsFree)
+            {
+                var bottom = new RequiredCard(card.Bottom, null, null, null);
+                bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
+                bottom.UpdateRequiredCard(CardCoordinates);
+                var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(bottom.Coordinate));
+
+                if (!reqCoord.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
+                {
+                    AvailableCoordinates.Remove(reqCoord.Key);
+                }
+                AvailableCoordinates.Add(bottom, bottom.Coordinate);
+            }
+
 
             if (card.RightIsFree)
             {
-                AvailableCoordinates.Add(new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y });
+                var right = new RequiredCard(null, card.Right, null, null);
+                right.Coordinate = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
+                right.UpdateRequiredCard(CardCoordinates);
+                var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(right.Coordinate));
+
+                if (!reqCoord.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
+                {
+                    AvailableCoordinates.Remove(reqCoord.Key);
+                }
+                AvailableCoordinates.Add(right, right.Coordinate);
             }
         }
 
         public void RemoveFromAvailableCoordinates(Coordinate coordinate)
         {
-            AvailableCoordinates.Remove(coordinate);
+            var item = AvailableCoordinates.FirstOrDefault(kvp => kvp.Value.Equals(coordinate));
+            if(!item.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
+                AvailableCoordinates.Remove(item.Key);
         }
 
-    }
+        public void SetSideOccupation(Coordinate coord)
+        {
+            var card = new Card();
+            if(!CardCoordinates.TryGetValue(coord, out card))
+            {
+                throw new ArgumentException();
+            }
 
+            var vertical = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
 
-    public struct Coordinate
-    {
-        public int x { get; set; }
-        public int y { get; set; }
+            card.TopIsFree = CardCoordinates.ContainsKey(vertical) ? false : true;
+            if (!card.TopIsFree)
+                CardCoordinates[vertical].BottomIsFree = false;
+
+            vertical.y = card.Coordinate.y - 1;
+            card.BottomIsFree = CardCoordinates.ContainsKey(vertical) ? false : true;
+            if (!card.BottomIsFree)
+                CardCoordinates[vertical].TopIsFree = false;
+
+            var horizontal = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
+            card.RightIsFree = CardCoordinates.ContainsKey(horizontal) ? false : true;
+            if (!card.RightIsFree)
+                CardCoordinates[horizontal].LeftIsFree = false;
+
+            horizontal.x = card.Coordinate.x - 1;
+            card.LeftIsFree = CardCoordinates.ContainsKey(horizontal) ? false : true;
+            if (!card.LeftIsFree)
+                CardCoordinates[horizontal].RightIsFree = false;
+        }
     }
 }

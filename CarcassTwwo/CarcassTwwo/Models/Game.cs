@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarcassTwwo.Models.Requests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +8,8 @@ namespace CarcassTwwo.Models
     public class Game
     {
         private List<Card> _cards;
-        private static Random rng = new Random();
+        private static Random rnd = new Random();
+        private Board _gameboard;
 
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -16,11 +18,10 @@ namespace CarcassTwwo.Models
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
         public Client LastPlayer { get; set; }
-        public Board GameBoard { get; set; }
 
         public Game(HashSet<Client> players)
         {
-            GameBoard = new Board();
+            _gameboard = new Board();
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
@@ -37,7 +38,7 @@ namespace CarcassTwwo.Models
                 var n = _cards.Count;
                 while (n > 1)
                 {
-                    int k = rng.Next(n);
+                    int k = rnd.Next(n);
                     n--;
                     var card = _cards[k];
                     _cards[k] = _cards[n];
@@ -59,13 +60,6 @@ namespace CarcassTwwo.Models
                 }
             }
             return cards;
-        }
-
-        public void Play()
-        {
-            //TODO
-            //params:
-            //eg. card position, player, board size...
         }
 
         public void CheckWinner(List<Client> players)
@@ -95,38 +89,134 @@ namespace CarcassTwwo.Models
 
         public Card PickRandomCard()
         {
-            var card = _cards[rng.Next(_cards.Count)];
-            _cards.Remove(card);
-            return card;
+            return _cards.Count == 0 ? null : _cards[rnd.Next(_cards.Count)];
+
         }
         public Card PlaceFirstCard()
         {
             var card = GetStarterCard();
-            _cards.Remove(card);
-            PlaceCard(new Coordinate { x = 0, y = 0 }, card);
+            var cardToRecieve = new CardToRecieve() { 
+                CardId = card.Id, 
+                Coordinate = new Coordinate { x = 0, y = 0 }, 
+                Rotation = "0" 
+            };
+            PlaceCard(cardToRecieve);
             return card;
         }
 
-        public void PlaceCard(Coordinate coordinate, Card card)
+        public void PlaceCard(CardToRecieve placedCard)
         {
-            GameBoard.CardCoordinates.Add(coordinate, card);
-            card.Coordinate = coordinate;
-
-            GameBoard.RemoveFromAvailableCoordinates(coordinate);
-            card.SetSideOccupation(card, GameBoard);
-            GameBoard.AddAvailableCoordinates(card); 
+            var card = _cards.First(c => c.Id == placedCard.CardId);
+            card.Coordinate = placedCard.Coordinate;
+            var sides = card.Rotations[placedCard.Rotation];
+            card.Top = sides[0];
+            card.Left = sides[1];
+            card.Bottom = sides[2];
+            card.Right = sides[3];
+            _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
+            _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
+            _gameboard.SetSideOccupation(placedCard.Coordinate);
+            _gameboard.AddAvailableCoordinates(card);
+            _cards.Remove(card);
         }
 
 
-        public HashSet<Coordinate> GetPossiblePlacements()
+        public Dictionary<Coordinate, List<int>> GetPossiblePlacements(Card card)
         {
-            return GameBoard.AvailableCoordinates;
-            //this will check if the card can be placed. later.
+            var placementsWithRotations = new Dictionary<Coordinate,List<int>>();
+
+            var rot0 = card.Rotations["0"];
+            var rot90 = card.Rotations["90"];
+            var rot180 = card.Rotations["180"];
+            var rot270 = card.Rotations["270"];
+
+            foreach(var place in _gameboard.AvailableCoordinates)
+            {
+                if(SidesMatches(place.Key, rot0) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(0);
+                    }
+                    else 
+                        placementsWithRotations.Add(place.Value, new List<int> { 0 });
+                }
+
+                if (SidesMatches(place.Key, rot90) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(90);
+                    }
+                    else
+                        placementsWithRotations.Add(place.Value, new List<int> { 90 });
+                }
+
+                if (SidesMatches(place.Key, rot180) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(180);
+                    }
+                    else
+                        placementsWithRotations.Add(place.Value, new List<int> { 180 });
+                }
+
+                if (SidesMatches(place.Key, rot270) == true)
+                {
+                    if (placementsWithRotations.ContainsKey(place.Value))
+                    {
+                        placementsWithRotations[place.Value].Add(270);
+                    }
+                    else
+                        placementsWithRotations.Add(place.Value, new List<int> { 270 });
+                }
+            }
+
+            return placementsWithRotations;
+
+        }
+
+        public bool SidesMatches(RequiredCard req, List<LandType> sides)
+        {
+            bool topIsGood, leftIsGood, bottomIsGood, rightIsGood;
+            topIsGood = leftIsGood = bottomIsGood = rightIsGood = true;
+
+            if(req.Top != null)
+            {
+                topIsGood = sides[0] == req.Top ? true : false;
+            }
+            if(req.Left != null)
+            {
+                leftIsGood = sides[1] == req.Left ? true : false;
+            }
+            if (req.Bottom != null)
+            {
+                bottomIsGood = sides[2] == req.Bottom ? true : false;
+            }
+            if (req.Right != null)
+            {
+                rightIsGood = sides[3] == req.Right ? true : false;
+            }
+
+            return topIsGood && leftIsGood && bottomIsGood && rightIsGood;
+        }
+
+        public CardToSend GenerateCardToSend(Card card)
+        {
+            CardToSend cardToSend = new CardToSend(card.Tile.Id, card.Id);
+            var possiblePlacesOfCard = GetPossiblePlacements(card);
+
+            foreach(var placement in possiblePlacesOfCard)
+            {
+                cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = placement.Key, Rotations = placement.Value});
+            }
+            return cardToSend;
         }
 
         public Card GetStarterCard()
         {
-            return _cards.First(c => c.Id == 20);
+            return _cards.First(c => c.Tile.Id == 20);
         }
 
         public Card GetFirstCard()

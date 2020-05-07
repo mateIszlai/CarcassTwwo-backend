@@ -1,4 +1,6 @@
-﻿namespace CarcassTwwo.Models
+﻿using System.Collections.Generic;
+
+namespace CarcassTwwo.Models
 {
     public class Card
     {
@@ -13,6 +15,8 @@
         public LandType Bottom { get; set; }
         public LandType Left { get; set; }
         public LandType Right { get; set; }
+
+        public Dictionary<string,List<LandType>> Rotations { get; set; }
 
         public bool TopIsFree { get; set; }
         public bool BottomIsFree { get; set; }
@@ -29,57 +33,22 @@
             Left = Tile.Field4.LandType;
             Right = Tile.Field6.LandType;
             HasCrest = Tile.HasCrest;
+            Rotations = new Dictionary<string, List<LandType>>();
+            SetRotations();
         }
 
-        public void SetSideOccupation(Card card, Board board)
+        public Card()
         {
-            Coordinate newCoord = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.TopIsFree = true;
-            } else
-            {
-                card.TopIsFree = false;
-                board.CardCoordinates[newCoord].BottomIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
-            }
-                        
-            newCoord.y = card.Coordinate.y - 1;
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.BottomIsFree = true;
-            }
-            else
-            {
-                card.BottomIsFree = false;
-                board.CardCoordinates[newCoord].TopIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
-            }
-            
-            newCoord.x = card.Coordinate.x + 1;
-            newCoord.y = card.Coordinate.y;
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.RightIsFree = true;
-            }
-            else
-            {
-                card.RightIsFree = false;
-                board.CardCoordinates[newCoord].LeftIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
-            }
-            
-            newCoord.x = card.Coordinate.x - 1;
-            if (!board.CardCoordinates.ContainsKey(newCoord))
-            {
-                card.LeftIsFree = true;
-            }
-            else
-            {
-                card.LeftIsFree = false;
-                board.CardCoordinates[newCoord].RightIsFree = false;
-                //SetSideOccupation(board.CardCoordinates[newCoord], board);
-            }
+
+        }
+        
+
+        public void SetRotations()
+        {
+            Rotations["0"] = new List<LandType> { Top, Left, Bottom, Right };
+            Rotations["90"] = new List<LandType> { Right, Top, Left, Bottom };
+            Rotations["180"] = new List<LandType> { Bottom, Right, Top, Left };
+            Rotations["270"] = new List<LandType> { Left, Bottom, Right, Top };
         }
 
         public void PlaceMeeple(Field field)
