@@ -62,13 +62,6 @@ namespace CarcassTwwo.Models
             return cards;
         }
 
-        public void Play()
-        {
-            //TODO
-            //params:
-            //eg. card position, player, board size...
-        }
-
         public void CheckWinner(List<Client> players)
         {
             int maxPoint = 0;
