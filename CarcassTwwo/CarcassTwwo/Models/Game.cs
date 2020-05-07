@@ -96,7 +96,8 @@ namespace CarcassTwwo.Models
 
         public Card PickRandomCard()
         {
-            return _cards[rnd.Next(_cards.Count)];
+            return _cards.Count == 0 ? null : _cards[rnd.Next(_cards.Count)];
+
         }
         public Card PlaceFirstCard()
         {
