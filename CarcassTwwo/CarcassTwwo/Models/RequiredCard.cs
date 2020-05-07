@@ -13,12 +13,9 @@ namespace CarcassTwwo.Models
         public LandType Right { get; set; }
         public Coordinate Coordinate { get; set; }
 
-        public RequiredCard(LandType top, LandType left, LandType bottom, LandType right)
+        public RequiredCard()
         {
-            Top = top;
-            Bottom = bottom;
-            Left = left;
-            Right = right;
+
         }
 
         public void UpdateRequiredCard(Dictionary<Coordinate, Card> CardCoordinates)

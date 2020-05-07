@@ -20,7 +20,7 @@ namespace CarcassTwwo.Models
         {
             if (card.TopIsFree)
             {
-                var top = new RequiredCard(null,  null, card.Top, null);
+                var top = new RequiredCard();
                 top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
                 top.UpdateRequiredCard(CardCoordinates);
                 var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(top.Coordinate));
@@ -35,7 +35,7 @@ namespace CarcassTwwo.Models
 
             if (card.LeftIsFree)
             {
-                var left = new RequiredCard(null, null, null, card.Left);
+                var left = new RequiredCard();
                 left.Coordinate = new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y };
                 left.UpdateRequiredCard(CardCoordinates);
                 var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(left.Coordinate));
@@ -49,7 +49,7 @@ namespace CarcassTwwo.Models
 
             if (card.BottomIsFree)
             {
-                var bottom = new RequiredCard(card.Bottom, null, null, null);
+                var bottom = new RequiredCard();
                 bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
                 bottom.UpdateRequiredCard(CardCoordinates);
                 var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(bottom.Coordinate));
@@ -64,7 +64,7 @@ namespace CarcassTwwo.Models
 
             if (card.RightIsFree)
             {
-                var right = new RequiredCard(null, card.Right, null, null);
+                var right = new RequiredCard();
                 right.Coordinate = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
                 right.UpdateRequiredCard(CardCoordinates);
                 var reqCoord = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(right.Coordinate));
