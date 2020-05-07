@@ -101,17 +101,27 @@ namespace CarcassTwwo.Models
         public Card PlaceFirstCard()
         {
             var card = GetStarterCard();
-            PlaceCard(new Coordinate { x = 0, y = 0 }, card.Id);
+            var cardToRecieve = new CardToRecieve() { 
+                CardId = card.Id, 
+                Coordinate = new Coordinate { x = 0, y = 0 }, 
+                Rotation = "0" 
+            };
+            PlaceCard(cardToRecieve);
             return card;
         }
 
-        public void PlaceCard(Coordinate coordinate, int cardId)
+        public void PlaceCard(CardToRecieve placedCard)
         {
-            var card = _cards.First(c => c.Id == cardId);
-            card.Coordinate = coordinate;
-            _gameboard.CardCoordinates.Add(coordinate, card);
-            _gameboard.RemoveFromAvailableCoordinates(coordinate);
-            _gameboard.SetSideOccupation(coordinate);
+            var card = _cards.First(c => c.Id == placedCard.CardId);
+            card.Coordinate = placedCard.Coordinate;
+            var sides = card.Rotations[placedCard.Rotation];
+            card.Top = sides[0];
+            card.Left = sides[1];
+            card.Bottom = sides[2];
+            card.Right = sides[3];
+            _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
+            _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
+            _gameboard.SetSideOccupation(placedCard.Coordinate);
             _gameboard.AddAvailableCoordinates(card);
             _cards.Remove(card);
         }
