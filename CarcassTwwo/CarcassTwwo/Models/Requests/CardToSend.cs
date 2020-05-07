@@ -7,11 +7,14 @@ namespace CarcassTwwo.Models.Requests
 {
     public class CardToSend
     {
-        public CardToSend (int tileId)
+        public CardToSend (int tileId, int cardId)
         {
             TileId = tileId;
+            CardId = cardId;
             CoordinatesWithRotations = new List<CoordinatesWithRotation>();
         }
+
+        public int CardId { get; set; }
         public int TileId { get; private set; }
         public List<CoordinatesWithRotation> CoordinatesWithRotations { get; set; }
     }
