@@ -83,7 +83,7 @@ namespace CarcassTwwo.Hubs
         {
             _manager.StartGame(groupName);
             var card = _manager.GetGroup(groupName).Game.PlaceFirstCard();
-            var cardToSend = new CardToSend(card.Tile.Id);
+            var cardToSend = new CardToSend(card.Tile.Id,card.Id);
             cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
             StartTurn(groupName);
