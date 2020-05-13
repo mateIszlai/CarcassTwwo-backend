@@ -10,6 +10,7 @@ namespace CarcassTwwo.Models
         private List<Card> _cards;
         private static Random rnd = new Random();
         private Board _gameboard;
+        private ScoreBoard _scoreBoard;
 
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -22,6 +23,7 @@ namespace CarcassTwwo.Models
         public Game(HashSet<Client> players)
         {
             _gameboard = new Board();
+            _scoreBoard = new ScoreBoard(players);
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
