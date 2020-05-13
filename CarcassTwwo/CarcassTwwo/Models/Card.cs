@@ -6,8 +6,7 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; private set; }
         public Tile Tile { get; set; }
-        public Coordinate MeepleField { get; set; }
-        public string MeepleType { get; set; }
+        public Meeple meeple { get; set; }
         public bool HasMeeple { get; set; }
         public Coordinate Coordinate { get; set; }
 
@@ -53,13 +52,13 @@ namespace CarcassTwwo.Models
 
         public void PlaceMeeple(Field field)
         {
-            MeepleField = field.Coordinate;
-            MeepleType = field.LandType.Meeple;
+            meeple = new Meeple(field.Coordinate, field.LandType.Meeple);
             HasMeeple = true;
         }
 
         public void RemoveMeeple()
         {
+            meeple = null;
             HasMeeple = false;
         }
     }
