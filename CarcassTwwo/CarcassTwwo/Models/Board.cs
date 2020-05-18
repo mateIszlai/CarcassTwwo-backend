@@ -20,9 +20,7 @@ namespace CarcassTwwo.Models
         {
             if (card.TopIsFree)
             {
-                var top = new RequiredCard();
-                top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
-                top.UpdateRequiredCard(CardCoordinates);
+                var top = new RequiredCard(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 }, CardCoordinates); top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
                 RemoveFromAvailableCoordinates(top.Coordinate);
                     
                 AvailableCoordinates.Add(top, top.Coordinate);
@@ -30,18 +28,14 @@ namespace CarcassTwwo.Models
 
             if (card.LeftIsFree)
             {
-                var left = new RequiredCard();
-                left.Coordinate = new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y };
-                left.UpdateRequiredCard(CardCoordinates);
+                var left = new RequiredCard(new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y }, CardCoordinates);
                 RemoveFromAvailableCoordinates(left.Coordinate);
                 AvailableCoordinates.Add(left, left.Coordinate);
             }
 
             if (card.BottomIsFree)
             {
-                var bottom = new RequiredCard();
-                bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
-                bottom.UpdateRequiredCard(CardCoordinates);
+                var bottom = new RequiredCard(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 }, CardCoordinates);
                 RemoveFromAvailableCoordinates(bottom.Coordinate);
                 AvailableCoordinates.Add(bottom, bottom.Coordinate);
             }
@@ -49,9 +43,7 @@ namespace CarcassTwwo.Models
 
             if (card.RightIsFree)
             {
-                var right = new RequiredCard();
-                right.Coordinate = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
-                right.UpdateRequiredCard(CardCoordinates);
+                var right = new RequiredCard(new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y }, CardCoordinates);
                 RemoveFromAvailableCoordinates(right.Coordinate);
                 AvailableCoordinates.Add(right, right.Coordinate);
             }
