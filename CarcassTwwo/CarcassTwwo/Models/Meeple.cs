@@ -9,10 +9,12 @@ namespace CarcassTwwo.Models
     {
         public Coordinate Field { get; set; }
         public string Type { get; set; }
-        public Meeple(Coordinate field, string type)
+        public Client Owner { get; set; }
+        public Meeple(Coordinate field, string type, Client owner)
         {
             Field = field;
             Type = type;
+            Owner = owner;
         }
     }
 }
