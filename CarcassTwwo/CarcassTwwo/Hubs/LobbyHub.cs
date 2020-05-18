@@ -101,13 +101,12 @@ namespace CarcassTwwo.Hubs
             } else
             {
                 var cardToSend = group.Game.GenerateCardToSend(card);
-                await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend, true);
+                await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend);
             }
         }
         public async void EndTurn(string groupName, CardToRecieve card)
         {
             _manager.GetGroup(groupName).Game.PlaceCard(card);
-            await Clients.Client(Context.ConnectionId).SendAsync("EndTurn", "Your turn is ended, waiting for the others", false);
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
         }
