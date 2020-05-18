@@ -21,9 +21,9 @@ namespace CarcassTwwo.Models.Places
             RoadTiles.Add(coordinate);
         }
 
-        public void PlaceHighwayMan(Coordinate field)
+        public void PlaceHighwayMan(Coordinate field, Client owner)
         {
-            HighwayMen.Add(new Meeple(field, "Highwayman"));
+            HighwayMen.Add(new Meeple(field, "Highwayman", owner));
         }
 
         public void CheckStateOfRoad()

@@ -21,9 +21,9 @@ namespace CarcassTwwo.Models.Places
             CityTiles.Add(coordinate);
         }
 
-        public void PlaceKnight(Coordinate field)
+        public void PlaceKnight(Coordinate field, Client owner)
         {
-            Knights.Add(new Meeple(field, "Knight"));
+            Knights.Add(new Meeple(field, "Knight", owner));
         }
 
         public void CheckStateOfCity()
