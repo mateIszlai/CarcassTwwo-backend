@@ -15,9 +15,9 @@ namespace CarcassTwwo.Models.Places
             SurroundingTiles = new List<Coordinate>();
         }
 
-        public void PlaceMonk(Coordinate field)
+        public void PlaceMonk(Coordinate field, Client player)
         {
-            Monk = new Meeple(field, "Monk");
+            Monk = new Meeple(field, "Monk",player);
         }
 
         public void ExpandMonastery(Coordinate coordinate)
