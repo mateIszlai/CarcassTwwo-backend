@@ -29,7 +29,7 @@ namespace CarcassTwwo.Models
         {
             if (card.TopIsFree)
             {
-                var top = new RequiredCard(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 }, CardCoordinates); top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
+                var top = new RequiredCard(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 }, CardCoordinates);
                 RemoveFromAvailableCoordinates(top.Coordinate);
                     
                 AvailableCoordinates.Add(top, top.Coordinate);
