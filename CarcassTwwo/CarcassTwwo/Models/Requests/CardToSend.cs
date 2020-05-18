@@ -12,10 +12,12 @@ namespace CarcassTwwo.Models.Requests
             TileId = tileId;
             CardId = cardId;
             CoordinatesWithRotations = new List<CoordinatesWithRotation>();
+            PossibleMeepleSlots = new List<int>();
         }
 
         public int CardId { get; set; }
         public int TileId { get; private set; }
         public List<CoordinatesWithRotation> CoordinatesWithRotations { get; set; }
+        public List<int> PossibleMeepleSlots { get; set; }
     }
 }
