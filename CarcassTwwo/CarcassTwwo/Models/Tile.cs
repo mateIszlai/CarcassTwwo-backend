@@ -19,12 +19,25 @@ namespace CarcassTwwo.Models
         public Field Field8 { get; set; }
         public Field Field9 { get; set; }
 
+        public Dictionary<int, Field> FieldTypes { get; }
+
         public bool HasCrest { get; set; }
 
         public int Amount { get; set; }
         public int Remaining { get; set; }
         public Tile()
         {
+            FieldTypes = new Dictionary<int, Field>();
+            FieldTypes.Add(1, Field1);
+            FieldTypes.Add(2, Field2);
+            FieldTypes.Add(3, Field3);
+            FieldTypes.Add(4, Field4);
+            FieldTypes.Add(5, Field5);
+            FieldTypes.Add(6, Field6);
+            FieldTypes.Add(7, Field7);
+            FieldTypes.Add(8, Field8);
+            FieldTypes.Add(9, Field9);
+
             /*Field1.Coordinate = new Coordinate { x = 0, y = 0 };
             Field2.Coordinate = new Coordinate { x = 1, y = 0 };
             Field3.Coordinate = new Coordinate { x = 2, y = 0 };
