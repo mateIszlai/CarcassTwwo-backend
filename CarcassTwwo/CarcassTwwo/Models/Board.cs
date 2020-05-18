@@ -32,12 +32,7 @@ namespace CarcassTwwo.Models
                 var top = new RequiredCard();
                 top.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
                 top.UpdateRequiredCard(CardCoordinates);
-                var previous = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(top.Coordinate));
-
-                if (!previous.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
-                {
-                    AvailableCoordinates.Remove(previous.Key);
-                }
+                RemoveFromAvailableCoordinates(top.Coordinate);
                     
                 AvailableCoordinates.Add(top, top.Coordinate);
             }
@@ -47,12 +42,7 @@ namespace CarcassTwwo.Models
                 var left = new RequiredCard();
                 left.Coordinate = new Coordinate { x = card.Coordinate.x - 1, y = card.Coordinate.y };
                 left.UpdateRequiredCard(CardCoordinates);
-                var previous = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(left.Coordinate));
-
-                if (!previous.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
-                {
-                    AvailableCoordinates.Remove(previous.Key);
-                }
+                RemoveFromAvailableCoordinates(left.Coordinate);
                 AvailableCoordinates.Add(left, left.Coordinate);
             }
 
@@ -61,12 +51,7 @@ namespace CarcassTwwo.Models
                 var bottom = new RequiredCard();
                 bottom.Coordinate = new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
                 bottom.UpdateRequiredCard(CardCoordinates);
-                var previous = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(bottom.Coordinate));
-
-                if (!previous.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
-                {
-                    AvailableCoordinates.Remove(previous.Key);
-                }
+                RemoveFromAvailableCoordinates(bottom.Coordinate);
                 AvailableCoordinates.Add(bottom, bottom.Coordinate);
             }
 
@@ -76,12 +61,7 @@ namespace CarcassTwwo.Models
                 var right = new RequiredCard();
                 right.Coordinate = new Coordinate { x = card.Coordinate.x + 1, y = card.Coordinate.y };
                 right.UpdateRequiredCard(CardCoordinates);
-                var previous = AvailableCoordinates.FirstOrDefault(c => c.Value.Equals(right.Coordinate));
-
-                if (!previous.Equals(default(KeyValuePair<RequiredCard, Coordinate>)))
-                {
-                    AvailableCoordinates.Remove(previous.Key);
-                }
+                RemoveFromAvailableCoordinates(right.Coordinate);
                 AvailableCoordinates.Add(right, right.Coordinate);
             }
         }
