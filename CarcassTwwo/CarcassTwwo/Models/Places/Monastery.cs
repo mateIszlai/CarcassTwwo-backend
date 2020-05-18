@@ -27,7 +27,7 @@ namespace CarcassTwwo.Models.Places
 
         public void CheckStateOfMonastery()
         {
-            //TODO if city is finished then IsFinished = true;
+            //TODO if monastery is surrounded then IsFinished = true;
         }
     }
 }
