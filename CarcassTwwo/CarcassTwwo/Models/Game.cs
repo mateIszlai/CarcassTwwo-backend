@@ -79,12 +79,7 @@ namespace CarcassTwwo.Models
         {
             var lastPlayerIndex = Players.FindIndex(c => c.Equals(LastPlayer));
 
-            if (lastPlayerIndex == Players.Count - 1)
-                LastPlayer = Players[0];
-            else
-                LastPlayer = Players[lastPlayerIndex + 1];
-
-            return LastPlayer;
+            return lastPlayerIndex == Players.Count - 1 ? Players[0] : Players[lastPlayerIndex + 1];
         }
 
         public Card PickRandomCard()
