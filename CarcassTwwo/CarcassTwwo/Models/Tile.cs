@@ -19,18 +19,18 @@ namespace CarcassTwwo.Models
         public Field Field8 { get; set; }
         public Field Field9 { get; set; }
 
-        public LandType TopLeft { get; set; }
-        public LandType TopMiddle { get; set; }
-        public LandType TopRight { get; set; }
-        public LandType LeftLeft { get; set; }
-        public LandType LeftMiddle { get; set; }
-        public LandType LeftRight { get; set; }
-        public LandType BottomLeft { get; set; }
-        public LandType BottomMiddle { get; set; }
-        public LandType BottomRight { get; set; }
-        public LandType RightLeft { get; set; }
-        public LandType RightMiddle { get; set; }
-        public LandType RightRight { get; set; }
+        public LandType Top1 { get; set; }
+        public LandType Top2 { get; set; }
+        public LandType Top3 { get; set; }
+        public LandType Left1 { get; set; }
+        public LandType Left2 { get; set; }
+        public LandType Left3 { get; set; }
+        public LandType Bottom1 { get; set; }
+        public LandType Bottom2 { get; set; }
+        public LandType Bottom3 { get; set; }
+        public LandType Right1 { get; set; }
+        public LandType Right2 { get; set; }
+        public LandType Right3 { get; set; }
 
         public Dictionary<int, Field> FieldTypes { get; }
 
