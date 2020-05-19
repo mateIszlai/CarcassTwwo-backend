@@ -21,6 +21,7 @@ namespace CarcassTwwo
                     new LandType{ Name = "City", Meeple = "Knight" },
                     new LandType{ Name = "Road", Meeple = "Highwayman" },
                     new LandType{ Name = "Monastery", Meeple = "Monk" },
+                    new LandType{Name = "Other"}
                 };
             }
         }
@@ -31,6 +32,7 @@ namespace CarcassTwwo
             LandType city = landTypes[1];
             LandType road = landTypes[2];
             LandType monastery = landTypes[3];
+            LandType other = landTypes[4];
 
             if (tiles == null)
             {
@@ -351,7 +353,7 @@ namespace CarcassTwwo
                             Field2 = new Field{LandType = land },
                             Field3 = new Field{LandType = land },
                             Field4 = new Field{LandType = road },
-                            Field5 = new Field{LandType = monastery },
+                            Field5 = new Field{LandType = other },
                             Field6 = new Field{LandType = road },
                             Field7 = new Field{LandType = land },
                             Field8 = new Field{LandType = road },
@@ -365,7 +367,7 @@ namespace CarcassTwwo
                             Field2 = new Field{LandType = road },
                             Field3 = new Field{LandType = land },
                             Field4 = new Field{LandType = road },
-                            Field5 = new Field{LandType = monastery },
+                            Field5 = new Field{LandType = other },
                             Field6 = new Field{LandType = road },
                             Field7 = new Field{LandType = land },
                             Field8 = new Field{LandType = road },
