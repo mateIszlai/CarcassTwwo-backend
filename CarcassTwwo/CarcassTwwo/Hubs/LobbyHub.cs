@@ -104,9 +104,15 @@ namespace CarcassTwwo.Hubs
                 await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend);
             }
         }
-        public async void EndTurn(string groupName, CardToRecieve card)
+
+        public async void EndPlacement(string groupName, CardToRecieve card)
         {
             _manager.GetGroup(groupName).Game.PlaceCard(card);
+            await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple",new Array[1, 2, 3, 4, 5, 7, 8, 9]);
+        }
+        public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
+        {   
+            //TODO place meeple on card and send it back
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
         }
