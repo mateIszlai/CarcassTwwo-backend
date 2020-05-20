@@ -1,34 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Places
 {
-    public class City
+    public class City : Place
     {
-        public List<Meeple> Knights { get; set; }
-        public List<Coordinate> CityTiles { get; set; }
-        public bool IsFinished { get; set; }
-        public City()
-        {
-            Knights = new List<Meeple>();
-            CityTiles = new List<Coordinate>();
+        private HashSet<CityPart> _cityParts;
+        public int Size { get { return _cityParts.Count; } }
+        
+
+        public bool IsOpen {
+            get 
+            { 
+                return _cityParts.Any(c => c.BottomIsOpen || c.LeftIsOpen || c.RightIsOpen || c.TopIsOpen ); 
+            } 
         }
 
-        public void BuildCity(Coordinate coordinate)
+        public City(int id) : base(id)
         {
-            CityTiles.Add(coordinate);
+            _cityParts = new HashSet<CityPart>();
         }
 
-        public void PlaceKnight(Coordinate field, Client owner)
+        public void ExpandCity(CityPart newPart)
         {
-            Knights.Add(new Meeple(field, "Knight", owner));
+            _cityParts.Add(newPart);
         }
 
-        public void CheckStateOfCity()
+        public CityPart GetCityPartByCardId(int cardId)
         {
-            //TODO if city is finished then IsFinished = true;
+            return _cityParts.FirstOrDefault(c => c.CardId == cardId);
+        }
+
+        public void SetSides(List<CityPart> cityParts)
+        {
+            foreach (var cityPart in cityParts)
+            {
+                var part = _cityParts.FirstOrDefault(c => c.CardId == cityPart.CardId);
+                if ( part != null)
+                {
+                    part.BottomIsOpen = cityPart.BottomIsOpen;
+                    part.LeftIsOpen = cityPart.LeftIsOpen;
+                    part.RightIsOpen = cityPart.RightIsOpen;
+                    part.TopIsOpen = cityPart.TopIsOpen;
+                }
+            }
+        }
+
+        public override void PlaceMeeple(Client owner)
+        {
+            Meeples.Add(new Meeple(MeepleType.KNIGHT, owner));
         }
     }
 }
