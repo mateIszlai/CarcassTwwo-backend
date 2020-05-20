@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CarcassTwwo.Models.Places;
+using System.Collections.Generic;
 
 namespace CarcassTwwo.Models
 {
@@ -7,9 +8,11 @@ namespace CarcassTwwo.Models
         public int Id { get; private set; }
         public Tile Tile { get; set; }
         public Meeple meeple { get; set; }
-        public bool HasMeeple { get; set; }
         public Coordinate Coordinate { get; set; }
-
+        public HashSet<City> Cities { get; private set; }
+        public HashSet<GrassLand> Lands { get; private set; }
+        public HashSet<Monastery> Monasteries { get; private set; }
+        public HashSet<Road> Roads { get; private set; }
         public LandType Top { get; set; }
         public LandType Bottom { get; set; }
         public LandType Left { get; set; }
@@ -52,14 +55,12 @@ namespace CarcassTwwo.Models
 
         public void PlaceMeeple(Field field, Client owner)
         {
-            meeple = new Meeple(field.Coordinate, field.LandType.Meeple, owner);
-            HasMeeple = true;
+            meeple = new Meeple(field.LandType.Meeple, owner);
         }
 
         public void RemoveMeeple()
         {
             meeple = null;
-            HasMeeple = false;
         }
     }
 }
