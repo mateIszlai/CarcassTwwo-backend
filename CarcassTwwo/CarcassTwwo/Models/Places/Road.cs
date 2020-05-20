@@ -5,30 +5,36 @@ using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Places
 {
-    public class Road
+    public class Road : Place
     {
-        public List<Meeple> HighwayMen { get; set; }
-        public List<Coordinate> RoadTiles { get; set; }
-        public bool IsFinished { get; set; }
-        public Road()
+        private HashSet<RoadPart> _roadParts;
+        public bool IsOpen { get {return _roadParts.Any(r => r.LeftOpen || r.RightOpen); } }
+        public Road(int id) : base(id)
         {
-            HighwayMen = new List<Meeple>();
-            RoadTiles = new List<Coordinate>();
+            _roadParts = new HashSet<RoadPart>();
         }
 
-        public void ExpandRoad(Coordinate coordinate)
+        public void ExpandRoad(RoadPart roadPart)
         {
-            RoadTiles.Add(coordinate);
+            _roadParts.Add(roadPart);
         }
 
-        public void PlaceHighwayMan(Coordinate field, Client owner)
+        public void SetSides(List<RoadPart> roadParts)
         {
-            HighwayMen.Add(new Meeple(field, "Highwayman", owner));
+            foreach (var roadPart in roadParts)
+            {
+                var part = _roadParts.FirstOrDefault(r => r.CardIds == roadPart.CardIds);
+                if(part != null)
+                {
+                    part.LeftOpen = roadPart.LeftOpen;
+                    part.RightOpen = roadPart.RightOpen;
+                }
+            }
         }
 
-        public void CheckStateOfRoad()
+        public override void PlaceMeeple(Client owner)
         {
-            //TODO if road is finished then IsFinished = true;
+            Meeples.Add(new Meeple(MeepleType.HIGHWAYMAN, owner));
         }
     }
 }
