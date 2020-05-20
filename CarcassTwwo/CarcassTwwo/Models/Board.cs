@@ -10,19 +10,12 @@ namespace CarcassTwwo.Models
     {
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
         public Dictionary<RequiredCard, Coordinate> AvailableCoordinates { get; set; }
-        public List<City> Cities { get; set; }
-        public List<GrassLand> GrassLands { get; set; }
-        public List<Monastery> Monasteries { get; set; }
-        public List<Road> Roads { get; set; }
 
         public Board()
         {
             CardCoordinates = new Dictionary<Coordinate, Card>();
             AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
-            Cities = new List<City>();
-            GrassLands = new List<GrassLand>();
-            Monasteries = new List<Monastery>();
-            Roads = new List<Road>();
+
         }
 
         public void AddAvailableCoordinates(Card card)
