@@ -9,6 +9,8 @@ namespace CarcassTwwo.Models
     {
         private List<Card> _cards;
         private static Random rnd = new Random();
+        private Board _gameboard;
+        private ScoreBoard _scoreBoard;
 
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -17,11 +19,11 @@ namespace CarcassTwwo.Models
         public List<Client> Players { get; set; }
         public string WinnerName { get; set; }
         public Client LastPlayer { get; set; }
-        public Board GameBoard { get; set; }
 
         public Game(HashSet<Client> players)
         {
-            GameBoard = new Board();
+            _gameboard = new Board();
+            _scoreBoard = new ScoreBoard(players);
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
@@ -62,13 +64,6 @@ namespace CarcassTwwo.Models
             return cards;
         }
 
-        public void Play()
-        {
-            //TODO
-            //params:
-            //eg. card position, player, board size...
-        }
-
         public void CheckWinner(List<Client> players)
         {
             int maxPoint = 0;
@@ -86,33 +81,39 @@ namespace CarcassTwwo.Models
         {
             var lastPlayerIndex = Players.FindIndex(c => c.Equals(LastPlayer));
 
-            if (lastPlayerIndex == Players.Count - 1)
-                LastPlayer = Players[0];
-            else
-                LastPlayer = Players[lastPlayerIndex + 1];
-
-            return LastPlayer;
+            return lastPlayerIndex == Players.Count - 1 ? Players[0] : Players[lastPlayerIndex + 1];
         }
 
         public Card PickRandomCard()
         {
-            return _cards[rnd.Next(_cards.Count)];
+            return _cards.Count == 0 ? null : _cards[rnd.Next(_cards.Count)];
+
         }
         public Card PlaceFirstCard()
         {
             var card = GetStarterCard();
-            PlaceCard(new Coordinate { x = 0, y = 0 }, card.Id);
+            var cardToRecieve = new CardToRecieve() { 
+                CardId = card.Id, 
+                Coordinate = new Coordinate { x = 0, y = 0 }, 
+                Rotation = "0" 
+            };
+            PlaceCard(cardToRecieve);
             return card;
         }
 
-        public void PlaceCard(Coordinate coordinate, int cardId)
+        public void PlaceCard(CardToRecieve placedCard)
         {
-            var card = _cards.First(c => c.Id == cardId);
-            card.Coordinate = coordinate;
-            GameBoard.CardCoordinates.Add(coordinate, card);
-            GameBoard.RemoveFromAvailableCoordinates(coordinate);
-            card.SetSideOccupation(GameBoard);
-            GameBoard.AddAvailableCoordinates(card);
+            var card = _cards.First(c => c.Id == placedCard.CardId);
+            card.Coordinate = placedCard.Coordinate;
+            var sides = card.Rotations[placedCard.Rotation];
+            card.Top = sides[0];
+            card.Left = sides[1];
+            card.Bottom = sides[2];
+            card.Right = sides[3];
+            _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
+            _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
+            _gameboard.SetSideOccupation(placedCard.Coordinate);
+            _gameboard.AddAvailableCoordinates(card);
             _cards.Remove(card);
         }
 
@@ -126,7 +127,7 @@ namespace CarcassTwwo.Models
             var rot180 = card.Rotations["180"];
             var rot270 = card.Rotations["270"];
 
-            foreach(var place in GameBoard.AvailableCoordinates)
+            foreach(var place in _gameboard.AvailableCoordinates)
             {
                 if(SidesMatches(place.Key, rot0) == true)
                 {
@@ -200,7 +201,7 @@ namespace CarcassTwwo.Models
 
         public CardToSend GenerateCardToSend(Card card)
         {
-            CardToSend cardToSend = new CardToSend(card.Tile.Id);
+            CardToSend cardToSend = new CardToSend(card.Tile.Id, card.Id);
             var possiblePlacesOfCard = GetPossiblePlacements(card);
 
             foreach(var placement in possiblePlacesOfCard)

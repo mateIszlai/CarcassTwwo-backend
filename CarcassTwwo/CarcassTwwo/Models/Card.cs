@@ -6,8 +6,7 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; private set; }
         public Tile Tile { get; set; }
-        public Coordinate MeepleField { get; set; }
-        public string MeepleType { get; set; }
+        public Meeple meeple { get; set; }
         public bool HasMeeple { get; set; }
         public Coordinate Coordinate { get; set; }
 
@@ -37,29 +36,11 @@ namespace CarcassTwwo.Models
             SetRotations();
         }
 
-        public void SetSideOccupation(Board board)
+        public Card()
         {
-            var vertical = new Coordinate { x = Coordinate.x, y = Coordinate.y + 1 };
 
-            TopIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
-            if (!TopIsFree)
-                board.CardCoordinates[vertical].BottomIsFree = false;
-                        
-            vertical.y = Coordinate.y - 1;
-            BottomIsFree = board.CardCoordinates.ContainsKey(vertical) ? false : true;
-            if(!BottomIsFree)
-                board.CardCoordinates[vertical].TopIsFree = false;
-
-            var horizontal = new Coordinate { x = Coordinate.x + 1, y = Coordinate.y };
-            RightIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
-            if(!RightIsFree)
-                board.CardCoordinates[horizontal].LeftIsFree = false;
-            
-            horizontal.x = Coordinate.x - 1;
-            LeftIsFree = board.CardCoordinates.ContainsKey(horizontal) ? false : true;
-            if(!LeftIsFree)
-                board.CardCoordinates[horizontal].RightIsFree = false;
         }
+        
 
         public void SetRotations()
         {
@@ -69,15 +50,15 @@ namespace CarcassTwwo.Models
             Rotations["270"] = new List<LandType> { Left, Bottom, Right, Top };
         }
 
-        public void PlaceMeeple(Field field)
+        public void PlaceMeeple(Field field, Client owner)
         {
-            MeepleField = field.Coordinate;
-            MeepleType = field.LandType.Meeple;
+            meeple = new Meeple(field.Coordinate, field.LandType.Meeple, owner);
             HasMeeple = true;
         }
 
         public void RemoveMeeple()
         {
+            meeple = null;
             HasMeeple = false;
         }
     }

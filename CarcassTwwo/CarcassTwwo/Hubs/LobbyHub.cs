@@ -83,7 +83,7 @@ namespace CarcassTwwo.Hubs
         {
             _manager.StartGame(groupName);
             var card = _manager.GetGroup(groupName).Game.PlaceFirstCard();
-            var cardToSend = new CardToSend(card.Tile.Id);
+            var cardToSend = new CardToSend(card.Tile.Id,card.Id);
             cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
             StartTurn(groupName);
@@ -94,14 +94,26 @@ namespace CarcassTwwo.Hubs
             var group = _manager.GetGroup(groupName);
             var player = group.Game.PickPlayer();
             var card = group.Game.PickRandomCard();
-            var cardToSend = group.Game.GenerateCardToSend(card);
-            await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend, true);
+            if(card == null)
+            {
+                await Clients.Group(groupName).SendAsync("GameOver", "Game over!");
+
+            } else
+            {
+                var cardToSend = group.Game.GenerateCardToSend(card);
+                await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend);
+            }
         }
-        public async void EndTurn(string groupName, CardToRecieve card)
+
+        public async void EndPlacement(string groupName, CardToRecieve card)
         {
-            _manager.GetGroup(groupName).Game.PlaceCard(card.Coordinate, card.CardId);
-            await Clients.Client(Context.ConnectionId).SendAsync("EndTurn", "Your turn is ended, waiting for the others", false);
-            await Clients.Group(groupName).SendAsync("RefreshBoard", card);
+            _manager.GetGroup(groupName).Game.PlaceCard(card);
+            await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", new List<int> { 1, 2, 3, 4, 5, 7, 8, 9 });
+        }
+        public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
+        {   
+            //TODO place meeple on card and send it back
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
         }
     }
