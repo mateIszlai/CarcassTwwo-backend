@@ -21,7 +21,7 @@ namespace CarcassTwwo
                     new LandType{ Name = "City", Meeple = "Knight" },
                     new LandType{ Name = "Road", Meeple = "Highwayman" },
                     new LandType{ Name = "Monastery", Meeple = "Monk" },
-                    new LandType{Name = "Other"}
+                    new LandType{ Name = "Other"}
                 };
             }
         }
@@ -513,7 +513,7 @@ namespace CarcassTwwo
                             Field2 = new Field{LandType = city },
                             Field3 = new Field{LandType = land },
                             Field4 = new Field{LandType = road },
-                            Field5 = new Field{LandType = land },
+                            Field5 = new Field{LandType = road },
                             Field6 = new Field{LandType = road },
                             Field7 = new Field{LandType = land },
                             Field8 = new Field{LandType = road },
@@ -670,6 +670,349 @@ namespace CarcassTwwo
                 {
                     tiles[i - 1].Id = i;
                 }
+
+                //Card 1
+                tiles[0].CreateArea(land,
+                    tiles[0].Field1,
+                    tiles[0].Field2,
+                    tiles[0].Field3,
+                    tiles[0].Field4,
+                    tiles[0].Field6,
+                    tiles[0].Field7,
+                    tiles[0].Field8,
+                    tiles[0].Field9);
+                tiles[0].CreateArea(monastery, 
+                    tiles[0].Field5);
+
+                //Card 2
+                tiles[1].CreateArea(land,
+                    tiles[1].Field1,
+                    tiles[1].Field2,
+                    tiles[1].Field3,
+                    tiles[1].Field4,
+                    tiles[1].Field6,
+                    tiles[1].Field7,
+                    tiles[1].Field9);
+                tiles[1].CreateArea(monastery,
+                    tiles[1].Field5);
+                tiles[1].CreateArea(road,
+                    tiles[1].Field8);
+
+                //Card 3
+                tiles[2].CreateArea(city,
+                    tiles[2].Field1,
+                    tiles[2].Field2,
+                    tiles[2].Field3,
+                    tiles[2].Field4,
+                    tiles[2].Field5,
+                    tiles[2].Field6,
+                    tiles[2].Field7,
+                    tiles[2].Field8,
+                    tiles[2].Field9);
+
+                //Card 4
+                tiles[3].CreateArea(city,
+                    tiles[3].Field1,
+                    tiles[3].Field2,
+                    tiles[3].Field3,
+                    tiles[3].Field4,
+                    tiles[3].Field5,
+                    tiles[3].Field6);
+                tiles[3].CreateArea(land,
+                    tiles[3].Field7,
+                    tiles[3].Field8,
+                    tiles[3].Field9);
+
+                //Card 5
+                tiles[4].CreateArea(city,
+                    tiles[4].Field1,
+                    tiles[4].Field2,
+                    tiles[4].Field3,
+                    tiles[4].Field4,
+                    tiles[4].Field5,
+                    tiles[4].Field6);
+                tiles[4].CreateArea(land,
+                    tiles[4].Field7,
+                    tiles[4].Field8,
+                    tiles[4].Field9);
+
+                //Card 6
+                tiles[5].CreateArea(city,
+                    tiles[5].Field1,
+                    tiles[5].Field2,
+                    tiles[5].Field3,
+                    tiles[5].Field4,
+                    tiles[5].Field5,
+                    tiles[5].Field6);
+                tiles[5].CreateArea(land,
+                    tiles[5].Field7);
+                tiles[5].CreateArea(road,
+                    tiles[5].Field8);
+                tiles[5].CreateArea(land,
+                    tiles[5].Field9);
+
+                //Card 7
+                tiles[6].CreateArea(city,
+                    tiles[6].Field1,
+                    tiles[6].Field2,
+                    tiles[6].Field3,
+                    tiles[6].Field4,
+                    tiles[6].Field5,
+                    tiles[6].Field6);
+                tiles[6].CreateArea(land,
+                    tiles[6].Field7);
+                tiles[6].CreateArea(road,
+                    tiles[6].Field8);
+                tiles[6].CreateArea(land,
+                    tiles[6].Field9);
+
+                //Card 8
+                tiles[7].CreateArea(city,
+                    tiles[7].Field1,
+                    tiles[7].Field2,
+                    tiles[7].Field4,
+                    tiles[7].Field7);
+                tiles[7].CreateArea(land,
+                    tiles[7].Field3,
+                    tiles[7].Field5,
+                    tiles[7].Field6,
+                    tiles[7].Field8,
+                    tiles[7].Field9);
+
+                //Card 9
+                tiles[8].CreateArea(city,
+                    tiles[8].Field1,
+                    tiles[8].Field2,
+                    tiles[8].Field4,
+                    tiles[8].Field7);
+                tiles[8].CreateArea(land,
+                    tiles[8].Field3,
+                    tiles[8].Field5,
+                    tiles[8].Field6,
+                    tiles[8].Field8,
+                    tiles[8].Field9);
+
+                //Card 10
+                tiles[9].CreateArea(city,
+                    tiles[9].Field1,
+                    tiles[9].Field2,
+                    tiles[9].Field4,
+                    tiles[9].Field7);
+                tiles[9].CreateArea(land,
+                    tiles[9].Field3,
+                    tiles[9].Field5);
+                tiles[9].CreateArea(road,
+                    tiles[9].Field6,
+                    tiles[9].Field8);
+                tiles[9].CreateArea(land,
+                    tiles[9].Field9);
+
+                //Card 11
+                tiles[10].CreateArea(city,
+                    tiles[10].Field1,
+                    tiles[10].Field2,
+                    tiles[10].Field4,
+                    tiles[10].Field7);
+                tiles[10].CreateArea(land,
+                    tiles[10].Field3,
+                    tiles[10].Field5);
+                tiles[10].CreateArea(road,
+                    tiles[10].Field6,
+                    tiles[10].Field8);
+                tiles[10].CreateArea(land,
+                    tiles[10].Field9);
+
+                //Card 12 
+                tiles[11].CreateArea(land,
+                    tiles[11].Field1,
+                    tiles[11].Field2,
+                    tiles[11].Field3);
+                tiles[11].CreateArea(city,
+                    tiles[11].Field4,
+                    tiles[11].Field5,
+                    tiles[11].Field6);
+                tiles[11].CreateArea(land,
+                    tiles[11].Field7,
+                    tiles[11].Field8,
+                    tiles[11].Field9);
+
+                //Card 13
+                tiles[12].CreateArea(land,
+                    tiles[12].Field1,
+                    tiles[12].Field2,
+                    tiles[12].Field3);
+                tiles[12].CreateArea(city,
+                    tiles[12].Field4,
+                    tiles[12].Field5,
+                    tiles[12].Field6);
+                tiles[12].CreateArea(land,
+                    tiles[12].Field7,
+                    tiles[12].Field8,
+                    tiles[12].Field9);
+
+                //Card 14
+                tiles[13].CreateArea(city,
+                    tiles[13].Field1,
+                    tiles[13].Field2);
+                tiles[13].CreateArea(city,
+                    tiles[13].Field4);
+                tiles[13].CreateArea(land,
+                    tiles[13].Field3,
+                    tiles[13].Field5,
+                    tiles[13].Field6,
+                    tiles[13].Field7,
+                    tiles[13].Field8,
+                    tiles[13].Field9);
+
+                //Card 15
+                tiles[14].CreateArea(city,
+                    tiles[14].Field2);
+                tiles[14].CreateArea(city,
+                    tiles[14].Field8);
+                tiles[14].CreateArea(land,
+                    tiles[14].Field1,
+                    tiles[14].Field3,
+                    tiles[14].Field4,
+                    tiles[14].Field5,
+                    tiles[14].Field6,
+                    tiles[14].Field7,
+                    tiles[14].Field9);
+
+                //Card 16
+                tiles[15].CreateArea(city,
+                    tiles[15].Field2);
+                tiles[15].CreateArea(land,
+                    tiles[15].Field1,
+                    tiles[15].Field3,
+                    tiles[15].Field4,
+                    tiles[15].Field5,
+                    tiles[15].Field6,
+                    tiles[15].Field7,
+                    tiles[15].Field8,
+                    tiles[15].Field9);
+
+                //Card 17
+                tiles[16].CreateArea(city,
+                    tiles[16].Field2);
+                tiles[16].CreateArea(land,
+                    tiles[16].Field1,
+                    tiles[16].Field3,
+                    tiles[16].Field5,
+                    tiles[16].Field6,
+                    tiles[16].Field9);
+                tiles[16].CreateArea(road,
+                    tiles[16].Field4,
+                    tiles[16].Field8);
+                tiles[16].CreateArea(land,
+                    tiles[16].Field7);
+
+                //Card 18
+                tiles[17].CreateArea(city,
+                    tiles[17].Field2);
+                tiles[17].CreateArea(land,
+                    tiles[17].Field1,
+                    tiles[17].Field3,
+                    tiles[17].Field4,
+                    tiles[17].Field5,
+                    tiles[17].Field7);
+                tiles[17].CreateArea(road,
+                    tiles[17].Field6,
+                    tiles[17].Field8);
+                tiles[17].CreateArea(land,
+                    tiles[17].Field9);
+
+                //Card 19
+                tiles[18].CreateArea(city,
+                    tiles[18].Field2);
+                tiles[18].CreateArea(land,
+                    tiles[18].Field1,
+                    tiles[18].Field3);
+                tiles[18].CreateArea(road,
+                    tiles[18].Field4,
+                    tiles[18].Field5,
+                    tiles[18].Field6,
+                    tiles[18].Field8);
+                tiles[18].CreateArea(land,
+                    tiles[18].Field7);
+                tiles[18].CreateArea(land,
+                    tiles[18].Field9);
+
+                //Card 20
+                tiles[19].CreateArea(city,
+                    tiles[19].Field2);
+                tiles[19].CreateArea(land,
+                    tiles[19].Field1,
+                    tiles[19].Field3);
+                tiles[19].CreateArea(road,
+                    tiles[19].Field4,
+                    tiles[19].Field5,
+                    tiles[19].Field6);
+                tiles[19].CreateArea(land,
+                    tiles[19].Field7,
+                    tiles[19].Field8,
+                    tiles[19].Field9);
+
+                //Card 21
+                tiles[20].CreateArea(land,
+                    tiles[20].Field1,
+                    tiles[20].Field4,
+                    tiles[20].Field7);
+                tiles[20].CreateArea(road,
+                    tiles[20].Field2,
+                    tiles[20].Field5,
+                    tiles[20].Field8);
+                tiles[20].CreateArea(land,
+                    tiles[20].Field3,
+                    tiles[20].Field6,
+                    tiles[20].Field9);
+
+                //Card 22
+                tiles[21].CreateArea(land,
+                    tiles[21].Field1,
+                    tiles[21].Field2,
+                    tiles[21].Field3,
+                    tiles[21].Field6,
+                    tiles[21].Field9);
+                tiles[21].CreateArea(road,
+                    tiles[21].Field4,
+                    tiles[21].Field5,
+                    tiles[21].Field8);
+                tiles[21].CreateArea(land,
+                    tiles[21].Field7);
+
+                //Card 23
+                tiles[22].CreateArea(land,
+                    tiles[22].Field1,
+                    tiles[22].Field2,
+                    tiles[22].Field3);
+                tiles[22].CreateArea(road,
+                    tiles[22].Field4);
+                tiles[22].CreateArea(road,
+                    tiles[22].Field6);
+                tiles[22].CreateArea(land,
+                    tiles[22].Field7);
+                tiles[22].CreateArea(road,
+                    tiles[22].Field8);
+                tiles[22].CreateArea(land,
+                    tiles[22].Field9);
+
+                //Card 24
+                tiles[23].CreateArea(land,
+                    tiles[23].Field1);
+                tiles[23].CreateArea(road,
+                    tiles[23].Field2);
+                tiles[23].CreateArea(land,
+                    tiles[23].Field3);
+                tiles[23].CreateArea(road,
+                    tiles[23].Field4);
+                tiles[23].CreateArea(road,
+                    tiles[23].Field6);
+                tiles[23].CreateArea(land,
+                    tiles[23].Field7);
+                tiles[23].CreateArea(road,
+                    tiles[23].Field8);
+                tiles[23].CreateArea(land,
+                    tiles[23].Field9);
             }
         }
 
