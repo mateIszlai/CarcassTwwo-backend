@@ -17,10 +17,10 @@ namespace CarcassTwwo
             {
                 landTypes = new List<LandType>
                 {
-                    new LandType{ Name = "Land", Meeple = "Peasant" },
-                    new LandType{ Name = "City", Meeple = "Knight" },
-                    new LandType{ Name = "Road", Meeple = "Highwayman" },
-                    new LandType{ Name = "Monastery", Meeple = "Monk" },
+                    new LandType{ Name = "Land", Meeple = MeepleType.PEASANT },
+                    new LandType{ Name = "City", Meeple = MeepleType.KNIGHT },
+                    new LandType{ Name = "Road", Meeple = MeepleType.HIGHWAYMAN },
+                    new LandType{ Name = "Monastery", Meeple = MeepleType.MONK },
                     new LandType{Name = "Other"}
                 };
             }
