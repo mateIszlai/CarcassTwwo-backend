@@ -5,29 +5,41 @@ using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Places
 {
-    public class Monastery
+    public class Monastery : Place
     {
-        public Meeple Monk { get; set; }
-        public List<Coordinate> SurroundingTiles { get; set; }
+        public List<Coordinate> SurroundingCoordinates { get; private set; }
         public bool IsFinished { get; set; }
-        public Monastery()
+        public Monastery(int id, Coordinate cardCoordinate) : base(id)
         {
-            SurroundingTiles = new List<Coordinate>();
-        }
-
-        public void PlaceMonk(Coordinate field, Client player)
-        {
-            Monk = new Meeple(field, "Monk",player);
+            SurroundingCoordinates = new List<Coordinate>
+            {
+                // topleft
+                new Coordinate{x = cardCoordinate.x - 1, y = cardCoordinate.y + 1},
+                //topmid
+                new Coordinate{x = cardCoordinate.x, y = cardCoordinate.y + 1},
+                // topright
+                new Coordinate{x = cardCoordinate.x + 1, y = cardCoordinate.y + 1},
+                // midleft
+                new Coordinate{x = cardCoordinate.x - 1, y = cardCoordinate.y},
+                //midright
+                new Coordinate{x = cardCoordinate.x + 1, y = cardCoordinate.y},
+                // botleft
+                new Coordinate{x = cardCoordinate.x - 1, y = cardCoordinate.y - 1},
+                //botmid
+                new Coordinate{x = cardCoordinate.x, y = cardCoordinate.y - 1},
+                //botright
+                new Coordinate{x = cardCoordinate.x + 1, y = cardCoordinate.y - 1},
+            };
         }
 
         public void ExpandMonastery(Coordinate coordinate)
         {
-            SurroundingTiles.Add(coordinate);
+            SurroundingCoordinates.Remove(coordinate);
         }
 
-        public void CheckStateOfMonastery()
+        public override void PlaceMeeple(Client owner)
         {
-            //TODO if monastery is surrounded then IsFinished = true;
+            Meeples.Add(new Meeple(MeepleType.MONK, owner));
         }
     }
 }
