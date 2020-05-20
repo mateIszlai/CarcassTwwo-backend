@@ -86,5 +86,93 @@ namespace CarcassTwwo.Models
             card.LeftIsFree = CardCoordinates.ContainsKey(horizontal) ? false : true;
            
         }
+
+        public void SetRegions(Card card)
+        {
+            if (card.TopIsFree)
+            {
+                var top = new Coordinate() { x = card.Coordinate.x, y = card.Coordinate.y + 1 };
+                switch (card.Top.Name)
+                {
+                    case "City":
+                        CreateCity(top);
+                        break;
+                    case "Road":
+                        CreateRoad(top);
+                        break;
+                    case "Land":
+                        CreateLand(top);
+                        break;
+
+                }
+            }
+            if (card.LeftIsFree)
+            {
+                var left = new Coordinate() { x = card.Coordinate.x -1, y = card.Coordinate.y };
+                switch(card.Left.Name){
+                    case "City":
+                        CreateCity(left);
+                        break;
+                    case "Road":
+                        CreateRoad(left);
+                        break;
+                    case "Land":
+                        CreateLand(left);
+                        break;
+                }
+                
+            }
+            if (card.BottomIsFree)
+            {
+                var bottom = new Coordinate() { x = card.Coordinate.x, y = card.Coordinate.y - 1 };
+                switch (card.Bottom.Name)
+                {
+                    case "City":
+                        CreateCity(bottom);
+                        break;
+                    case "Road":
+                        CreateRoad(bottom);
+                        break;
+                    case "Land":
+                        CreateLand(bottom);
+                        break;
+
+                }
+            }
+            if (card.RightIsFree)
+            {
+                var right = new Coordinate() { x = card.Coordinate.x + 1, y = card.Coordinate.y };
+                switch (card.Right.Name)
+                {
+                    case "City":
+                        CreateCity(right);
+                        break;
+                    case "Road":
+                        CreateRoad(right);
+                        break;
+                    case "Land":
+                        CreateLand(right);
+                        break;
+                }
+            }
+        }
+
+        private void CreateLand(Coordinate top)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CreateRoad(Coordinate top)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateCity(Coordinate coordinate)
+        {
+            foreach(City city in Cities)
+            {
+                
+            }
+        }
     }
 }

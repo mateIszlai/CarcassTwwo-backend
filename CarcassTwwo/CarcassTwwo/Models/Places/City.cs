@@ -7,8 +7,8 @@ namespace CarcassTwwo.Models.Places
 {
     public class City
     {
-        public List<Meeple> Knights { get; set; }
-        public List<Coordinate> CityTiles { get; set; }
+        public List<Meeple> Knights { get; private set; }
+        public List<Coordinate> CityTiles { get; private set; }
         public bool IsFinished { get; set; }
         public City()
         {
