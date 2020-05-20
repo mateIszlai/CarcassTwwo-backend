@@ -26,8 +26,8 @@ namespace CarcassTwwoTests
         [Test]
         public void GetFirstCard_ReturnsFirstCard()
         {
-            var land = new LandType { Name = "Land", Meeple = "Peasant" };
-            var monastery = new LandType { Name = "Monastery", Meeple = "Monk" };
+            var land = new LandType { Name = "Land", Meeple = MeepleType.PEASANT };
+            var monastery = new LandType { Name = "Monastery", Meeple = MeepleType.MONK };
 
             var expected = new Card(new Tile
             {

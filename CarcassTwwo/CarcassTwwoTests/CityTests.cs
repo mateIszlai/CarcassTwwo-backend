@@ -12,7 +12,7 @@ namespace CarcassTwwoTests
         [SetUp]
         public void SetUp()
         {
-            _city = new City();
+            _city = new City(0);
         }
 
         [TearDown]
@@ -24,7 +24,7 @@ namespace CarcassTwwoTests
         [Test]
         public void ExpandCityWorks()
         {
-            _city.ExpandCity(new CityPart());
+            _city.ExpandCity(new CityPart(0));
             Assert.AreEqual(1, _city.Size);
         }
 
@@ -32,7 +32,7 @@ namespace CarcassTwwoTests
         [Test]
         public void GetCityPartByCardIdWorks()
         {
-            var cityPart = new CityPart();
+            var cityPart = new CityPart(0);
             _city.ExpandCity(cityPart);
             Assert.AreEqual(cityPart, _city.GetCityPartByCardId(cityPart.CardId));
         }
@@ -40,8 +40,12 @@ namespace CarcassTwwoTests
         [Test]
         public void SetSidesWorks()
         {
-            _city.ExpandCity(new CityPart { CardId = 1, TopIsOpen = true });
-            _city.SetSides(new List<CityPart> { new CityPart { CardId = 1, TopIsOpen = false } });
+            var cityPart = new CityPart(1);
+            cityPart.TopIsOpen = true;
+            _city.ExpandCity(cityPart);
+            var modifiedCityPart = new CityPart(1);
+            modifiedCityPart.TopIsOpen = false;
+            _city.SetSides(new List<CityPart> { modifiedCityPart });
             Assert.IsFalse(_city.GetCityPartByCardId(1).TopIsOpen);
         }
     }
