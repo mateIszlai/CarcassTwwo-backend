@@ -2,7 +2,7 @@
 {
     public class LandType
     {
-        public int Id { get; set; }
+        public int PlaceId { get; set; }
         public string Name { get; set; }
         public MeepleType Meeple { get; set; }
     }
