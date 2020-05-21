@@ -12,7 +12,7 @@ namespace CarcassTwwoTests
         [SetUp]
         public void SetUp()
         {
-            _city = new City(0);
+            _city = new City(0, 0);
         }
 
         [TearDown]
@@ -43,9 +43,7 @@ namespace CarcassTwwoTests
             var cityPart = new CityPart(1);
             cityPart.TopIsOpen = true;
             _city.ExpandCity(cityPart);
-            var modifiedCityPart = new CityPart(1);
-            modifiedCityPart.TopIsOpen = false;
-            _city.SetSides(new List<CityPart> { modifiedCityPart });
+            _city.SetSides( 1, Side.TOP);
             Assert.IsFalse(_city.GetCityPartByCardId(1).TopIsOpen);
         }
     }
