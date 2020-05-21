@@ -1,5 +1,4 @@
-﻿using CarcassTwwo.Models.Places;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CarcassTwwo.Models
 {
@@ -9,10 +8,6 @@ namespace CarcassTwwo.Models
         public Tile Tile { get; set; }
         public Meeple meeple { get; set; }
         public Coordinate Coordinate { get; set; }
-        public HashSet<City> Cities { get; private set; }
-        public HashSet<GrassLand> Lands { get; private set; }
-        public HashSet<Monastery> Monasteries { get; private set; }
-        public HashSet<Road> Roads { get; private set; }
         public LandType Top { get; set; }
         public LandType Bottom { get; set; }
         public LandType Left { get; set; }
