@@ -21,7 +21,7 @@ namespace CarcassTwwo.Models.Places
         {
             foreach (var roadPart in roadParts)
             {
-                var part = _roadParts.FirstOrDefault(r => r.CardId == roadPart.CardIds);
+                var part = _roadParts.FirstOrDefault(r => r.CardId == roadPart.CardId);
                 if(part != null)
                 {
                     part.LeftOpen = roadPart.LeftOpen;
