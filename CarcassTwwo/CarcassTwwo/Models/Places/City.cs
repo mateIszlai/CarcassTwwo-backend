@@ -16,9 +16,9 @@ namespace CarcassTwwo.Models.Places
             } 
         }
 
-        public City(int id) : base(id)
+        public City(int id, int cardId) : base(id)
         {
-            _cityParts = new HashSet<CityPart>();
+            _cityParts = new HashSet<CityPart> { new CityPart(cardId)};
         }
 
         public void ExpandCity(CityPart newPart)
