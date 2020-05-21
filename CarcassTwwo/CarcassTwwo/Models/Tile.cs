@@ -34,6 +34,7 @@ namespace CarcassTwwo.Models
         public LandType Right3 { get; set; }
 
         public Dictionary<int, Field> FieldTypes { get; }
+        public List<Area> Areas { get; }
 
         public bool HasCrest { get; set; }
 
@@ -52,15 +53,18 @@ namespace CarcassTwwo.Models
             FieldTypes.Add(8, Field8);
             FieldTypes.Add(9, Field9);
 
-            /*Field1.Coordinate = new Coordinate { x = 0, y = 0 };
-            Field2.Coordinate = new Coordinate { x = 1, y = 0 };
-            Field3.Coordinate = new Coordinate { x = 2, y = 0 };
-            Field4.Coordinate = new Coordinate { x = 0, y = 1 };
-            Field5.Coordinate = new Coordinate { x = 1, y = 1 };
-            Field6.Coordinate = new Coordinate { x = 2, y = 1 };
-            Field7.Coordinate = new Coordinate { x = 0, y = 2 };
-            Field8.Coordinate = new Coordinate { x = 1, y = 2 };
-            Field9.Coordinate = new Coordinate { x = 2, y = 2 };*/
+            Areas = new List<Area>();
+
+        }
+
+        public void CreateArea(LandType landtype, params Field[] fields)
+        {
+            Area area = new Area(landtype);
+            foreach(Field field in fields)
+            {
+                area.AddField(field);
+            }
+            Areas.Add(area);
         }
     }
 }
