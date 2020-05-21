@@ -31,24 +31,41 @@ namespace CarcassTwwo.Models.Places
             return _cityParts.FirstOrDefault(c => c.CardId == cardId);
         }
 
-        public void SetSides(List<CityPart> cityParts)
+        public void SetSides(int cardId, Side side)
         {
-            foreach (var cityPart in cityParts)
+            var part = _cityParts.FirstOrDefault(c => c.CardId == cardId);
+            if (part != null)
             {
-                var part = _cityParts.FirstOrDefault(c => c.CardId == cityPart.CardId);
-                if ( part != null)
+                switch (side)
                 {
-                    part.BottomIsOpen = cityPart.BottomIsOpen;
-                    part.LeftIsOpen = cityPart.LeftIsOpen;
-                    part.RightIsOpen = cityPart.RightIsOpen;
-                    part.TopIsOpen = cityPart.TopIsOpen;
+                    case Side.TOP:
+                        part.TopIsOpen = false;
+                        break;
+                    case Side.BOTTOM:
+                        part.BottomIsOpen = false;
+                        break;
+                    case Side.LEFT:
+                        part.LeftIsOpen = false;
+                        break;
+                    case Side.RIGHT:
+                        part.RightIsOpen = false;
+                        break;
                 }
             }
+            
         }
 
         public override void PlaceMeeple(Client owner)
         {
             Meeples.Add(new Meeple(MeepleType.KNIGHT, owner));
         }
+    }
+
+    public enum Side
+    {
+        TOP,
+        LEFT,
+        BOTTOM,
+        RIGHT
     }
 }
