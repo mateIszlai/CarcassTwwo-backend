@@ -96,10 +96,47 @@ namespace CarcassTwwo.Models
                 throw new ArgumentException();
             }
 
+            var monasteries = _monasteries.Where(m => m.SurroundingCoordinates.Contains(coordinate)).ToList();
+            monasteries.ForEach(m => m.SurroundingCoordinates.Remove(coordinate));
+
+            bool roadClosed = SetRoadClosed(card.Tile.Field5.LandType);
+            int landCounts = GetLandCount(card);
+
+            
+            if(card.Tile.Field5.LandType.Name == "Monastery")
+            {
+                _monasteries.Add(new Monastery(id++, coordinate));
+            }
+
             if (card.TopIsFree)
             {
 
             }
+        }
+
+        private int GetLandCount(Card card)
+        {
+            var roadCount = card.Sides.Count(s => s.Name == "Road");
+            if (roadCount != 0)
+            {
+                if (card.Sides.Count(s => s.Name == "City") == 3)
+                    return 2;
+                return roadCount;
+            }
+            if (card.Top.Name == "City" && card.Bottom.Name == "City" && card.Tile.Field5.LandType.Name == "City" ||
+                card.Left.Name == "City" && card.Right.Name == "City" && card.Tile.Field5.LandType.Name == "City") 
+                return card.Sides.Count(s => s.Name == "Land");
+            
+            if (card.Sides.Count(l => l.Name == "Land") >= 2)
+                return 1;
+
+            return 0;
+        }
+
+        private bool SetRoadClosed(LandType landType)
+        {
+            var names = new string[] { "Monastery", "City", "Other" };
+            return names.Contains(landType.Name);
         }
     }
 }
