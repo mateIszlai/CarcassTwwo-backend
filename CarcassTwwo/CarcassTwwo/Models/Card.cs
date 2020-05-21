@@ -13,6 +13,10 @@ namespace CarcassTwwo.Models
         public LandType Left { get; set; }
         public LandType Right { get; set; }
 
+        public int MonasteryId { get; set; }
+
+
+
         public List<LandType> Sides { get { return new List<LandType> { Top, Bottom, Left, Right }; } }
 
         public Dictionary<string,List<LandType>> Rotations { get; set; }
@@ -34,6 +38,7 @@ namespace CarcassTwwo.Models
             HasCrest = Tile.HasCrest;
             Rotations = new Dictionary<string, List<LandType>>();
             SetRotations();
+            MonasteryId = -1;
         }
 
         public Card()
