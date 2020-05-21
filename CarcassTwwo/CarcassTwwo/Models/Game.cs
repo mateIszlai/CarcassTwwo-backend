@@ -115,6 +115,7 @@ namespace CarcassTwwo.Models
             _gameboard.SetSideOccupation(placedCard.Coordinate);
             _gameboard.AddAvailableCoordinates(card);
             _cards.Remove(card);
+            _gameboard.SetRegions(placedCard.Coordinate);
         }
 
 
