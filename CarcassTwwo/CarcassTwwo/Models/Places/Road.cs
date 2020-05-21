@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Places
 {
@@ -9,9 +7,9 @@ namespace CarcassTwwo.Models.Places
     {
         private HashSet<RoadPart> _roadParts;
         public bool IsOpen { get {return _roadParts.Any(r => r.LeftOpen || r.RightOpen); } }
-        public Road(int id) : base(id)
+        public Road(int id, int cardId) : base(id)
         {
-            _roadParts = new HashSet<RoadPart>();
+            _roadParts = new HashSet<RoadPart> { new RoadPart(cardId)};
         }
 
         public void ExpandRoad(RoadPart roadPart)
@@ -23,7 +21,7 @@ namespace CarcassTwwo.Models.Places
         {
             foreach (var roadPart in roadParts)
             {
-                var part = _roadParts.FirstOrDefault(r => r.CardIds == roadPart.CardIds);
+                var part = _roadParts.FirstOrDefault(r => r.CardId == roadPart.CardIds);
                 if(part != null)
                 {
                     part.LeftOpen = roadPart.LeftOpen;
