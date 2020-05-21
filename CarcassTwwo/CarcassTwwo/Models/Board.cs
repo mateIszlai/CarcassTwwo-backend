@@ -11,11 +11,22 @@ namespace CarcassTwwo.Models
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
         public Dictionary<RequiredCard, Coordinate> AvailableCoordinates { get; set; }
 
+        private HashSet<City> _cities;
+        private HashSet<GrassLand> _grassLands;
+        private HashSet<Monastery> _monasteries;
+        private HashSet<Road> _roads;
+
+
+        private int id = 0;
+
         public Board()
         {
             CardCoordinates = new Dictionary<Coordinate, Card>();
             AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
-
+            _cities = new HashSet<City>();
+            _grassLands = new HashSet<GrassLand>();
+            _monasteries = new HashSet<Monastery>();
+            _roads = new HashSet<Road>();
         }
 
         public void AddAvailableCoordinates(Card card)
@@ -23,8 +34,7 @@ namespace CarcassTwwo.Models
             if (card.TopIsFree)
             {
                 var top = new RequiredCard(new Coordinate { x = card.Coordinate.x, y = card.Coordinate.y + 1 }, CardCoordinates);
-                RemoveFromAvailableCoordinates(top.Coordinate);
-                    
+                RemoveFromAvailableCoordinates(top.Coordinate);    
                 AvailableCoordinates.Add(top, top.Coordinate);
             }
 
@@ -60,8 +70,7 @@ namespace CarcassTwwo.Models
 
         public void SetSideOccupation(Coordinate coord)
         {
-            var card = new Card();
-            if(!CardCoordinates.TryGetValue(coord, out card))
+            if (!CardCoordinates.TryGetValue(coord, out Card card))
             {
                 throw new ArgumentException();
             }
@@ -78,6 +87,19 @@ namespace CarcassTwwo.Models
             horizontal.x = card.Coordinate.x - 1;
             card.LeftIsFree = CardCoordinates.ContainsKey(horizontal) ? false : true;
            
+        }
+
+        public void SetRegions(Coordinate coordinate)
+        {
+            if (!CardCoordinates.TryGetValue(coordinate, out Card card))
+            {
+                throw new ArgumentException();
+            }
+
+            if (card.TopIsFree)
+            {
+
+            }
         }
     }
 }
