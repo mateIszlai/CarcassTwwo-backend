@@ -105,9 +105,6 @@ namespace CarcassTwwo.Models
             var botCoord = new Coordinate { x = coordinate.x, y = coordinate.y - 1 };
             var rightCoord = new Coordinate { x = coordinate.x + 1, y = coordinate.y };
             var leftCoord = new Coordinate { x = coordinate.x - 1, y = coordinate.y };
-
-            var modifiedCityParts = new List<CityPart>();
-
             if (card.Tile.Field5.LandType.Name == "Monastery")
             {
                 id++;
@@ -115,31 +112,149 @@ namespace CarcassTwwo.Models
                 card.MonasteryId = id;
             }
 
-            PlaceCity(topCoord, botCoord, leftCoord, rightCoord, card);
+            var Places = new Dictionary<Side, int>();
+
+            foreach (var city in PlaceCity(topCoord, botCoord, leftCoord, rightCoord, card))
+                Places.Add(city.Key, city.Value);
+
+
+            // TODO PlaceRoads
+
+            // TODO PlaceLands
+
+
+            foreach (var place in Places)
+            {
+                switch (place.Key)
+                {
+                    case Side.TOP:
+                        card.Top.PlaceId = place.Value;
+                        break;
+                    case Side.LEFT:
+                        card.Left.PlaceId = place.Value;
+                        break;
+                    case Side.BOTTOM:
+                        card.Bottom.PlaceId = place.Value;
+                        break;
+                    case Side.RIGHT:
+                        card.Top.PlaceId = place.Value;
+                        break;
+                }
+            }
         }
 
-        private void PlaceCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
+        private Dictionary<Side, int> PlaceCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
         {
-
             int cityCounts = GetCityCount(card);
             if (cityCounts == 2)
             {
-                PlaceTwoCity( topCoord,  botCoord,  leftCoord,  rightCoord,  card);
+                return PlaceTwoCity( topCoord,  botCoord,  leftCoord,  rightCoord,  card);
             }
 
+            var citiesAround = new Dictionary<Side, int>();
 
+            if (CardCoordinates.TryGetValue(topCoord, out Card topCard) && topCard.Bottom.Name == "City")
+                citiesAround.Add(Side.TOP, topCard.Bottom.PlaceId);
+            if (CardCoordinates.TryGetValue(leftCoord, out Card leftCard) && leftCard.Right.Name == "City")
+                citiesAround.Add(Side.LEFT, leftCard.Right.PlaceId);
+            if (CardCoordinates.TryGetValue(botCoord, out Card botCard) && botCard.Top.Name == "City")
+                citiesAround.Add(Side.BOTTOM, botCard.Top.PlaceId);
+            if (CardCoordinates.TryGetValue(rightCoord, out Card rightCard) && rightCard.Left.Name == "City")
+                citiesAround.Add(Side.RIGHT, rightCard.Left.PlaceId);
 
+            var cityPart = new CityPart(card.Id);
+            if (card.Top.Name != "City")
+                cityPart.TopIsOpen = false;
+            if (card.Left.Name != "City")
+                cityPart.LeftIsOpen = false;
+            if (card.Bottom.Name != "City")
+                cityPart.BottomIsOpen = false;
+            if (card.Right.Name != "City")
+                cityPart.RightIsOpen = false;
+
+            if (citiesAround.Count == 0)
+            {
+                id++;
+                var city = new City(id);
+                city.ExpandCity(cityPart);
+                _cities.Add(city);
+                if (card.Top.Name == "City")
+                    citiesAround.Add(Side.TOP, id);
+                else if (card.Left.Name == "City")
+                    citiesAround.Add(Side.LEFT, id);
+                else if (card.Bottom.Name == "City")
+                    citiesAround.Add(Side.BOTTOM, id);
+                else
+                    citiesAround.Add(Side.RIGHT, id);
+            }
+            else
+            {
+                id++;
+                var newCity = new City(id);
+                foreach (var around in citiesAround)
+                {
+                    var city = _cities.FirstOrDefault(c => c.Id == around.Value);
+                    switch (around.Key)
+                    {
+                        case Side.TOP:
+                            city.SetSides(topCard.Id, Side.BOTTOM);
+                            cityPart.TopIsOpen = false;
+                            break;
+                        case Side.LEFT:
+                            city.SetSides(leftCard.Id, Side.RIGHT);
+                            cityPart.LeftIsOpen = false;
+                            break;
+                        case Side.BOTTOM:
+                            city.SetSides(botCard.Id, Side.TOP);
+                            cityPart.BottomIsOpen = false;
+                            break;
+                        case Side.RIGHT:
+                            city.SetSides(rightCard.Id, Side.BOTTOM);
+                            cityPart.LeftIsOpen = false;
+                            break;
+                    }
+                    if (citiesAround.Count == 1)
+                    {
+                        city.ExpandCity(cityPart);
+                        id--;
+                    }
+                    else
+                    {
+                        citiesAround[around.Key] = newCity.Id;
+                        foreach (var cp in city.CityParts)
+                        {
+                            newCity.ExpandCity(cp);
+                            var cityCard = CardCoordinates.Values.FirstOrDefault(c => c.Id == cp.CardId);
+                            if (cityCard.Top.Name == "City")
+                                cityCard.Top.PlaceId = newCity.Id;
+                            if (cityCard.Left.Name == "City")
+                                cityCard.Left.PlaceId = newCity.Id;
+                            if (cityCard.Bottom.Name == "City")
+                                cityCard.Bottom.PlaceId = newCity.Id;
+                            if (cityCard.Right.Name == "City")
+                                cityCard.Right.PlaceId = newCity.Id;
+                        }
+                        _cities.Remove(city);
+                    }
+                }
+                if (citiesAround.Count > 1)
+                {
+                    _cities.Add(newCity);
+                }
+            }
+            return citiesAround;
         }
 
-        private void PlaceTwoCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
+        private Dictionary<Side, int> PlaceTwoCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
         {
+            var toModify = new Dictionary<Side, int>();
             if (card.Top.Name == "City")
             {
 
                 if (CardCoordinates.TryGetValue(topCoord, out Card topCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == topCard.Bottom.PlaceId);
-                    card.Top.PlaceId = city.Id;
+                    toModify.Add(Side.TOP, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(topCard.Id, Side.BOTTOM);
@@ -147,17 +262,20 @@ namespace CarcassTwwo.Models
                 else
                 {
                     id++;
-                    _cities.Add(new City(id, card.Id));
-                    card.Top.PlaceId = id;
+                    var city = new City(id);
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = true, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                    _cities.Add(city);
+                    toModify.Add(Side.TOP, id);
                 }
             }
+
             if (card.Left.Name == "City")
             {
 
                 if (CardCoordinates.TryGetValue(leftCoord, out Card leftCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == leftCard.Right.PlaceId);
-                    card.Left.PlaceId = city.Id;
+                    toModify.Add(Side.LEFT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(leftCard.Id, Side.RIGHT);
@@ -165,17 +283,42 @@ namespace CarcassTwwo.Models
                 else
                 {
                     id++;
-                    _cities.Add(new City(id, card.Id));
-                    card.Left.PlaceId = id;
+                    var city = new City(id);
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = true, BottomIsOpen = false, RightIsOpen = false });
+                    _cities.Add(city);
+                    toModify.Add(Side.LEFT, id);
+
                 }
             }
+
+            if(card.Bottom.Name == "City")
+            {
+                if (CardCoordinates.TryGetValue(botCoord, out Card botCard))
+                {
+                    var city = _cities.FirstOrDefault(c => c.Id == botCard.Top.PlaceId);
+                    toModify.Add(Side.BOTTOM, city.Id);
+                    if (city.GetCityPartByCardId(card.Id) == null)
+                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                    city.SetSides(botCard.Id, Side.TOP);
+                }
+                else
+                {
+                    id++;
+                    var city = new City(id);
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = true, RightIsOpen = false });
+                    _cities.Add(city);
+                    toModify.Add(Side.BOTTOM, id);
+
+                }
+            }
+
             if (card.Right.Name == "City")
             {
 
                 if (CardCoordinates.TryGetValue(rightCoord, out Card rightCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == rightCard.Right.PlaceId);
-                    card.Left.PlaceId = city.Id;
+                    toModify.Add(Side.RIGHT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(rightCard.Id, Side.LEFT);
@@ -183,24 +326,15 @@ namespace CarcassTwwo.Models
                 else
                 {
                     id++;
-                    _cities.Add(new City(id, card.Id));
-                    card.Right.PlaceId = id;
+                    var city = new City(id);
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = true });
+                    _cities.Add(city);
+                    toModify.Add(Side.RIGHT, id);
+
                 }
             }
-            if (CardCoordinates.TryGetValue(botCoord, out Card botCard))
-            {
-                var city = _cities.FirstOrDefault(c => c.Id == botCard.Top.PlaceId);
-                card.Bottom.PlaceId = city.Id;
-                if (city.GetCityPartByCardId(card.Id) == null)
-                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
-                city.SetSides(botCard.Id, Side.BOTTOM);
-            }
-            else
-            {
-                id++;
-                _cities.Add(new City(id, card.Id));
-                card.Bottom.PlaceId = id;
-            };
+
+            return toModify;
         }
 
         private int GetCityCount(Card card)
@@ -209,8 +343,7 @@ namespace CarcassTwwo.Models
                 return 0;
             if(card.Tile.Field5.LandType.Name == "Land")
             {
-                if (card.Top.Name == "City" && card.Bottom.Name == "City" || card.Left.Name == "City" && card.Right.Name == "City")
-                    return 2;
+                return card.Sides.Count(s => s.Name == "City");
             }
             return 1;
         }
