@@ -60,12 +60,4 @@ namespace CarcassTwwo.Models.Places
             Meeples.Add(new Meeple(MeepleType.KNIGHT, owner));
         }
     }
-
-    public enum Side
-    {
-        TOP,
-        LEFT,
-        BOTTOM,
-        RIGHT
-    }
 }

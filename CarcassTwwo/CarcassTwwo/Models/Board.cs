@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models
 {
@@ -118,7 +117,8 @@ namespace CarcassTwwo.Models
                 Places.Add(city.Key, city.Value);
 
 
-            // TODO PlaceRoads
+            foreach (var road in PlaceRoad(topCoord, botCoord, leftCoord, rightCoord, card, roadClosed))
+                Places.Add(road.Key, road.Value);
 
             // TODO PlaceLands
 
@@ -141,6 +141,113 @@ namespace CarcassTwwo.Models
                         break;
                 }
             }
+        }
+
+        private Dictionary<Side, int> PlaceRoad(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card, bool roadClosed)
+        {
+            var roadsCount = roadClosed ? card.Sides.Count(l => l.Name == "Road") : 1;
+
+            var roadsAround = new Dictionary<Side, int>();
+
+            if (CardCoordinates.TryGetValue(topCoord, out Card topCard) && topCard.Bottom.Name == "Road")
+                roadsAround.Add(Side.TOP, topCard.Bottom.PlaceId);
+            if (CardCoordinates.TryGetValue(leftCoord, out Card leftCard) && leftCard.Right.Name == "Road")
+                roadsAround.Add(Side.LEFT, leftCard.Right.PlaceId);
+            if (CardCoordinates.TryGetValue(botCoord, out Card botCard) && botCard.Top.Name == "Road")
+                roadsAround.Add(Side.BOTTOM, botCard.Top.PlaceId);
+            if (CardCoordinates.TryGetValue(rightCoord, out Card rightCard) && rightCard.Left.Name == "Road")
+                roadsAround.Add(Side.RIGHT, rightCard.Left.PlaceId);
+
+            if(roadsAround.Count == 0)
+            {
+                if (roadsCount != 1)
+                {
+                    for(int i = 0; i < roadsCount; i++)
+                    {
+                        id++;
+                        var road = new Road(id);
+                        var roadPart = new RoadPart(card.Id);
+                        roadPart.LeftOpen = false;
+                        road.ExpandRoad(roadPart);
+                        _roads.Add(road);
+                    }
+                }
+                else
+                {
+                    id++;
+                    var road = new Road(id);
+                    road.ExpandRoad(new RoadPart(card.Id));
+                    _roads.Add(road);
+                }
+            }
+            else
+            {
+                id++;
+                var newRoad = new Road(id);
+
+                foreach (var around in roadsAround)
+                {
+                    var road = _roads.First(r => r.Id == around.Value);
+                    switch (around.Key)
+                    {
+                        case Side.TOP:
+                            road.SetSides(topCard.Id);
+                            break;
+                        case Side.LEFT:
+                            road.SetSides(leftCard.Id);
+                            break;
+                        case Side.BOTTOM:
+                            road.SetSides(botCard.Id);
+                            break;
+                        case Side.RIGHT:
+                            road.SetSides(rightCard.Id);
+                            break;
+                    }
+                    if (roadClosed)
+                    {
+                        road.ExpandRoad(new RoadPart(card.Id) { LeftOpen = false, RightOpen = false });
+                    }
+                    else
+                    {
+                        roadsAround[around.Key] = newRoad.Id;
+                        foreach (var rp in road.RoadParts)
+                        {
+                            newRoad.ExpandRoad(rp);
+                            var roadCard = CardCoordinates.Values.FirstOrDefault(r => r.Id == rp.CardId);
+                            if (roadCard.Top.PlaceId == road.Id)
+                                roadCard.Top.PlaceId = newRoad.Id;
+                            if (roadCard.Left.PlaceId == road.Id)
+                                roadCard.Left.PlaceId = newRoad.Id;
+                            if (roadCard.Bottom.PlaceId == road.Id)
+                                roadCard.Bottom.PlaceId = newRoad.Id;
+                            if (roadCard.Right.PlaceId == road.Id)
+                                roadCard.Right.PlaceId = newRoad.Id;
+                        }
+                        _roads.Remove(road);
+                    }
+                    roadsCount--;
+                }
+
+                if(roadsCount >= 0)
+                {
+                    id--;
+                    for(int i = 0; i < roadsCount; i++)
+                    {
+                        id++;
+                        var road = new Road(id);
+                        var roadPart = new RoadPart(card.Id);
+                        roadPart.LeftOpen = false;
+                        road.ExpandRoad(roadPart);
+                        _roads.Add(road);
+                    }
+                }
+                else
+                {
+                    _roads.Add(newRoad);
+                }
+            }
+
+            return roadsAround;
         }
 
         private Dictionary<Side, int> PlaceCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
@@ -225,13 +332,13 @@ namespace CarcassTwwo.Models
                         {
                             newCity.ExpandCity(cp);
                             var cityCard = CardCoordinates.Values.FirstOrDefault(c => c.Id == cp.CardId);
-                            if (cityCard.Top.Name == "City")
+                            if (cityCard.Top.PlaceId == city.Id)
                                 cityCard.Top.PlaceId = newCity.Id;
-                            if (cityCard.Left.Name == "City")
+                            if (cityCard.Left.PlaceId == city.Id)
                                 cityCard.Left.PlaceId = newCity.Id;
-                            if (cityCard.Bottom.Name == "City")
+                            if (cityCard.Bottom.PlaceId == city.Id)
                                 cityCard.Bottom.PlaceId = newCity.Id;
-                            if (cityCard.Right.Name == "City")
+                            if (cityCard.Right.PlaceId == city.Id)
                                 cityCard.Right.PlaceId = newCity.Id;
                         }
                         _cities.Remove(city);
