@@ -13,6 +13,16 @@ namespace CarcassTwwo.Models
         public LandType Left { get; set; }
         public LandType Right { get; set; }
 
+        public HashSet<int> PlaceIds
+        { 
+            get
+            {
+                var ids = new HashSet<int>();
+                Sides.ForEach(s => ids.Add(s.PlaceId));
+                return ids;
+            } 
+        }
+
         public int MonasteryId { get; set; }
 
 
