@@ -9,7 +9,7 @@ namespace CarcassTwwo.Models.Places
     {
 
         //Grasslands are counted only at the end of the game.
-        public int SurroundingCities { get; set; }
+        public List<int> SurroundingCities { get; set; }
         public int Size { get { return _cardIds.Count; }}
 
         private List<int> _cardIds;
@@ -17,7 +17,7 @@ namespace CarcassTwwo.Models.Places
         public List<Meeple> Peasants { get; set; }
         public GrassLand(int id) : base(id)
         {
-            SurroundingCities = 0;
+            SurroundingCities = new List<int>();
             Peasants = new List<Meeple>();
             _cardIds = new List<int>();
         }
@@ -27,9 +27,9 @@ namespace CarcassTwwo.Models.Places
             _cardIds.Add(cardId);
         }
 
-        public void AddNewCity()
+        public void AddNewCity(int id)
         {
-            SurroundingCities++;
+            SurroundingCities.Add(id);
         }
 
         public override void PlaceMeeple(Client owner)
