@@ -5,7 +5,7 @@ namespace CarcassTwwo.Models.Places
 {
     public class City : Place
     {
-        public HashSet<CityPart> CityParts { get; private set}
+        public HashSet<CityPart> CityParts { get; private set; }
         public int Size { get { return CityParts.Count; } }
         
 
@@ -59,13 +59,5 @@ namespace CarcassTwwo.Models.Places
         {
             Meeples.Add(new Meeple(MeepleType.KNIGHT, owner));
         }
-    }
-
-    public enum Side
-    {
-        TOP,
-        LEFT,
-        BOTTOM,
-        RIGHT
     }
 }
