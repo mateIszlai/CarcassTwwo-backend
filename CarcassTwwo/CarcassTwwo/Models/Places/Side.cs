@@ -2,9 +2,15 @@
 {
     public enum Side
     {
+        TOPLEFT,
         TOP,
-        LEFT,
+        TOPRIGHT,
+        MIDDLELEFT,
+        MIDDLE,
+        MIDDLERIGHT,
+        BOTTOMLEFT,
         BOTTOM,
-        RIGHT
+        BOTTOMRIGHT
     }
+
 }
