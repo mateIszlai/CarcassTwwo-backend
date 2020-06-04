@@ -9,9 +9,9 @@ namespace CarcassTwwo.Models.Places
     {
 
         //Grasslands are counted only at the end of the game.
-        public List<int> SurroundingCities { get; private set; }
+        public HashSet<int> SurroundingCities { get; private set; }
 
-        public List<int> Roads { get; private set; }
+        public HashSet<int> Roads { get; private set; }
         public int Size { get { return CardIds.Count; }}
 
         public List<int> CardIds { get; private set; }
