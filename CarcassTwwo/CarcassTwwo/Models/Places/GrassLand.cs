@@ -31,9 +31,15 @@ namespace CarcassTwwo.Models.Places
             SurroundingCities.Add(id);
         }
 
-        public override void PlaceMeeple(Client owner)
+        public override void PlaceMeeple(Client owner, int field, Card card)
         {
-            Meeples.Add(new Meeple(MeepleType.PEASANT, owner));
+            if (!card.HasMeeple)
+            {
+                var peasant = new Meeple(MeepleType.PEASANT, owner, field, card.Id, Id);
+                Meeples.Add(peasant);
+                card.AddMeeple(peasant, field);
+                CanPlaceMeeple = false;
+            }
         }
     }
 }
