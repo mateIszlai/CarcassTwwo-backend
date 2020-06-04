@@ -8,6 +8,7 @@ namespace CarcassTwwo.Models.Places
     public class Monastery : Place
     {
         public List<Coordinate> SurroundingCoordinates { get; private set; }
+        public int CardId { get; set; }
         public bool IsFinished { get; set; }
         public Monastery(int id, Coordinate cardCoordinate) : base(id)
         {

@@ -107,7 +107,7 @@ namespace CarcassTwwo.Models
             if (card.Tile.Field5.LandType.Name == "Monastery")
             {
                 id++;
-                _monasteries.Add(new Monastery(id, coordinate));
+                _monasteries.Add(new Monastery(id, coordinate) { CardId = card.Id });
                 card.MonasteryId = id;
             }
 
