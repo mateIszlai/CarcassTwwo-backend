@@ -108,7 +108,7 @@ namespace CarcassTwwo.Hubs
         public async void EndPlacement(string groupName, CardToRecieve card)
         {
             _manager.GetGroup(groupName).Game.PlaceCard(card);
-            await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple",new Array[1, 2, 3, 4, 5, 7, 8, 9]);
+            await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", new List<int> { 1, 2, 3, 4, 5, 7, 8, 9 });
         }
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
         {   
