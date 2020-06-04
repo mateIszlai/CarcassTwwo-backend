@@ -1,4 +1,6 @@
 ﻿using CarcassTwwo.Models.Places;
+using CarcassTwwo.Models.Requests;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -248,6 +250,42 @@ namespace CarcassTwwo.Models
             }
 
             return roadsAround;
+        }
+
+        internal void PlaceMeeple(int placeOfMeeple, Card placedCard, Client owner)
+        {
+            var landtype = placedCard.Tile.Fields[placeOfMeeple - 1].LandType;
+            switch (landtype.Name)
+            {
+                case "City":
+                    var city = _cities.FirstOrDefault(c => c.CityParts.Where(part => part.CardId == placedCard.Id) != null);
+                    if (city != null && city.CanPlaceMeeple)
+                    {
+                        city.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+                case "Road":
+                    var road = _roads.FirstOrDefault(r => r.RoadParts.Where(part => part.CardId == placedCard.Id) != null);
+                    if (road != null && road.CanPlaceMeeple)
+                    {
+                        road.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+                case "Land":
+                    var land = _grassLands.FirstOrDefault(g => g._cardIds.Contains(placedCard.Id));
+                    if(land != null && land.CanPlaceMeeple)
+                    {
+                        land.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+                case "Monastery":
+                    var monastery = _monasteries.FirstOrDefault(m => m.CardId == placedCard.Id);
+                    if (monastery != null && monastery.CanPlaceMeeple)
+                    {
+                        monastery.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+            }            
         }
 
         private Dictionary<Side, int> PlaceCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
