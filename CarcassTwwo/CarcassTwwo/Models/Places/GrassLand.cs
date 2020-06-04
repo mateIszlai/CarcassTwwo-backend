@@ -30,7 +30,7 @@ namespace CarcassTwwo.Models.Places
             Roads = new List<int>();
             SurroundingCities = new List<int>();
             Peasants = new List<Meeple>();
-            _cardIds = new List<int> ;
+            _cardIds = new List<int>();
         }
 
         public void ExpandLand (int cardId)
