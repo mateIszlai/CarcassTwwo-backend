@@ -26,9 +26,15 @@ namespace CarcassTwwo.Models.Places
                 roadPart.RightOpen = false;
         }
 
-        public override void PlaceMeeple(Client owner)
+        public override void PlaceMeeple(Client owner, int field, Card card)
         {
-            Meeples.Add(new Meeple(MeepleType.HIGHWAYMAN, owner));
+            if (!card.HasMeeple)
+            {
+                var highwayman = new Meeple(MeepleType.HIGHWAYMAN, owner, field, card.Id, Id);
+                Meeples.Add(highwayman);
+                card.AddMeeple(highwayman, field);
+                CanPlaceMeeple = false;
+            }
         }
     }
 }
