@@ -1,4 +1,5 @@
-﻿using CarcassTwwo.Models.Requests;
+﻿using CarcassTwwo.Models.Places;
+using CarcassTwwo.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -175,6 +176,7 @@ namespace CarcassTwwo.Models
 
         }
 
+
         public bool SidesMatches(RequiredCard req, List<LandType> sides)
         {
             bool topIsGood, leftIsGood, bottomIsGood, rightIsGood;
@@ -220,6 +222,12 @@ namespace CarcassTwwo.Models
         public Card GetFirstCard()
         {
             return _cards[0];
+        }
+
+        public void PlaceMeeple(int placeOfMeeple, CardToRecieve placedCard)
+        {
+            var card = _cards.First(c => c.Id == placedCard.CardId);
+            _gameboard.PlaceMeeple(placeOfMeeple, card, LastPlayer);
         }
     }
 }
