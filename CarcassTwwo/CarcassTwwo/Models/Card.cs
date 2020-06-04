@@ -66,14 +66,24 @@ namespace CarcassTwwo.Models
             Rotations["270"] = new List<LandType> { Left, Bottom, Right, Top };
         }
 
-        public void PlaceMeeple(Field field, Client owner)
+        public void AddMeeple(Meeple meeple, int field)
         {
-            meeple = new Meeple(field.LandType.Meeple, owner);
+            Meeple = meeple;
+            HasMeeple = true;
+            SetMeepleField(field);
+
         }
 
         public void RemoveMeeple()
         {
-            meeple = null;
+            Meeple = null;
+            HasMeeple = false;
+            MeepleField = null;
+        }
+
+        public void SetMeepleField(int field)
+        {
+            MeepleField = Tile.Fields[field - 1];
         }
     }
 }
