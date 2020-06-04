@@ -19,6 +19,19 @@ namespace CarcassTwwo.Models
         public Field Field8 { get; set; }
         public Field Field9 { get; set; }
 
+        public LandType Top1 { get; set; }
+        public LandType Top2 { get; set; }
+        public LandType Top3 { get; set; }
+        public LandType Left1 { get; set; }
+        public LandType Left2 { get; set; }
+        public LandType Left3 { get; set; }
+        public LandType Bottom1 { get; set; }
+        public LandType Bottom2 { get; set; }
+        public LandType Bottom3 { get; set; }
+        public LandType Right1 { get; set; }
+        public LandType Right2 { get; set; }
+        public LandType Right3 { get; set; }
+
         public Dictionary<int, Field> FieldTypes { get; }
 
         public bool HasCrest { get; set; }
