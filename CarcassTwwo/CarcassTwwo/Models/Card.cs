@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using CarcassTwwo.Models.Places;
+using System;
+using System.Collections.Generic;
 
 namespace CarcassTwwo.Models
 {
@@ -122,6 +124,40 @@ namespace CarcassTwwo.Models
             Tile.Field7.LandType = Rotations[rotation][5];
             Tile.Field8.LandType = Rotations[rotation][6];
             Tile.Field9.LandType = Rotations[rotation][7];
+        }
+
+        internal void SetField(Side side, int placeId)
+        {
+            switch (side)
+            {
+                case Side.TOPLEFT:
+                    Tile.Field1.LandType.PlaceId = placeId;
+                    break;
+                case Side.TOP:
+                    Tile.Field2.LandType.PlaceId = placeId;
+                    break;
+                case Side.TOPRIGHT:
+                    Tile.Field3.LandType.PlaceId = placeId;
+                    break;
+                case Side.MIDDLELEFT:
+                    Tile.Field4.LandType.PlaceId = placeId;
+                    break;
+                case Side.MIDDLE:
+                    Tile.Field5.LandType.PlaceId = placeId;
+                    break;
+                case Side.MIDDLERIGHT:
+                    Tile.Field6.LandType.PlaceId = placeId;
+                    break;
+                case Side.BOTTOMLEFT:
+                    Tile.Field7.LandType.PlaceId = placeId;
+                    break;
+                case Side.BOTTOM:
+                    Tile.Field8.LandType.PlaceId = placeId;
+                    break;
+                case Side.BOTTOMRIGHT:
+                    Tile.Field9.LandType.PlaceId = placeId;
+                    break;
+            }
         }
     }
 }
