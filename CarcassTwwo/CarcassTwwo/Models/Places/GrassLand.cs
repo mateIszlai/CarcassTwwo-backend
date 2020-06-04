@@ -12,9 +12,9 @@ namespace CarcassTwwo.Models.Places
         public List<int> SurroundingCities { get; private set; }
 
         public List<int> Roads { get; private set; }
-        public int Size { get { return _cardIds.Count; }}
+        public int Size { get { return CardIds.Count; }}
 
-        private List<int> _cardIds;
+        public List<int> CardIds { get; private set; }
         //only the finished cities count
         public List<Meeple> Peasants { get; set; }
         public GrassLand(int id, int cardId) : base(id)
@@ -22,7 +22,7 @@ namespace CarcassTwwo.Models.Places
             Roads = new List<int>();
             SurroundingCities = new List<int>();
             Peasants = new List<Meeple>();
-            _cardIds = new List<int> { cardId };
+            CardIds = new List<int> { cardId };
         }
 
         public GrassLand(int id) : base(id)
@@ -30,12 +30,12 @@ namespace CarcassTwwo.Models.Places
             Roads = new List<int>();
             SurroundingCities = new List<int>();
             Peasants = new List<Meeple>();
-            _cardIds = new List<int>();
+            CardIds = new List<int>();
         }
 
         public void ExpandLand (int cardId)
         {
-            _cardIds.Add(cardId);
+            CardIds.Add(cardId);
         }
 
         public override void PlaceMeeple(Client owner)
