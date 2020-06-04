@@ -6,7 +6,9 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; private set; }
         public Tile Tile { get; set; }
-        public Meeple meeple { get; set; }
+        public Meeple Meeple { get; set; }
+        public bool HasMeeple { get; set; }
+        public Field MeepleField { get; set; }
         public Coordinate Coordinate { get; set; }
         public LandType Top { get; set; }
         public LandType Bottom { get; set; }
