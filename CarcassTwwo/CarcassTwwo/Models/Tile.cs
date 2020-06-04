@@ -33,7 +33,7 @@ namespace CarcassTwwo.Models
         public LandType Right2 { get; set; }
         public LandType Right3 { get; set; }
 
-        public Dictionary<Side, Field> Fields { 
+        public Dictionary<Side, Field> Sides { 
             get
             {
                 return new Dictionary<Side, Field>
