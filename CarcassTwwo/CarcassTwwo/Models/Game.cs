@@ -80,8 +80,8 @@ namespace CarcassTwwo.Models
         public Client PickPlayer()
         {
             var lastPlayerIndex = Players.FindIndex(c => c.Equals(LastPlayer));
-
-            return lastPlayerIndex == Players.Count - 1 ? Players[0] : Players[lastPlayerIndex + 1];
+            LastPlayer = lastPlayerIndex == Players.Count - 1 ? Players[0] : Players[lastPlayerIndex + 1];
+            return LastPlayer;
         }
 
         public Card PickRandomCard()
@@ -105,11 +105,7 @@ namespace CarcassTwwo.Models
         {
             var card = _cards.First(c => c.Id == placedCard.CardId);
             card.Coordinate = placedCard.Coordinate;
-            var sides = card.Rotations[placedCard.Rotation];
-            card.Top = sides[0];
-            card.Left = sides[1];
-            card.Bottom = sides[2];
-            card.Right = sides[3];
+            card.Rotate(placedCard.Rotation);
             _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
             _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
             _gameboard.SetSideOccupation(placedCard.Coordinate);
@@ -175,26 +171,26 @@ namespace CarcassTwwo.Models
 
         }
 
-        public bool SidesMatches(RequiredCard req, List<LandType> sides)
+        public bool SidesMatches(RequiredCard req, LandType[] sides)
         {
             bool topIsGood, leftIsGood, bottomIsGood, rightIsGood;
             topIsGood = leftIsGood = bottomIsGood = rightIsGood = true;
 
             if(req.Top != null)
             {
-                topIsGood = sides[0] == req.Top ? true : false;
+                topIsGood = sides[1] == req.Top ? true : false;
             }
             if(req.Left != null)
             {
-                leftIsGood = sides[1] == req.Left ? true : false;
+                leftIsGood = sides[3] == req.Left ? true : false;
             }
             if (req.Bottom != null)
             {
-                bottomIsGood = sides[2] == req.Bottom ? true : false;
+                bottomIsGood = sides[6] == req.Bottom ? true : false;
             }
             if (req.Right != null)
             {
-                rightIsGood = sides[3] == req.Right ? true : false;
+                rightIsGood = sides[4] == req.Right ? true : false;
             }
 
             return topIsGood && leftIsGood && bottomIsGood && rightIsGood;

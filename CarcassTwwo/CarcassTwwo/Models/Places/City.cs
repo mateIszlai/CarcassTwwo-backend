@@ -44,10 +44,10 @@ namespace CarcassTwwo.Models.Places
                     case Side.BOTTOM:
                         part.BottomIsOpen = false;
                         break;
-                    case Side.LEFT:
+                    case Side.MIDDLELEFT:
                         part.LeftIsOpen = false;
                         break;
-                    case Side.RIGHT:
+                    case Side.MIDDLERIGHT:
                         part.RightIsOpen = false;
                         break;
                 }
@@ -59,13 +59,5 @@ namespace CarcassTwwo.Models.Places
         {
             Meeples.Add(new Meeple(MeepleType.KNIGHT, owner));
         }
-    }
-
-    public enum Side
-    {
-        TOP,
-        LEFT,
-        BOTTOM,
-        RIGHT
     }
 }
