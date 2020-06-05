@@ -774,7 +774,8 @@ namespace CarcassTwwo.Models
             int cityCounts = GetCityCount(card);
             if (cityCounts == 2)
             {
-                return PlaceTwoCity(topCoord, botCoord, leftCoord, rightCoord, card);
+                //return PlaceTwoCity(topCoord, botCoord, leftCoord, rightCoord, card);
+                return;
             }
 
             var citiesAround = new Dictionary<Side, int>();
@@ -782,7 +783,7 @@ namespace CarcassTwwo.Models
             var cities = new Dictionary<Side, int>();
 
             if (cityCounts == 0)
-                return cities;
+                return;
 
             if (CardCoordinates.TryGetValue(topCoord, out Card topCard) && topCard.Bottom.Name == "City")
                 citiesAround.Add(Side.TOP, topCard.Bottom.PlaceId);
@@ -874,7 +875,7 @@ namespace CarcassTwwo.Models
                     _cities.Add(newCity);
                 }
             }
-            return cities;
+            return;
         }
 
         private void PlaceTwoCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
@@ -966,7 +967,7 @@ namespace CarcassTwwo.Models
                 }
             }
 
-            return toModify;
+            return;
         }
 
         private int GetCityCount(Card card)
