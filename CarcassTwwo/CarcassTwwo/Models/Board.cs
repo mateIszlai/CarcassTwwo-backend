@@ -419,8 +419,8 @@ namespace CarcassTwwo.Models
                     var land = _grassLands.First(l => l.Id == id);
                     newLand.Meeples.AddRange(land.Meeples);
                     newLand.Peasants.AddRange(land.Peasants);
-                    newLand.Roads.AddRange(land.Roads);
-                    newLand.SurroundingCities.AddRange(land.SurroundingCities);
+                    newLand.Roads.UnionWith(land.Roads);
+                    newLand.SurroundingCities.UnionWith(land.SurroundingCities);
                     foreach (var cardId in land.CardIds)
                     {
                         var landCard = CardCoordinates.Values.First(c => c.Id == cardId);
@@ -1013,8 +1013,8 @@ namespace CarcassTwwo.Models
                 var land = _grassLands.First(l => l.Id == landId);
                 newLand.Meeples.AddRange(land.Meeples);
                 newLand.Peasants.AddRange(land.Peasants);
-                newLand.Roads.AddRange(land.Roads);
-                newLand.SurroundingCities.AddRange(land.SurroundingCities);
+                newLand.Roads.UnionWith(land.Roads);
+                newLand.SurroundingCities.UnionWith(land.SurroundingCities);
                 foreach (var cardId in land.CardIds)
                 {
                     var landCard = CardCoordinates.Values.First(c => c.Id == cardId);
