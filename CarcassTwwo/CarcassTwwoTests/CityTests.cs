@@ -12,7 +12,7 @@ namespace CarcassTwwoTests
         [SetUp]
         public void SetUp()
         {
-            _city = new City(0, 0);
+            _city = new City(0);
         }
 
         [TearDown]
