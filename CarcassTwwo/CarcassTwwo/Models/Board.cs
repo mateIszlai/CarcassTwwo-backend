@@ -419,8 +419,8 @@ namespace CarcassTwwo.Models
                     var land = _grassLands.First(l => l.Id == id);
                     newLand.Meeples.AddRange(land.Meeples);
                     newLand.Peasants.AddRange(land.Peasants);
-                    newLand.Roads.AddRange(land.Roads);
-                    newLand.SurroundingCities.AddRange(land.SurroundingCities);
+                    land.Roads.ToList().ForEach(r => newLand.Roads.Add(r));
+                    land.SurroundingCities.ToList().ForEach(c => newLand.SurroundingCities.Add(c));
                     foreach (var cardId in land.CardIds)
                     {
                         var landCard = CardCoordinates.Values.First(c => c.Id == cardId);
@@ -632,26 +632,18 @@ namespace CarcassTwwo.Models
 
             if (roadsAround.Count == 0)
             {
-                if (roadsCount != 1)
-                {
-                    for (int i = 0; i < roadsCount; i++)
-                    {
-                        id++;
-                        var road = new Road(id);
-                        var roadPart = new RoadPart(card.Id);
-                        roadPart.LeftOpen = false;
-                        road.ExpandRoad(roadPart);
-                        _roads.Add(road);
-                    }
-                }
-                else
+                for (int i = 0; i < roadsCount; i++)
                 {
                     id++;
                     var road = new Road(id);
-                    road.ExpandRoad(new RoadPart(card.Id));
-                    _roads.Add(road);
+                    var roadPart = new RoadPart(card.Id);
+                    if (roadClosed)
+                        roadPart.LeftOpen = false;
 
+                    road.ExpandRoad(roadPart);
+                    _roads.Add(road);
                 }
+              
                 var tempId = id;
                 foreach (var side in card.Tile.Sides.Where(f => f.Value.LandType.Name == "Road").Select(s => s.Key))
                 {
@@ -697,23 +689,29 @@ namespace CarcassTwwo.Models
                     {
                         road.ExpandRoad(new RoadPart(card.Id) { LeftOpen = false, RightOpen = false });
                         card.SetField(around.Key, road.Id);
+                        AddRoadToLand(around.Key, road.Id, card);
                     }
                     else
                     {
 
                         card.SetField(around.Key, newRoad.Id);
+                        AddRoadToLand(around.Key, newRoad.Id, card);
+
                         foreach (var rp in road.RoadParts)
                         {
                             newRoad.ExpandRoad(rp);
                             var roadCard = CardCoordinates.Values.FirstOrDefault(r => r.Id == rp.CardId);
-                            if (roadCard.Top.PlaceId == road.Id)
-                                roadCard.Top.PlaceId = newRoad.Id;
-                            if (roadCard.Left.PlaceId == road.Id)
-                                roadCard.Left.PlaceId = newRoad.Id;
-                            if (roadCard.Bottom.PlaceId == road.Id)
-                                roadCard.Bottom.PlaceId = newRoad.Id;
-                            if (roadCard.Right.PlaceId == road.Id)
-                                roadCard.Right.PlaceId = newRoad.Id;
+                            foreach (var side in roadCard.Tile.Sides)
+                            {
+                                if (side.Value.LandType.PlaceId == road.Id)
+                                    roadCard.SetField(side.Key, newRoad.Id);
+                                if (side.Value.LandType.Name == "Land")
+                                {
+                                    var land =  _grassLands.First(l => l.Id == side.Value.LandType.PlaceId);
+                                    land.Roads.RemoveWhere(r => r == road.Id);
+                                    land.Roads.Add(newRoad.Id);
+                                }
+                            }
                         }
                         _roads.Remove(road);
                     }
@@ -734,6 +732,7 @@ namespace CarcassTwwo.Models
                             road.ExpandRoad(roadPart);
                             _roads.Add(road);
                             card.SetField(side, id);
+                            AddRoadToLand(side, id, card);
                         }
                     }
                 }
@@ -774,15 +773,14 @@ namespace CarcassTwwo.Models
             int cityCounts = GetCityCount(card);
             if (cityCounts == 2)
             {
-                return PlaceTwoCity(topCoord, botCoord, leftCoord, rightCoord, card);
+                PlaceTwoCity(topCoord, botCoord, leftCoord, rightCoord, card);
+                return;
             }
 
             var citiesAround = new Dictionary<Side, int>();
 
-            var cities = new Dictionary<Side, int>();
-
             if (cityCounts == 0)
-                return cities;
+                return;
 
             if (CardCoordinates.TryGetValue(topCoord, out Card topCard) && topCard.Bottom.Name == "City")
                 citiesAround.Add(Side.TOP, topCard.Bottom.PlaceId);
@@ -809,14 +807,13 @@ namespace CarcassTwwo.Models
                 var city = new City(id);
                 city.ExpandCity(cityPart);
                 _cities.Add(city);
-                if (card.Top.Name == "City")
-                    cities.Add(Side.TOP, id);
-                else if (card.Left.Name == "City")
-                    cities.Add(Side.MIDDLELEFT, id);
-                else if (card.Bottom.Name == "City")
-                    cities.Add(Side.BOTTOM, id);
-                else
-                    cities.Add(Side.MIDDLERIGHT, id);
+                foreach(var side in card.Tile.Sides)
+                {
+                    if(side.Value.LandType.Name == "City")
+                        card.SetField(side.Key, id);
+                    if (side.Value.LandType.Name == "Land")
+                        _grassLands.First(l => l.Id == side.Value.LandType.PlaceId).SurroundingCities.Add(city.Id);
+                }
             }
             else
             {
@@ -828,43 +825,47 @@ namespace CarcassTwwo.Models
                     switch (around.Key)
                     {
                         case Side.TOP:
-                            city.SetSides(topCard.Id, Side.BOTTOM);
                             cityPart.TopIsOpen = false;
                             break;
                         case Side.MIDDLELEFT:
-                            city.SetSides(leftCard.Id, Side.MIDDLERIGHT);
                             cityPart.LeftIsOpen = false;
                             break;
                         case Side.BOTTOM:
-                            city.SetSides(botCard.Id, Side.TOP);
                             cityPart.BottomIsOpen = false;
                             break;
                         case Side.MIDDLERIGHT:
-                            city.SetSides(rightCard.Id, Side.MIDDLELEFT);
                             cityPart.LeftIsOpen = false;
                             break;
                     }
                     if (citiesAround.Count == 1)
                     {
                         city.ExpandCity(cityPart);
-                        cities.Add(around.Key, around.Value);
+                        foreach (var side in card.Tile.Sides)
+                        {
+                            if (side.Value.LandType.Name == "City")
+                                card.SetField(side.Key, city.Id);
+                            if (side.Value.LandType.Name == "Land")
+                                _grassLands.First(l => l.Id == side.Value.LandType.PlaceId).SurroundingCities.Add(city.Id);
+                        }
                         id--;
                     }
                     else
                     {
-                        cities.Add(around.Key, newCity.Id);
                         foreach (var cp in city.CityParts)
                         {
                             newCity.ExpandCity(cp);
                             var cityCard = CardCoordinates.Values.FirstOrDefault(c => c.Id == cp.CardId);
-                            if (cityCard.Top.PlaceId == city.Id)
-                                cityCard.Top.PlaceId = newCity.Id;
-                            if (cityCard.Left.PlaceId == city.Id)
-                                cityCard.Left.PlaceId = newCity.Id;
-                            if (cityCard.Bottom.PlaceId == city.Id)
-                                cityCard.Bottom.PlaceId = newCity.Id;
-                            if (cityCard.Right.PlaceId == city.Id)
-                                cityCard.Right.PlaceId = newCity.Id;
+                            foreach (var side in cityCard.Tile.Sides)
+                            {
+                                if (side.Value.LandType.PlaceId == city.Id)
+                                    cityCard.SetField(side.Key, newCity.Id);
+                                if (side.Value.LandType.Name == "Land")
+                                {
+                                    var land = _grassLands.First(l => l.Id == side.Value.LandType.PlaceId);
+                                    land.SurroundingCities.Remove(city.Id);
+                                    land.SurroundingCities.Add(newCity.Id);
+                                }
+                            }
                         }
                         _cities.Remove(city);
                     }
@@ -872,24 +873,30 @@ namespace CarcassTwwo.Models
                 if (citiesAround.Count > 1)
                 {
                     _cities.Add(newCity);
+                    foreach (var side in card.Tile.Sides)
+                    {
+                        if (side.Value.LandType.Name == "City")
+                            card.SetField(side.Key, newCity.Id);
+                        if (side.Value.LandType.Name == "Land")
+                            _grassLands.First(l => l.Id == side.Value.LandType.PlaceId).SurroundingCities.Add(newCity.Id);
+                    }
                 }
             }
-            return cities;
+            return;
         }
 
         private void PlaceTwoCity(Coordinate topCoord, Coordinate botCoord, Coordinate leftCoord, Coordinate rightCoord, Card card)
         {
-            var toModify = new Dictionary<Side, int>();
             if (card.Top.Name == "City")
             {
-
                 if (CardCoordinates.TryGetValue(topCoord, out Card topCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == topCard.Bottom.PlaceId);
-                    toModify.Add(Side.TOP, city.Id);
+                    card.SetField(Side.TOP, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(topCard.Id, Side.BOTTOM);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
                 }
                 else
                 {
@@ -897,8 +904,10 @@ namespace CarcassTwwo.Models
                     var city = new City(id);
                     city.ExpandCity(new CityPart(card.Id) { TopIsOpen = true, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     _cities.Add(city);
-                    toModify.Add(Side.TOP, id);
+                    card.SetField(Side.TOP, id);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
                 }
+
             }
 
             if (card.Left.Name == "City")
@@ -907,10 +916,12 @@ namespace CarcassTwwo.Models
                 if (CardCoordinates.TryGetValue(leftCoord, out Card leftCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == leftCard.Right.PlaceId);
-                    toModify.Add(Side.MIDDLELEFT, city.Id);
+                    card.SetField(Side.MIDDLELEFT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(leftCard.Id, Side.MIDDLERIGHT);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
+
                 }
                 else
                 {
@@ -918,8 +929,8 @@ namespace CarcassTwwo.Models
                     var city = new City(id);
                     city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = true, BottomIsOpen = false, RightIsOpen = false });
                     _cities.Add(city);
-                    toModify.Add(Side.MIDDLELEFT, id);
-
+                    card.SetField(Side.MIDDLELEFT, id);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
                 }
             }
 
@@ -928,10 +939,12 @@ namespace CarcassTwwo.Models
                 if (CardCoordinates.TryGetValue(botCoord, out Card botCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == botCard.Top.PlaceId);
-                    toModify.Add(Side.BOTTOM, city.Id);
+                    card.SetField(Side.BOTTOM, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(botCard.Id, Side.TOP);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
+
                 }
                 else
                 {
@@ -939,7 +952,8 @@ namespace CarcassTwwo.Models
                     var city = new City(id);
                     city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = true, RightIsOpen = false });
                     _cities.Add(city);
-                    toModify.Add(Side.BOTTOM, id);
+                    card.SetField(Side.BOTTOM, id);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
 
                 }
             }
@@ -950,10 +964,12 @@ namespace CarcassTwwo.Models
                 if (CardCoordinates.TryGetValue(rightCoord, out Card rightCard))
                 {
                     var city = _cities.FirstOrDefault(c => c.Id == rightCard.Right.PlaceId);
-                    toModify.Add(Side.MIDDLERIGHT, city.Id);
+                    card.SetField(Side.MIDDLERIGHT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
                     city.SetSides(rightCard.Id, Side.MIDDLELEFT);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
+
                 }
                 else
                 {
@@ -961,12 +977,12 @@ namespace CarcassTwwo.Models
                     var city = new City(id);
                     city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = true });
                     _cities.Add(city);
-                    toModify.Add(Side.MIDDLERIGHT, id);
-
+                    card.SetField(Side.MIDDLERIGHT, id);
+                    _grassLands.First(l => l.Id == card.Tile.Field5.LandType.PlaceId).SurroundingCities.Add(city.Id);
                 }
             }
 
-            return toModify;
+            return;
         }
 
         private int GetCityCount(Card card)
@@ -1013,8 +1029,8 @@ namespace CarcassTwwo.Models
                 var land = _grassLands.First(l => l.Id == landId);
                 newLand.Meeples.AddRange(land.Meeples);
                 newLand.Peasants.AddRange(land.Peasants);
-                newLand.Roads.AddRange(land.Roads);
-                newLand.SurroundingCities.AddRange(land.SurroundingCities);
+                land.Roads.ToList().ForEach(r => newLand.Roads.Add(r));
+                land.SurroundingCities.ToList().ForEach(s => newLand.SurroundingCities.Add(s));
                 foreach (var cardId in land.CardIds)
                 {
                     var landCard = CardCoordinates.Values.First(c => c.Id == cardId);
