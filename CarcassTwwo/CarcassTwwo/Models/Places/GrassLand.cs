@@ -19,16 +19,16 @@ namespace CarcassTwwo.Models.Places
         public List<Meeple> Peasants { get; set; }
         public GrassLand(int id, int cardId) : base(id)
         {
-            Roads = new List<int>();
-            SurroundingCities = new List<int>();
+            Roads = new HashSet<int>();
+            SurroundingCities = new HashSet<int>();
             Peasants = new List<Meeple>();
             CardIds = new List<int> { cardId };
         }
 
         public GrassLand(int id) : base(id)
         {
-            Roads = new List<int>();
-            SurroundingCities = new List<int>();
+            Roads = new HashSet<int>();
+            SurroundingCities = new HashSet<int>();
             Peasants = new List<Meeple>();
             CardIds = new List<int>();
         }
