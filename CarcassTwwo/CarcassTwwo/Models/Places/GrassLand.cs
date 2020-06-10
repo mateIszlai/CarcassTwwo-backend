@@ -8,22 +8,33 @@ namespace CarcassTwwo.Models.Places
     public class GrassLand : Place
     {
         //Grasslands are counted only at the end of the game.
-        public List<int> SurroundingCities { get; set; }
-        public int Size { get { return _cardIds.Count; }}
+        public HashSet<int> SurroundingCities { get; private set; }
 
-        public List<int> _cardIds { get; private set; }
+        public HashSet<int> Roads { get; private set; }
+        public int Size { get { return CardIds.Count; }}
+
+        public List<int> CardIds { get; private set; }
         //only the finished cities count
         public List<Meeple> Peasants { get; set; }
+        public GrassLand(int id, int cardId) : base(id)
+        {
+            Roads = new HashSet<int>();
+            SurroundingCities = new HashSet<int>();
+            Peasants = new List<Meeple>();
+            CardIds = new List<int> { cardId };
+        }
+
         public GrassLand(int id) : base(id)
         {
-            SurroundingCities = new List<int>();
+            Roads = new HashSet<int>();
+            SurroundingCities = new HashSet<int>();
             Peasants = new List<Meeple>();
-            _cardIds = new List<int>();
+            CardIds = new List<int>();
         }
 
         public void ExpandLand (int cardId)
         {
-            _cardIds.Add(cardId);
+            CardIds.Add(cardId);
         }
 
         public void AddNewCity(int id)

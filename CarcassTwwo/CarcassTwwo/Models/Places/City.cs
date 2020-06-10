@@ -44,10 +44,10 @@ namespace CarcassTwwo.Models.Places
                     case Side.BOTTOM:
                         part.BottomIsOpen = false;
                         break;
-                    case Side.LEFT:
+                    case Side.MIDDLELEFT:
                         part.LeftIsOpen = false;
                         break;
-                    case Side.RIGHT:
+                    case Side.MIDDLERIGHT:
                         part.RightIsOpen = false;
                         break;
                 }

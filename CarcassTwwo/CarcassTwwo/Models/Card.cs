@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using CarcassTwwo.Models.Places;
+using System;
+using System.Collections.Generic;
 
 namespace CarcassTwwo.Models
 {
@@ -10,16 +12,51 @@ namespace CarcassTwwo.Models
         public bool HasMeeple { get; set; }
         public Field MeepleField { get; set; }
         public Coordinate Coordinate { get; set; }
-        public LandType Top { get; set; }
-        public LandType Bottom { get; set; }
-        public LandType Left { get; set; }
-        public LandType Right { get; set; }
-        
-        public int MonasteryId { get; set; }
+        public LandType Top
+        {
+            get
+            {
+                return Tile.Field2.LandType;
+            }
+            set
+            {
+                Tile.Field2.LandType = value;
+            }
+        }
+        public LandType Bottom
+        {
+            get
+            {
+                return Tile.Field8.LandType;
+            }
+            set
+            {
+                Tile.Field8.LandType = value;
+            }
+        }
 
-        public List<LandType> Sides { get { return new List<LandType> { Top, Bottom, Left, Right }; } }
-
-        public Dictionary<string,List<LandType>> Rotations { get; set; }
+        public LandType Left
+        {
+            get
+            {
+                return Tile.Field4.LandType;
+            }
+            set
+            {
+                Tile.Field4.LandType = value;
+            }
+        }
+        public LandType Right
+        {
+            get
+            {
+                return Tile.Field6.LandType;
+            }
+            set
+            {
+                Tile.Field6.LandType = value;
+            }
+        }
 
         public HashSet<int> PlaceIds
         { 
@@ -31,6 +68,13 @@ namespace CarcassTwwo.Models
             } 
         }
 
+        public int MonasteryId { get; set; }
+
+
+
+        public List<LandType> Sides { get { return new List<LandType> { Top, Bottom, Left, Right }; } }
+
+        public Dictionary<string, LandType[]> Rotations { get; private set; }
 
         public bool TopIsFree { get; set; }
         public bool BottomIsFree { get; set; }
@@ -42,12 +86,8 @@ namespace CarcassTwwo.Models
         {
             Id = id;
             Tile = tile;
-            Top = Tile.Field2.LandType;
-            Bottom = Tile.Field8.LandType;
-            Left = Tile.Field4.LandType;
-            Right = Tile.Field6.LandType;
             HasCrest = Tile.HasCrest;
-            Rotations = new Dictionary<string, List<LandType>>();
+            Rotations = new Dictionary<string, LandType[]>();
             SetRotations();
             MonasteryId = -1;
         }
@@ -60,10 +100,10 @@ namespace CarcassTwwo.Models
 
         public void SetRotations()
         {
-            Rotations["0"] = new List<LandType> { Top, Left, Bottom, Right };
-            Rotations["90"] = new List<LandType> { Right, Top, Left, Bottom };
-            Rotations["180"] = new List<LandType> { Bottom, Right, Top, Left };
-            Rotations["270"] = new List<LandType> { Left, Bottom, Right, Top };
+            Rotations["0"] = new LandType[] { Tile.Field1.LandType, Tile.Field2.LandType, Tile.Field3.LandType, Tile.Field4.LandType, Tile.Field6.LandType, Tile.Field7.LandType, Tile.Field8.LandType, Tile.Field9.LandType };
+            Rotations["90"] = new LandType[] { Tile.Field3.LandType, Tile.Field6.LandType, Tile.Field9.LandType, Tile.Field2.LandType, Tile.Field8.LandType, Tile.Field1.LandType, Tile.Field4.LandType, Tile.Field7.LandType };
+            Rotations["180"] = new LandType[] { Tile.Field9.LandType, Tile.Field8.LandType, Tile.Field7.LandType, Tile.Field6.LandType, Tile.Field4.LandType, Tile.Field3.LandType, Tile.Field2.LandType, Tile.Field1.LandType };
+            Rotations["270"] = new LandType[] { Tile.Field7.LandType, Tile.Field4.LandType, Tile.Field1.LandType, Tile.Field8.LandType, Tile.Field2.LandType, Tile.Field9.LandType, Tile.Field6.LandType, Tile.Field3.LandType };
         }
 
         public void AddMeeple(Meeple meeple, int field)
@@ -84,6 +124,52 @@ namespace CarcassTwwo.Models
         public void SetMeepleField(int field)
         {
             MeepleField = Tile.Fields[field - 1];
+        }
+
+        public void Rotate(string rotation)
+        {
+            Tile.Field1.LandType = Rotations[rotation][0];
+            Tile.Field2.LandType = Rotations[rotation][1];
+            Tile.Field3.LandType = Rotations[rotation][2];
+            Tile.Field4.LandType = Rotations[rotation][3];
+            Tile.Field6.LandType = Rotations[rotation][4];
+            Tile.Field7.LandType = Rotations[rotation][5];
+            Tile.Field8.LandType = Rotations[rotation][6];
+            Tile.Field9.LandType = Rotations[rotation][7];
+        }
+
+        internal void SetField(Side side, int placeId)
+        {
+            switch (side)
+            {
+                case Side.TOPLEFT:
+                    Tile.Field1.LandType.PlaceId = placeId;
+                    break;
+                case Side.TOP:
+                    Tile.Field2.LandType.PlaceId = placeId;
+                    break;
+                case Side.TOPRIGHT:
+                    Tile.Field3.LandType.PlaceId = placeId;
+                    break;
+                case Side.MIDDLELEFT:
+                    Tile.Field4.LandType.PlaceId = placeId;
+                    break;
+                case Side.MIDDLE:
+                    Tile.Field5.LandType.PlaceId = placeId;
+                    break;
+                case Side.MIDDLERIGHT:
+                    Tile.Field6.LandType.PlaceId = placeId;
+                    break;
+                case Side.BOTTOMLEFT:
+                    Tile.Field7.LandType.PlaceId = placeId;
+                    break;
+                case Side.BOTTOM:
+                    Tile.Field8.LandType.PlaceId = placeId;
+                    break;
+                case Side.BOTTOMRIGHT:
+                    Tile.Field9.LandType.PlaceId = placeId;
+                    break;
+            }
         }
     }
 }
