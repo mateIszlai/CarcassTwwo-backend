@@ -10,15 +10,15 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; set; }
         public string Image { get; set; }
-        public Field Field1 { get; set; }
-        public Field Field2 { get; set; }
-        public Field Field3 { get; set; }
-        public Field Field4 { get; set; }
-        public Field Field5 { get; set; }
-        public Field Field6 { get; set; }
-        public Field Field7 { get; set; }
-        public Field Field8 { get; set; }
-        public Field Field9 { get; set; }
+        public LandType Field1 { get; set; }
+        public LandType Field2 { get; set; }
+        public LandType Field3 { get; set; }
+        public LandType Field4 { get; set; }
+        public LandType Field5 { get; set; }
+        public LandType Field6 { get; set; }
+        public LandType Field7 { get; set; }
+        public LandType Field8 { get; set; }
+        public LandType Field9 { get; set; }
 
         public LandType Top1 { get; set; }
         public LandType Top2 { get; set; }
@@ -33,10 +33,10 @@ namespace CarcassTwwo.Models
         public LandType Right2 { get; set; }
         public LandType Right3 { get; set; }
 
-        public Dictionary<Side, Field> Sides { 
+        public Dictionary<Side, LandType> Sides { 
             get
             {
-                return new Dictionary<Side, Field>
+                return new Dictionary<Side, LandType>
                 {
                     { Side.TOPLEFT, Field1 },
                     { Side.TOP, Field2 },
