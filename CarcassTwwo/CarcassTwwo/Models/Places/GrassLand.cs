@@ -14,23 +14,20 @@ namespace CarcassTwwo.Models.Places
         public HashSet<int> Roads { get; private set; }
         public int Size { get { return CardIds.Count; }}
 
-        public List<int> CardIds { get; private set; }
+        public HashSet<int> CardIds { get; private set; }
         //only the finished cities count
-        public List<Meeple> Peasants { get; set; }
         public GrassLand(int id, int cardId) : base(id)
         {
             Roads = new HashSet<int>();
             SurroundingCities = new HashSet<int>();
-            Peasants = new List<Meeple>();
-            CardIds = new List<int> { cardId };
+            CardIds = new HashSet<int> { cardId };
         }
 
         public GrassLand(int id) : base(id)
         {
             Roads = new HashSet<int>();
             SurroundingCities = new HashSet<int>();
-            Peasants = new List<Meeple>();
-            CardIds = new List<int>();
+            CardIds = new HashSet<int>();
         }
 
         public void ExpandLand (int cardId)
