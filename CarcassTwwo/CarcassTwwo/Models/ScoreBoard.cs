@@ -44,5 +44,17 @@ namespace CarcassTwwo.Models
                 }
             }
         }
+
+        internal void CheckOwnerOfRoad(Road road)
+        {
+            Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
+            foreach (var meeple in road.Meeples)
+            {
+                _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+            }
+            int maxCount = meepleCountByPlayers.Values.Max();
+            var roadOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
+            AddPointsForRoad(roadOwners, road);
+        }
     }
 }
