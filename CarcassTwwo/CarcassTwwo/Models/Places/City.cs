@@ -7,7 +7,6 @@ namespace CarcassTwwo.Models.Places
     {
         public HashSet<CityPart> CityParts { get; private set; }
         public int Size { get { return CityParts.Count; } }
-        
 
         public bool IsOpen {
             get 

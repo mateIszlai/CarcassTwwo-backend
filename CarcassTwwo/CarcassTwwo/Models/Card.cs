@@ -111,7 +111,6 @@ namespace CarcassTwwo.Models
             Meeple = meeple;
             HasMeeple = true;
             SetMeepleField(field);
-
         }
 
         public void RemoveMeeple()

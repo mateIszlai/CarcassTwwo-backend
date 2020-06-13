@@ -7,14 +7,12 @@ namespace CarcassTwwo.Models.Places
 {
     public class GrassLand : Place
     {
-        //Grasslands are counted only at the end of the game.
         public HashSet<int> SurroundingCities { get; private set; }
-
         public HashSet<int> Roads { get; private set; }
         public int Size { get { return CardIds.Count; }}
 
         public List<int> CardIds { get; private set; }
-        //only the finished cities count
+
         public List<Meeple> Peasants { get; set; }
         public GrassLand(int id, int cardId) : base(id)
         {

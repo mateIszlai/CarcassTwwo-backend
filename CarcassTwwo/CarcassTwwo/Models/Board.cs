@@ -1049,6 +1049,7 @@ namespace CarcassTwwo.Models
         internal void PlaceMeeple(int placeOfMeeple, Card placedCard, Client owner)
         {
             var landtype = placedCard.Tile.Fields[placeOfMeeple - 1].LandType;
+
             switch (landtype.Name)
             {
                 case "City":
@@ -1160,7 +1161,5 @@ namespace CarcassTwwo.Models
                 Console.WriteLine($"{player.Key.Name}: {player.Value}");
             }
         }
-
     }
-
 }
