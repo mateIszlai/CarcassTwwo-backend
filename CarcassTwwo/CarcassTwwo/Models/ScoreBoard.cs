@@ -97,5 +97,26 @@ namespace CarcassTwwo.Models
                 Players[monastery.Meeples[0].Owner] += (9 - monastery.SurroundingCoordinates.Count) * (int)Points.MONASTERYTILE;
 
         }
+
+        internal List<Client> GetWinner()
+        {
+            int maxPoint = Players.Values.Max();
+            var winners = Players.Keys.Where(k => Players[k] == maxPoint).ToList();
+            return winners;
+        }
     }
+
+    public enum Points
+    {
+        ROADTILE = 1,
+        CITYTILE = 2,
+        CITYMEEPLE = 2,
+        OPENCITYTILE = 1,
+        OPENCITYMEEPLE = 1,
+        MONASTERYTILE = 1,
+        FINISHEDMONASTERY = 9,
+        FINISHEDCITYONLAND = 3
+    }
+
+
 }
