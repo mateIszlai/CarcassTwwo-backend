@@ -36,6 +36,8 @@ namespace CarcassTwwo.Models.Places
         public void ExpandMonastery(Coordinate coordinate)
         {
             SurroundingCoordinates.Remove(coordinate);
+            if (SurroundingCoordinates.Count.Equals(0))  
+                IsFinished = true; 
         }
 
         public override void PlaceMeeple(Client owner, int field, Card card)
