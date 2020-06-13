@@ -110,7 +110,15 @@ namespace CarcassTwwo.Hubs
         public async void EndPlacement(string groupName, CardToRecieve card)
         {
             _manager.GetGroup(groupName).Game.PlaceCard(card);
-            await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", new List<int> { 1, 2, 3, 4, 5, 7, 8, 9 });
+            if(_manager.GetGroup(groupName).Game.LastPlayer.MeepleCount > 0)
+                await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", new List<int> { 1, 2, 3, 4, 5, 7, 8, 9 });
+            else
+            {
+                _manager.GetGroup(groupName).Game.CheckScores();
+                await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
+                StartTurn(groupName);
+            }
+
         }
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
         {
