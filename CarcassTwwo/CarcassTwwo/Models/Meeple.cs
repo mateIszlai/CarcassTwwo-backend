@@ -10,15 +10,15 @@ namespace CarcassTwwo.Models
         public MeepleType Type { get; set; }
         public Client Owner { get; set; }
         public int FieldId { get; set; }
-        public int CardId { get; set; }
+        public Card Card { get; set; }
         public int PlaceId { get; set; }
   
-        public Meeple( MeepleType type, Client owner, int fieldId, int cardId, int placeId)
+        public Meeple( MeepleType type, Client owner, int fieldId, Card card, int placeId)
         {
             Type = type;
             Owner = owner;
             FieldId = fieldId;
-            CardId = cardId;
+            Card = card;
             PlaceId = placeId;
         }
     }
