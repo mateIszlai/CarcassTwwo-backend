@@ -28,11 +28,20 @@ namespace CarcassTwwo.Models
             AddPointsForCity(cityOwners, city);
         }
 
+        private void AddPointsForCity(List<Client> players, City city)
         {
-            //this should get data from the game/board, and use it to update the points e.g.:
+            int numOfCards = city.Size;
+            int numOfMeeples = city.Meeples.Count;
             foreach(Client player in players)
             {
-                player.Points += 42;
+                if (!city.IsOpen){
+                    Players[player] += numOfCards * (int)Points.CITYTILE;
+                    Players[player] += numOfMeeples * (int)Points.CITYMEEPLE;
+                } else
+                {
+                    Players[player] += numOfCards * (int)Points.OPENCITYTILE;
+                    Players[player] += numOfMeeples * (int)Points.OPENCITYMEEPLE;
+                }
             }
         }
     }
