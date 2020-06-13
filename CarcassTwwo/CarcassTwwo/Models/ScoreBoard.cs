@@ -56,5 +56,14 @@ namespace CarcassTwwo.Models
             var roadOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
             AddPointsForRoad(roadOwners, road);
         }
+
+        private void AddPointsForRoad(List<Client> players, Road road)
+        {
+            int numOfCards = road.RoadParts.Count;
+            foreach (Client player in players)
+            {
+                Players[player] += numOfCards * (int)Points.ROADTILE;
+            }
+        }
     }
 }
