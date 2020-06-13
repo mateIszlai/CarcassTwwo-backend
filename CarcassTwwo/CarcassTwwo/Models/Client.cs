@@ -17,5 +17,6 @@ namespace CarcassTwwo.Models
         public string ConnectionId { get; set; }
         public int Points { get; set; }
         public List<Meeple> Meeples { get; set; }
+        public int MeepleCount { get; set; } = 7;
     }
 }
