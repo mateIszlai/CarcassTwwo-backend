@@ -77,5 +77,25 @@ namespace CarcassTwwo.Models
             var landOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
             AddPointsForLand(landOwners, land);
         }
+
+        private void AddPointsForLand(List<Client> players, GrassLand land)
+        {
+            //TODO HOW TO GET THE FINISHED CITIES??
+
+            int finishedCities = 1;
+            foreach (Client player in players)
+            {
+                Players[player] += finishedCities * (int)Points.FINISHEDCITYONLAND;
+            }
+        }
+
+        internal void AddPointsForMonastery(Monastery monastery)
+        {
+            if(monastery.IsFinished)
+                Players[monastery.Meeples[0].Owner] += (int)Points.FINISHEDMONASTERY;
+            else
+                Players[monastery.Meeples[0].Owner] += (9 - monastery.SurroundingCoordinates.Count) * (int)Points.MONASTERYTILE;
+
+        }
     }
 }
