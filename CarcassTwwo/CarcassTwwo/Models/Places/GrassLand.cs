@@ -46,7 +46,7 @@ namespace CarcassTwwo.Models.Places
         {
             if (!card.HasMeeple)
             {
-                var peasant = new Meeple(MeepleType.PEASANT, owner, field, card.Id, Id);
+                var peasant = new Meeple(MeepleType.PEASANT, owner, field, card, Id);
                 Meeples.Add(peasant);
                 card.AddMeeple(peasant, field);
                 CanPlaceMeeple = false;
