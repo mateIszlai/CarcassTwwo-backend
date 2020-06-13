@@ -18,6 +18,12 @@ namespace CarcassTwwo.Models.Places
         public abstract void PlaceMeeple(Client owner, int field, Card card);
         public void RemoveMeeples()
         {
+            foreach(var meeple in Meeples)
+            {
+                meeple.Card.RemoveMeeple();
+                meeple.Owner.MeepleCount++;
+                meeple.Owner.Meeples.Remove(meeple);
+            }
             Meeples.Clear();
         }
     }
