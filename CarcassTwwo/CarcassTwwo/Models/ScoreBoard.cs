@@ -65,5 +65,17 @@ namespace CarcassTwwo.Models
                 Players[player] += numOfCards * (int)Points.ROADTILE;
             }
         }
+
+        internal void CheckOwnerOfLand(GrassLand land)
+        {
+            Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
+            foreach (var meeple in land.Meeples)
+            {
+                _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+            }
+            int maxCount = meepleCountByPlayers.Values.Max();
+            var landOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
+            AddPointsForLand(landOwners, land);
+        }
     }
 }
