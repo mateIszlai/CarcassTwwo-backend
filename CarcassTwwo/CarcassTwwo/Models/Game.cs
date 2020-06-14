@@ -173,7 +173,7 @@ namespace CarcassTwwo.Models
 
         internal List<int> GenerateMeeplePlaces(int cardId)
         {
-            return new List<int> { 1, 2, 3, 4, 5, 7, 8, 9};
+            return _gameboard.GetMeeplePlaces(cardId);
         }
 
         public bool SidesMatches(RequiredCard req, LandType[] sides)
