@@ -61,7 +61,8 @@ namespace CarcassTwwo.Models
             get
             {
                 var ids = new HashSet<int>();
-                Sides.ForEach(s => ids.Add(s.PlaceId));
+                foreach (var landType in Tile.Sides.Values)
+                    ids.Add(landType.PlaceId);
                 return ids;
             } 
         }
