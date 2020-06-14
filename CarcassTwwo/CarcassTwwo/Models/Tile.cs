@@ -33,6 +33,14 @@ namespace CarcassTwwo.Models
         public LandType Right2 { get; set; }
         public LandType Right3 { get; set; }
 
+        public int[] FieldsPlaceIds
+        {
+            get
+            {
+                return new int[] { Field1.PlaceId, Field2.PlaceId, Field3.PlaceId, Field4.PlaceId, Field5.PlaceId, Field6.PlaceId, Field7.PlaceId, Field8.PlaceId, Field9.PlaceId };
+            }
+        }
+
         public Dictionary<Side, LandType> Sides { 
             get
             {
