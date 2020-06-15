@@ -16,6 +16,7 @@ namespace CarcassTwwo.Models
         private HashSet<GrassLand> _grassLands;
         private HashSet<Monastery> _monasteries;
         private HashSet<Road> _roads;
+        public List <Meeple> RemovableMeeples = new List<Meeple>();
 
         public ScoreBoard ScoreBoard { get; set; }
 
@@ -1179,12 +1180,14 @@ namespace CarcassTwwo.Models
         }
         internal Dictionary<Client,int> CountScores()
         {
+            RemovableMeeples.Clear();
+
             foreach(var city in _cities)
             {
                 if (!city.IsOpen && !city.IsCounted)
                 {
                     ScoreBoard.CheckOwnerOfCity(city);
-                    city.RemoveMeeples();
+                    RemovableMeeples.AddRange(city.RemoveMeeples());
                     city.IsCounted = true;
                 }
             }
@@ -1194,7 +1197,7 @@ namespace CarcassTwwo.Models
                 if (!road.IsOpen && !road.IsCounted)
                 {
                     ScoreBoard.CheckOwnerOfRoad(road);
-                    road.RemoveMeeples();
+                    RemovableMeeples.AddRange(road.RemoveMeeples());
                     road.IsCounted = true;
                 }
             }
@@ -1204,7 +1207,7 @@ namespace CarcassTwwo.Models
                 if (monastery.IsFinished && !monastery.IsCounted)
                 {
                     ScoreBoard.AddPointsForMonastery(monastery);
-                    monastery.RemoveMeeples();
+                    RemovableMeeples.AddRange(monastery.RemoveMeeples());
                     monastery.IsCounted = true;
                 }
             }
