@@ -98,10 +98,10 @@ namespace CarcassTwwo.Models
 
         }
 
-        internal List<Client> GetWinner()
+        internal Client GetWinner()
         {
             int maxPoint = Players.Values.Max();
-            var winners = Players.Keys.Where(k => Players[k] == maxPoint).ToList();
+            var winners = Players.Keys.First(k => Players[k] == maxPoint);
             return winners;
         }
     }

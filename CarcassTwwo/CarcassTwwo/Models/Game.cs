@@ -63,9 +63,9 @@ namespace CarcassTwwo.Models
             return cards;
         }
 
-        public void CheckWinner()
+        public Client CheckWinner()
         {
-            _gameboard.CheckWinner();
+            return _gameboard.CheckWinner();
         }
 
         public Client PickPlayer()

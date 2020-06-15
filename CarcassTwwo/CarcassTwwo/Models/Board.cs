@@ -1246,19 +1246,9 @@ namespace CarcassTwwo.Models
             return ScoreBoard.Players;
         }
 
-        internal void CheckWinner()
+        internal Client CheckWinner()
         {
-            Console.WriteLine("And the winner(s) is(/are): ");
-            foreach(var player in ScoreBoard.GetWinner())
-            {
-                Console.WriteLine(player.Name);
-            }
-
-            Console.WriteLine("Points: ");
-            foreach(var player in ScoreBoard.Players)
-            {
-                Console.WriteLine($"{player.Key.Name}: {player.Value}");
-            }
+            return ScoreBoard.GetWinner();
         }
     }
 }
