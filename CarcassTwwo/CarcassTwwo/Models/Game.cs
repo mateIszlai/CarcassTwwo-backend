@@ -163,7 +163,7 @@ namespace CarcassTwwo.Models
 
         internal List<PlayerInfo> GeneratePlayerInfos()
         {
-            return Players.Select(player => new PlayerInfo { Name = player.Name, Score = player.Points, MeepleCount = player.MeepleCount }).ToList();
+            return Players.Select(player => new PlayerInfo { Name = player.Name, Score = player.Points, MeepleCount = player.MeepleCount, Id = player.ConnectionId }).ToList();
         }
 
         internal List<int> GenerateMeeplePlaces(int cardId)
