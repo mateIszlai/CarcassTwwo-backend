@@ -96,9 +96,9 @@ namespace CarcassTwwo.Hubs
             var card = group.Game.PickRandomCard();
             if(card == null)
             {
-                await Clients.Group(groupName).SendAsync("GameOver", "Game over!");
                 var scores = _manager.GetGroup(groupName).Game.CheckEndScores();
-                _manager.GetGroup(groupName).Game.CheckWinner();
+                var winner = _manager.GetGroup(groupName).Game.CheckWinner();
+                await Clients.Group(groupName).SendAsync("GameOver", "Game over!", scores, winner);
 
             } else
             {
@@ -124,8 +124,9 @@ namespace CarcassTwwo.Hubs
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
         {
             _manager.GetGroup(groupName).Game.PlaceMeeple(placeOfMeeple, card);
+            var meepleCount = _manager.GetGroup(groupName).Game.LastPlayer.MeepleCount;
             var scores = _manager.GetGroup(groupName).Game.CheckScores();
-            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, scores, meepleCount);
             StartTurn(groupName);
         }
     }
