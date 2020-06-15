@@ -236,9 +236,14 @@ namespace CarcassTwwo.Models
             return _gameboard.CountEndScores();
         }
 
-        internal List<Meeple> GetRemovableMeeples()
+        internal List<MeepleInfo> GetRemovableMeeples()
         {
-            return _gameboard.RemovableMeeples;
+            List<MeepleInfo> meeples = new List<MeepleInfo>();
+            foreach(var meeple in _gameboard.RemovableMeeples)
+            {
+                meeples.Add(new MeepleInfo(meeple.Owner, meeple.Card.Coordinate, meeple.FieldId));
+            }
+            return meeples;
         }
     }
 }
