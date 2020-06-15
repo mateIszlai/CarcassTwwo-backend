@@ -219,13 +219,13 @@ namespace CarcassTwwo.Models
             var card = _gameboard.CardCoordinates.Values.First(c => c.Id == placedCard.CardId);
             _gameboard.PlaceMeeple(placeOfMeeple, card, LastPlayer);
         }
-        public void CheckScores()
+        public Dictionary<Client,int> CheckScores()
         {
-            _gameboard.CountScores();
+            return _gameboard.CountScores();
         }
-        internal void CheckEndScores()
+        internal Dictionary<Client, int> CheckEndScores()
         {
-            _gameboard.CountEndScores();
+            return _gameboard.CountEndScores();
         }
     }
 }

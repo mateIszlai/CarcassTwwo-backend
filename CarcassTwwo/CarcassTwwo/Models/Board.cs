@@ -1177,7 +1177,7 @@ namespace CarcassTwwo.Models
                     break;
             }            
         }
-        internal void CountScores()
+        internal Dictionary<Client,int> CountScores()
         {
             foreach(var city in _cities)
             {
@@ -1208,9 +1208,11 @@ namespace CarcassTwwo.Models
                     monastery.IsCounted = true;
                 }
             }
+
+            return ScoreBoard.Players;
         }
 
-        internal void CountEndScores()
+        internal Dictionary<Client,int> CountEndScores()
         {
             foreach (var city in _cities)
             {
@@ -1240,6 +1242,8 @@ namespace CarcassTwwo.Models
             {
                 ScoreBoard.CheckOwnerOfLand(grassland);
             }
+
+            return ScoreBoard.Players;
         }
 
         internal void CheckWinner()
