@@ -227,5 +227,10 @@ namespace CarcassTwwo.Models
         {
             return _gameboard.CountEndScores();
         }
+
+        internal List<Meeple> GetRemovableMeeples()
+        {
+            return _gameboard.RemovableMeeples;
+        }
     }
 }
