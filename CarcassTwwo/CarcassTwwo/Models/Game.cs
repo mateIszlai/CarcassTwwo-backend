@@ -161,6 +161,10 @@ namespace CarcassTwwo.Models
 
         }
 
+        internal List<PlayerInfo> GeneratePlayerInfos()
+        {
+            return Players.Select(player => new PlayerInfo { Name = player.Name, Score = player.Points, MeepleCount = player.MeepleCount }).ToList();
+        }
 
         internal List<int> GenerateMeeplePlaces(int cardId)
         {
@@ -222,6 +226,10 @@ namespace CarcassTwwo.Models
         public void CheckScores()
         {
             _gameboard.CountScores();
+            foreach (var player in _gameboard.ScoreBoard.Players)
+            {
+                Players.First(p => p == player.Key).Points += player.Value;
+            }
         }
         internal void CheckEndScores()
         {
