@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public int Score { get; set; }
         public string Id { get; set; }
+        public bool Me { get; set; }
     }
 }
