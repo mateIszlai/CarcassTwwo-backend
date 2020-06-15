@@ -1178,7 +1178,7 @@ namespace CarcassTwwo.Models
                     break;
             }            
         }
-        internal Dictionary<Client,int> CountScores()
+        internal void CountScores()
         {
             RemovableMeeples.Clear();
 
@@ -1211,8 +1211,6 @@ namespace CarcassTwwo.Models
                     monastery.IsCounted = true;
                 }
             }
-
-            return ScoreBoard.Players;
         }
 
         internal Dictionary<Client,int> CountEndScores()
