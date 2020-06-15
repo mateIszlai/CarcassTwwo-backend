@@ -97,6 +97,8 @@ namespace CarcassTwwo.Hubs
             if(card == null)
             {
                 await Clients.Group(groupName).SendAsync("GameOver", "Game over!");
+                _manager.GetGroup(groupName).Game.CheckEndScores();
+                _manager.GetGroup(groupName).Game.CheckWinner();
 
             } else
             {
@@ -108,13 +110,21 @@ namespace CarcassTwwo.Hubs
 
         public async void EndPlacement(string groupName, CardToRecieve card)
         {
-            var group = _manager.GetGroup(groupName);
-            group.Game.PlaceCard(card);
-            await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", group.Game.GenerateMeeplePlaces(card.CardId));
+            _manager.GetGroup(groupName).Game.PlaceCard(card);
+            if(_manager.GetGroup(groupName).Game.LastPlayer.MeepleCount > 0)
+                await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", new List<int> { 1, 2, 3, 4, 5, 7, 8, 9 });
+            else
+            {
+                _manager.GetGroup(groupName).Game.CheckScores();
+                await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
+                StartTurn(groupName);
+            }
+
         }
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
-        {   
-            //TODO place meeple on card and send it back
+        {
+            _manager.GetGroup(groupName).Game.PlaceMeeple(placeOfMeeple, card);
+            _manager.GetGroup(groupName).Game.CheckScores();
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
         }

@@ -10,7 +10,6 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; set; }
         public string Image { get; set; }
-<<<<<<< HEAD
         public List<Field> Fields { get { return new List<Field> { Field1, Field2, Field3, Field4, Field5, Field6, Field7, Field8, Field9 }; } }
         public Field Field1 { get; set; }
         public Field Field2 { get; set; }

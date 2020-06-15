@@ -20,7 +20,7 @@ namespace CarcassTwwoTests
         {
             DataSeeder.SeedLandTypes();
             DataSeeder.SeedTiles();
-            board = new Board();
+            board = new Board(null);
 
             testCard = new Card(DataSeeder.tiles[7], 0);
             testCard.BottomIsFree = false;

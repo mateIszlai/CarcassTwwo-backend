@@ -1,4 +1,5 @@
-﻿using CarcassTwwo.Models.Requests;
+﻿using CarcassTwwo.Models.Places;
+using CarcassTwwo.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace CarcassTwwo.Models
         private List<Card> _cards;
         private static Random rnd = new Random();
         private Board _gameboard;
-        private ScoreBoard _scoreBoard;
 
         public int GameId { get; set; }
         public bool IsOver { get; set; }
@@ -22,8 +22,6 @@ namespace CarcassTwwo.Models
 
         public Game(HashSet<Client> players)
         {
-            _gameboard = new Board();
-            _scoreBoard = new ScoreBoard(players);
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
@@ -31,6 +29,7 @@ namespace CarcassTwwo.Models
             DataSeeder.SeedLandTypes();
             DataSeeder.SeedTiles();
             _cards = GenerateDeck();
+            _gameboard = new Board(players);
         }
 
         public void ShuffleCards(int times)
@@ -64,17 +63,9 @@ namespace CarcassTwwo.Models
             return cards;
         }
 
-        public void CheckWinner(List<Client> players)
+        public void CheckWinner()
         {
-            int maxPoint = 0;
-            foreach (var player in players)
-            {
-                if (player.Points > maxPoint)
-                {
-                    maxPoint = player.Points;
-                    WinnerName = player.Name;
-                }
-            }
+            _gameboard.CheckWinner();
         }
 
         public Client PickPlayer()
@@ -113,7 +104,6 @@ namespace CarcassTwwo.Models
             _gameboard.AddAvailableCoordinates(card);
             _gameboard.SetRegions(placedCard.Coordinate);
         }
-
 
         public Dictionary<Coordinate, List<int>> GetPossiblePlacements(Card card)
         {
@@ -171,6 +161,7 @@ namespace CarcassTwwo.Models
 
         }
 
+
         internal List<int> GenerateMeeplePlaces(int cardId)
         {
             return _gameboard.GetMeeplePlaces(cardId);
@@ -221,6 +212,20 @@ namespace CarcassTwwo.Models
         public Card GetFirstCard()
         {
             return _cards[0];
+        }
+
+        public void PlaceMeeple(int placeOfMeeple, CardToRecieve placedCard)
+        {
+            var card = _cards.First(c => c.Id == placedCard.CardId);
+            _gameboard.PlaceMeeple(placeOfMeeple, card, LastPlayer);
+        }
+        public void CheckScores()
+        {
+            _gameboard.CountScores();
+        }
+        internal void CheckEndScores()
+        {
+            _gameboard.CountEndScores();
         }
     }
 }

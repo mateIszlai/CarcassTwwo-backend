@@ -8,6 +8,7 @@ namespace CarcassTwwo.Models.Places
     public class Monastery : Place
     {
         public List<Coordinate> SurroundingCoordinates { get; private set; }
+        public int CardId { get; set; }
         public bool IsFinished { get; set; }
         public Monastery(int id, Coordinate cardCoordinate) : base(id)
         {
@@ -35,11 +36,19 @@ namespace CarcassTwwo.Models.Places
         public void ExpandMonastery(Coordinate coordinate)
         {
             SurroundingCoordinates.Remove(coordinate);
+            if (SurroundingCoordinates.Count.Equals(0))  
+                IsFinished = true; 
         }
 
-        public override void PlaceMeeple(Client owner)
+        public override void PlaceMeeple(Client owner, int field, Card card)
         {
-            Meeples.Add(new Meeple(MeepleType.MONK, owner));
+            if (!card.HasMeeple)
+            {
+                var monk = new Meeple(MeepleType.MONK, owner, field, card, Id);
+                Meeples.Add(monk);
+                card.AddMeeple(monk, field);
+                CanPlaceMeeple = false;
+            }
         }
     }
 }

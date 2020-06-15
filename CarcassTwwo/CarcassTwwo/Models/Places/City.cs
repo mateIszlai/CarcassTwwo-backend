@@ -7,7 +7,6 @@ namespace CarcassTwwo.Models.Places
     {
         public HashSet<CityPart> CityParts { get; private set; }
         public int Size { get { return CityParts.Count; } }
-        
 
         public bool IsOpen {
             get 
@@ -51,13 +50,18 @@ namespace CarcassTwwo.Models.Places
                         part.RightIsOpen = false;
                         break;
                 }
-            }
-            
+            }     
         }
 
-        public override void PlaceMeeple(Client owner)
+        public override void PlaceMeeple(Client owner, int field, Card card)
         {
-            Meeples.Add(new Meeple(MeepleType.KNIGHT, owner));
+            if (!card.HasMeeple)
+            {
+                var knight = new Meeple(MeepleType.KNIGHT, owner, field, card, Id);
+                Meeples.Add(knight);
+                card.AddMeeple(knight, field);
+                CanPlaceMeeple = false;
+            }
         }
     }
 }

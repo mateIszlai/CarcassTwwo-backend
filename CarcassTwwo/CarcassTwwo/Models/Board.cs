@@ -1,4 +1,6 @@
 ﻿using CarcassTwwo.Models.Places;
+using CarcassTwwo.Models.Requests;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +17,15 @@ namespace CarcassTwwo.Models
         private HashSet<Monastery> _monasteries;
         private HashSet<Road> _roads;
 
+        public ScoreBoard ScoreBoard { get; set; }
+
         private readonly Side[] LEFT = new Side[] { Side.BOTTOMLEFT, Side.MIDDLELEFT, Side.TOPLEFT };
         private readonly Side[] RIGHT = new Side[] { Side.BOTTOMRIGHT, Side.MIDDLERIGHT, Side.TOPRIGHT };
         private readonly Side[] TOP = new Side[] { Side.TOPLEFT, Side.TOPRIGHT, Side.TOP };
         private readonly Side[] BOTTOM = new Side[] { Side.BOTTOMRIGHT, Side.BOTTOM, Side.BOTTOMLEFT };
         private int id = 0;
 
-        public Board()
+        public Board(HashSet<Client> clients)
         {
             CardCoordinates = new Dictionary<Coordinate, Card>();
             AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
@@ -29,6 +33,7 @@ namespace CarcassTwwo.Models
             _grassLands = new HashSet<GrassLand>();
             _monasteries = new HashSet<Monastery>();
             _roads = new HashSet<Road>();
+            ScoreBoard = new ScoreBoard(clients);
         }
 
         public void AddAvailableCoordinates(Card card)
@@ -1135,6 +1140,121 @@ namespace CarcassTwwo.Models
             _grassLands.Add(newLand);
             return newLand;
         }
-    }
 
+        internal void PlaceMeeple(int placeOfMeeple, Card placedCard, Client owner)
+        {
+            var landtype = placedCard.Tile.Fields[placeOfMeeple - 1].LandType;
+
+            switch (landtype.Name)
+            {
+                case "City":
+                    var city = _cities.FirstOrDefault(c => c.CityParts.Where(part => part.CardId == placedCard.Id) != null);
+                    if (city != null && city.CanPlaceMeeple)
+                    {
+                        city.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+                case "Road":
+                    var road = _roads.FirstOrDefault(r => r.RoadParts.Where(part => part.CardId == placedCard.Id) != null);
+                    if (road != null && road.CanPlaceMeeple)
+                    {
+                        road.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+                case "Land":
+                    var land = _grassLands.FirstOrDefault(g => g.CardIds.Contains(placedCard.Id));
+                    if(land != null && land.CanPlaceMeeple)
+                    {
+                        land.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+                case "Monastery":
+                    var monastery = _monasteries.FirstOrDefault(m => m.CardId == placedCard.Id);
+                    if (monastery != null && monastery.CanPlaceMeeple)
+                    {
+                        monastery.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                    }
+                    break;
+            }            
+        }
+        internal void CountScores()
+        {
+            foreach(var city in _cities)
+            {
+                if (!city.IsOpen && !city.IsCounted)
+                {
+                    ScoreBoard.CheckOwnerOfCity(city);
+                    city.RemoveMeeples();
+                    city.IsCounted = true;
+                }
+            }
+
+            foreach(var road in _roads)
+            {
+                if (!road.IsOpen && !road.IsCounted)
+                {
+                    ScoreBoard.CheckOwnerOfRoad(road);
+                    road.RemoveMeeples();
+                    road.IsCounted = true;
+                }
+            }
+
+            foreach(var monastery in _monasteries)
+            {
+                if (monastery.IsFinished && !monastery.IsCounted)
+                {
+                    ScoreBoard.AddPointsForMonastery(monastery);
+                    monastery.RemoveMeeples();
+                    monastery.IsCounted = true;
+                }
+            }
+        }
+
+        internal void CountEndScores()
+        {
+            foreach (var city in _cities)
+            {
+                if (city.IsOpen && !city.CanPlaceMeeple)
+                {
+                    ScoreBoard.CheckOwnerOfCity(city);
+                }
+            }
+
+            foreach (var road in _roads)
+            {
+                if (road.IsOpen && !road.CanPlaceMeeple)
+                {
+                    ScoreBoard.CheckOwnerOfRoad(road);
+                }
+            }
+
+            foreach (var monastery in _monasteries)
+            {
+                if (!monastery.IsFinished && !monastery.CanPlaceMeeple)
+                {
+                    ScoreBoard.AddPointsForMonastery(monastery);
+                }
+            }
+
+            foreach (var grassland in _grassLands)
+            {
+                //TODO if grassland has finished cities...
+            }
+        }
+
+        internal void CheckWinner()
+        {
+            Console.WriteLine("And the winner(s) is(/are): ");
+            foreach(var player in ScoreBoard.GetWinner())
+            {
+                Console.WriteLine(player.Name);
+            }
+
+            Console.WriteLine("Points: ");
+            foreach(var player in ScoreBoard.Players)
+            {
+                Console.WriteLine($"{player.Key.Name}: {player.Value}");
+            }
+        }
+    }
 }

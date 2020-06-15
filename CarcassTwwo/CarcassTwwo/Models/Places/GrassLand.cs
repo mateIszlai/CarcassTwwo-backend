@@ -7,15 +7,11 @@ namespace CarcassTwwo.Models.Places
 {
     public class GrassLand : Place
     {
-
-        //Grasslands are counted only at the end of the game.
         public HashSet<int> SurroundingCities { get; private set; }
-
         public HashSet<int> Roads { get; private set; }
         public int Size { get { return CardIds.Count; }}
 
         public HashSet<int> CardIds { get; private set; }
-        //only the finished cities count
         public GrassLand(int id, int cardId) : base(id)
         {
             Roads = new HashSet<int>();
@@ -35,9 +31,20 @@ namespace CarcassTwwo.Models.Places
             CardIds.Add(cardId);
         }
 
-        public override void PlaceMeeple(Client owner)
+        public void AddNewCity(int id)
         {
-            Meeples.Add(new Meeple(MeepleType.PEASANT, owner));
+            SurroundingCities.Add(id);
+        }
+
+        public override void PlaceMeeple(Client owner, int field, Card card)
+        {
+            if (!card.HasMeeple)
+            {
+                var peasant = new Meeple(MeepleType.PEASANT, owner, field, card, Id);
+                Meeples.Add(peasant);
+                card.AddMeeple(peasant, field);
+                CanPlaceMeeple = false;
+            }
         }
     }
 }
