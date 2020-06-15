@@ -10,7 +10,7 @@ namespace CarcassTwwo.Models
         public Tile Tile { get; set; }
         public Meeple Meeple { get; set; }
         public bool HasMeeple { get; set; }
-        public Field MeepleField { get; set; }
+        public LandType MeepleField { get; set; }
         public Coordinate Coordinate { get; set; }
         public LandType Top
         {
