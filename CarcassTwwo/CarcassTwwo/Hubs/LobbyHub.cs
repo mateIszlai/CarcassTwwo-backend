@@ -128,12 +128,7 @@ namespace CarcassTwwo.Hubs
             if(placeOfMeeple > 0) group.Game.PlaceMeeple(placeOfMeeple, card);
             group.Game.CheckScores();
             var meeplesToRemove = group.Game.GetRemovableMeeples();
-            /*
-             * need to send: 
-             * - coordinate of card (meeple.card.coordinate)
-             * - field of meeple on card (meeple.fieldId)
-             * - owner of meeple (meeple.owner)
-             */
+
             await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, meeplesToRemove);
             StartTurn(groupName);
