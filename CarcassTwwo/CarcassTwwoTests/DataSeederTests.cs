@@ -55,8 +55,6 @@ namespace CarcassTwwoTests
         public void SeventhTileIsCorrectlySeeded()
         {
             Assert.AreEqual(DataSeeder.tiles[6].Amount, 2);
-            Assert.AreEqual(DataSeeder.tiles[6].Bottom1.Name, "Land");
-            Assert.AreEqual(DataSeeder.tiles[6].Field1.LandType.Name, "City");
             Assert.AreEqual(DataSeeder.tiles[6].HasCrest, true);
             Assert.AreEqual(DataSeeder.tiles[6].Id, 7);
             Assert.AreEqual(DataSeeder.tiles[6].Image, "../wwwroot/image/7_2.png");
