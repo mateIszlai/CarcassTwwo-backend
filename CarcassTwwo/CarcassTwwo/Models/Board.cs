@@ -1143,7 +1143,7 @@ namespace CarcassTwwo.Models
 
         internal void PlaceMeeple(int placeOfMeeple, Card placedCard, Client owner)
         {
-            var landtype = placedCard.Tile.Fields[placeOfMeeple - 1].LandType;
+            var landtype = placedCard.Tile.Fields[placeOfMeeple - 1];
 
             switch (landtype.Name)
             {
