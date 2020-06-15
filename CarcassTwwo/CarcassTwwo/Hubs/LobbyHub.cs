@@ -115,18 +115,28 @@ namespace CarcassTwwo.Hubs
                 await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", new List<int> { 1, 2, 3, 4, 5, 7, 8, 9 });
             else
             {
+                var meepleCount = 0;
                 var scores = _manager.GetGroup(groupName).Game.CheckScores();
-                await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
+                await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, scores, meepleCount);
                 StartTurn(groupName);
             }
 
         }
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
         {
-            _manager.GetGroup(groupName).Game.PlaceMeeple(placeOfMeeple, card);
-            var meepleCount = _manager.GetGroup(groupName).Game.LastPlayer.MeepleCount;
-            var scores = _manager.GetGroup(groupName).Game.CheckScores();
-            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, scores, meepleCount);
+            Game game = _manager.GetGroup(groupName).Game;
+            game.PlaceMeeple(placeOfMeeple, card);
+            var meepleCount = game.LastPlayer.MeepleCount;
+            var scores = game.CheckScores();
+            var meeplesToRemove = game.GetRemovableMeeples();
+            /*
+             * need to send: 
+             * - coordinate of card (meeple.card.coordinate)
+             * - field of meeple on card (meeple.fieldId)
+             * - owner of meeple (meeple.owner)
+             */
+
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, scores, meepleCount, meeplesToRemove);
             StartTurn(groupName);
         }
     }
