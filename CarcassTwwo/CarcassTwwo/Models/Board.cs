@@ -1214,7 +1214,7 @@ namespace CarcassTwwo.Models
         {
             foreach (var city in _cities)
             {
-                if (city.IsOpen && !city.CanPlaceMeeple)
+                if (!city.CanPlaceMeeple && !city.IsCounted)
                 {
                     ScoreBoard.CheckOwnerOfCity(city);
                 }
@@ -1222,7 +1222,7 @@ namespace CarcassTwwo.Models
 
             foreach (var road in _roads)
             {
-                if (road.IsOpen && !road.CanPlaceMeeple)
+                if (!road.IsCounted && !road.CanPlaceMeeple)
                 {
                     ScoreBoard.CheckOwnerOfRoad(road);
                 }
@@ -1230,7 +1230,7 @@ namespace CarcassTwwo.Models
 
             foreach (var monastery in _monasteries)
             {
-                if (!monastery.IsFinished && !monastery.CanPlaceMeeple)
+                if (!monastery.IsCounted && !monastery.CanPlaceMeeple)
                 {
                     ScoreBoard.AddPointsForMonastery(monastery);
                 }
@@ -1238,7 +1238,7 @@ namespace CarcassTwwo.Models
 
             foreach (var grassland in _grassLands)
             {
-                //TODO if grassland has finished cities...
+                ScoreBoard.CheckOwnerOfLand(grassland);
             }
         }
 
