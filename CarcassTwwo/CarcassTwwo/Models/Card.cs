@@ -14,22 +14,22 @@ namespace CarcassTwwo.Models
         {
             get
             {
-                return Tile.Field2.LandType;
+                return Tile.Field2;
             }
             set
             {
-                Tile.Field2.LandType = value;
+                Tile.Field2 = value;
             }
         }
         public LandType Bottom
         {
             get
             {
-                return Tile.Field8.LandType;
+                return Tile.Field8;
             }
             set
             {
-                Tile.Field8.LandType = value;
+                Tile.Field8 = value;
             }
         }
 
@@ -37,22 +37,22 @@ namespace CarcassTwwo.Models
         {
             get
             {
-                return Tile.Field4.LandType;
+                return Tile.Field4;
             }
             set
             {
-                Tile.Field4.LandType = value;
+                Tile.Field4 = value;
             }
         }
         public LandType Right
         {
             get
             {
-                return Tile.Field6.LandType;
+                return Tile.Field6;
             }
             set
             {
-                Tile.Field6.LandType = value;
+                Tile.Field6 = value;
             }
         }
 
@@ -61,7 +61,8 @@ namespace CarcassTwwo.Models
             get
             {
                 var ids = new HashSet<int>();
-                Sides.ForEach(s => ids.Add(s.PlaceId));
+                foreach (var landType in Tile.Sides.Values)
+                    ids.Add(landType.PlaceId);
                 return ids;
             } 
         }
@@ -98,15 +99,15 @@ namespace CarcassTwwo.Models
 
         public void SetRotations()
         {
-            Rotations["0"] = new LandType[] { Tile.Field1.LandType, Tile.Field2.LandType, Tile.Field3.LandType, Tile.Field4.LandType, Tile.Field6.LandType, Tile.Field7.LandType, Tile.Field8.LandType, Tile.Field9.LandType };
-            Rotations["90"] = new LandType[] { Tile.Field3.LandType, Tile.Field6.LandType, Tile.Field9.LandType, Tile.Field2.LandType, Tile.Field8.LandType, Tile.Field1.LandType, Tile.Field4.LandType, Tile.Field7.LandType };
-            Rotations["180"] = new LandType[] { Tile.Field9.LandType, Tile.Field8.LandType, Tile.Field7.LandType, Tile.Field6.LandType, Tile.Field4.LandType, Tile.Field3.LandType, Tile.Field2.LandType, Tile.Field1.LandType };
-            Rotations["270"] = new LandType[] { Tile.Field7.LandType, Tile.Field4.LandType, Tile.Field1.LandType, Tile.Field8.LandType, Tile.Field2.LandType, Tile.Field9.LandType, Tile.Field6.LandType, Tile.Field3.LandType };
+            Rotations["0"] = new LandType[] { Tile.Field1, Tile.Field2, Tile.Field3, Tile.Field4, Tile.Field5, Tile.Field6, Tile.Field7, Tile.Field8, Tile.Field9 };
+            Rotations["90"] = new LandType[] { Tile.Field3, Tile.Field6, Tile.Field9, Tile.Field2, Tile.Field5, Tile.Field8, Tile.Field1, Tile.Field4, Tile.Field7 };
+            Rotations["180"] = new LandType[] { Tile.Field9, Tile.Field8, Tile.Field7, Tile.Field6, Tile.Field5, Tile.Field4, Tile.Field3, Tile.Field2, Tile.Field1 };
+            Rotations["270"] = new LandType[] { Tile.Field7, Tile.Field4, Tile.Field1, Tile.Field8, Tile.Field5, Tile.Field2, Tile.Field9, Tile.Field6, Tile.Field3 };
         }
 
-        public void PlaceMeeple(Field field, Client owner)
+        public void PlaceMeeple(LandType field, Client owner)
         {
-            meeple = new Meeple(field.LandType.Meeple, owner);
+            meeple = new Meeple(field.Meeple, owner);
         }
 
         public void RemoveMeeple()
@@ -116,14 +117,15 @@ namespace CarcassTwwo.Models
 
         public void Rotate(string rotation)
         {
-            Tile.Field1.LandType = Rotations[rotation][0];
-            Tile.Field2.LandType = Rotations[rotation][1];
-            Tile.Field3.LandType = Rotations[rotation][2];
-            Tile.Field4.LandType = Rotations[rotation][3];
-            Tile.Field6.LandType = Rotations[rotation][4];
-            Tile.Field7.LandType = Rotations[rotation][5];
-            Tile.Field8.LandType = Rotations[rotation][6];
-            Tile.Field9.LandType = Rotations[rotation][7];
+            Tile.Field1 = Rotations[rotation][0];
+            Tile.Field2 = Rotations[rotation][1];
+            Tile.Field3 = Rotations[rotation][2];
+            Tile.Field4 = Rotations[rotation][3];
+            Tile.Field5 = Rotations[rotation][4];
+            Tile.Field6 = Rotations[rotation][5];
+            Tile.Field7 = Rotations[rotation][6];
+            Tile.Field8 = Rotations[rotation][7];
+            Tile.Field9 = Rotations[rotation][8];
         }
 
         internal void SetField(Side side, int placeId)
@@ -131,31 +133,31 @@ namespace CarcassTwwo.Models
             switch (side)
             {
                 case Side.TOPLEFT:
-                    Tile.Field1.LandType.PlaceId = placeId;
+                    Tile.Field1.PlaceId = placeId;
                     break;
                 case Side.TOP:
-                    Tile.Field2.LandType.PlaceId = placeId;
+                    Tile.Field2.PlaceId = placeId;
                     break;
                 case Side.TOPRIGHT:
-                    Tile.Field3.LandType.PlaceId = placeId;
+                    Tile.Field3.PlaceId = placeId;
                     break;
                 case Side.MIDDLELEFT:
-                    Tile.Field4.LandType.PlaceId = placeId;
+                    Tile.Field4.PlaceId = placeId;
                     break;
                 case Side.MIDDLE:
-                    Tile.Field5.LandType.PlaceId = placeId;
+                    Tile.Field5.PlaceId = placeId;
                     break;
                 case Side.MIDDLERIGHT:
-                    Tile.Field6.LandType.PlaceId = placeId;
+                    Tile.Field6.PlaceId = placeId;
                     break;
                 case Side.BOTTOMLEFT:
-                    Tile.Field7.LandType.PlaceId = placeId;
+                    Tile.Field7.PlaceId = placeId;
                     break;
                 case Side.BOTTOM:
-                    Tile.Field8.LandType.PlaceId = placeId;
+                    Tile.Field8.PlaceId = placeId;
                     break;
                 case Side.BOTTOMRIGHT:
-                    Tile.Field9.LandType.PlaceId = placeId;
+                    Tile.Field9.PlaceId = placeId;
                     break;
             }
         }

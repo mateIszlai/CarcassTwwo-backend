@@ -104,13 +104,13 @@ namespace CarcassTwwo.Models
         public void PlaceCard(CardToRecieve placedCard)
         {
             var card = _cards.First(c => c.Id == placedCard.CardId);
+            _cards.Remove(card);
             card.Coordinate = placedCard.Coordinate;
             card.Rotate(placedCard.Rotation);
             _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
             _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
             _gameboard.SetSideOccupation(placedCard.Coordinate);
             _gameboard.AddAvailableCoordinates(card);
-            _cards.Remove(card);
             _gameboard.SetRegions(placedCard.Coordinate);
         }
 
@@ -171,6 +171,11 @@ namespace CarcassTwwo.Models
 
         }
 
+        internal List<int> GenerateMeeplePlaces(int cardId)
+        {
+            return _gameboard.GetMeeplePlaces(cardId);
+        }
+
         public bool SidesMatches(RequiredCard req, LandType[] sides)
         {
             bool topIsGood, leftIsGood, bottomIsGood, rightIsGood;
@@ -178,19 +183,19 @@ namespace CarcassTwwo.Models
 
             if(req.Top != null)
             {
-                topIsGood = sides[1] == req.Top ? true : false;
+                topIsGood = sides[1].Name == req.Top.Name ? true : false;
             }
             if(req.Left != null)
             {
-                leftIsGood = sides[3] == req.Left ? true : false;
+                leftIsGood = sides[3].Name == req.Left.Name ? true : false;
             }
             if (req.Bottom != null)
             {
-                bottomIsGood = sides[6] == req.Bottom ? true : false;
+                bottomIsGood = sides[7].Name == req.Bottom.Name ? true : false;
             }
             if (req.Right != null)
             {
-                rightIsGood = sides[4] == req.Right ? true : false;
+                rightIsGood = sides[5].Name == req.Right.Name ? true : false;
             }
 
             return topIsGood && leftIsGood && bottomIsGood && rightIsGood;
