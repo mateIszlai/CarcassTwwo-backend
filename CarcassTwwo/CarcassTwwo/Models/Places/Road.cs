@@ -34,6 +34,7 @@ namespace CarcassTwwo.Models.Places
                 Meeples.Add(highwayman);
                 card.AddMeeple(highwayman, field);
                 CanPlaceMeeple = false;
+                owner.MeepleCount--;
             }
         }
     }

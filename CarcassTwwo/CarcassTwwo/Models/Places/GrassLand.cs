@@ -44,6 +44,7 @@ namespace CarcassTwwo.Models.Places
                 Meeples.Add(peasant);
                 card.AddMeeple(peasant, field);
                 CanPlaceMeeple = false;
+                owner.MeepleCount--;
             }
         }
     }
