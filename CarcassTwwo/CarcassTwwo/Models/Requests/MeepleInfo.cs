@@ -7,9 +7,9 @@ namespace CarcassTwwo.Models.Requests
 {
     public class MeepleInfo
     {
-        Client Owner { get; set; }
-        Coordinate Coordinate { get; set; }
-        int Field { get; set; }
+        public Client Owner { get; private set; }
+        public Coordinate Coordinate { get; private set; }
+        public int Field { get; private set; }
         public MeepleInfo(Client owner, Coordinate coordinate, int field)
         {
             Owner = owner;
