@@ -23,32 +23,32 @@ namespace CarcassTwwoTests
             _game = null;
         }
 
-        [Test]
-        public void GetFirstCard_ReturnsFirstCard()
-        {
-            var land = new LandType { Name = "Land", Meeple = MeepleType.PEASANT };
-            var monastery = new LandType { Name = "Monastery", Meeple = MeepleType.MONK };
+        //[Test]
+        //public void GetFirstCard_ReturnsFirstCard()
+        //{
+        //    var land = new LandType { Name = "Land", Meeple = MeepleType.PEASANT };
+        //    var monastery = new LandType { Name = "Monastery", Meeple = MeepleType.MONK };
 
-            var expected = new Card(new Tile
-            {
-                Field1 = new Field { LandType = land },
-                Field2 = new Field { LandType = land },
-                Field3 = new Field { LandType = land },
-                Field4 = new Field { LandType = land },
-                Field5 = new Field { LandType = monastery },
-                Field6 = new Field { LandType = land },
-                Field7 = new Field { LandType = land },
-                Field8 = new Field { LandType = land },
-                Field9 = new Field { LandType = land },
-                Amount = 4,
-                Remaining = 4,
-                Image = "../wwwroot/image/1_4.png",
-                HasCrest = false
-            }, 1);
-            var actual = _game.GetFirstCard();
+        //    var expected = new Card(new Tile
+        //    {
+        //        Field1 = new LandType {  = land },
+        //        Field2 = new Field { LandType = land },
+        //        Field3 = new Field { LandType = land },
+        //        Field4 = new Field { LandType = land },
+        //        Field5 = new Field { LandType = monastery },
+        //        Field6 = new Field { LandType = land },
+        //        Field7 = new Field { LandType = land },
+        //        Field8 = new Field { LandType = land },
+        //        Field9 = new Field { LandType = land },
+        //        Amount = 4,
+        //        Remaining = 4,
+        //        Image = "../wwwroot/image/1_4.png",
+        //        HasCrest = false
+        //    }, 1);
+        //    var actual = _game.GetFirstCard();
 
-            Assert.AreEqual(expected.Id, actual.Id);
-        }
+        //    Assert.AreEqual(expected.Id, actual.Id);
+        //}
 
 
         [Test]
