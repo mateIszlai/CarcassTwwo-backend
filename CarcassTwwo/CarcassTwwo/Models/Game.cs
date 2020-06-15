@@ -63,9 +63,9 @@ namespace CarcassTwwo.Models
             return cards;
         }
 
-        public void CheckWinner()
+        public Client CheckWinner()
         {
-            _gameboard.CheckWinner();
+            return _gameboard.CheckWinner();
         }
 
         public Client PickPlayer()
@@ -220,20 +220,25 @@ namespace CarcassTwwo.Models
 
         public void PlaceMeeple(int placeOfMeeple, CardToRecieve placedCard)
         {
-            var card = _cards.First(c => c.Id == placedCard.CardId);
+            var card = _gameboard.CardCoordinates.Values.First(c => c.Id == placedCard.CardId);
             _gameboard.PlaceMeeple(placeOfMeeple, card, LastPlayer);
         }
-        public void CheckScores()
+        public Dictionary<Client,int> CheckScores()
         {
-            _gameboard.CountScores();
             foreach (var player in _gameboard.ScoreBoard.Players)
             {
                 Players.First(p => p == player.Key).Points += player.Value;
             }
+            return _gameboard.CountScores();
         }
-        internal void CheckEndScores()
+        internal Dictionary<Client, int> CheckEndScores()
         {
-            _gameboard.CountEndScores();
+            return _gameboard.CountEndScores();
+        }
+
+        internal List<Meeple> GetRemovableMeeples()
+        {
+            return _gameboard.RemovableMeeples;
         }
     }
 }

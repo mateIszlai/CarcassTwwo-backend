@@ -66,7 +66,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        internal void CheckOwnerOfLand(GrassLand land)
+        internal void CheckOwnerOfLand(GrassLand land, int cities)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
             foreach (var meeple in land.Meeples)
@@ -75,14 +75,11 @@ namespace CarcassTwwo.Models
             }
             int maxCount = meepleCountByPlayers.Values.Max();
             var landOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
-            AddPointsForLand(landOwners, land);
+            AddPointsForLand(landOwners, cities);
         }
 
-        private void AddPointsForLand(List<Client> players, GrassLand land)
+        private void AddPointsForLand(List<Client> players, int finishedCities)
         {
-            //TODO HOW TO GET THE FINISHED CITIES??
-
-            int finishedCities = 1;
             foreach (Client player in players)
             {
                 Players[player] += finishedCities * (int)Points.FINISHEDCITYONLAND;
@@ -98,10 +95,10 @@ namespace CarcassTwwo.Models
 
         }
 
-        internal List<Client> GetWinner()
+        internal Client GetWinner()
         {
             int maxPoint = Players.Values.Max();
-            var winners = Players.Keys.Where(k => Players[k] == maxPoint).ToList();
+            var winners = Players.Keys.First(k => Players[k] == maxPoint);
             return winners;
         }
     }

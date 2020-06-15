@@ -16,6 +16,7 @@ namespace CarcassTwwo.Models
         private HashSet<GrassLand> _grassLands;
         private HashSet<Monastery> _monasteries;
         private HashSet<Road> _roads;
+        public List <Meeple> RemovableMeeples = new List<Meeple>();
 
         public ScoreBoard ScoreBoard { get; set; }
 
@@ -1177,14 +1178,16 @@ namespace CarcassTwwo.Models
                     break;
             }            
         }
-        internal void CountScores()
+        internal Dictionary<Client,int> CountScores()
         {
+            RemovableMeeples.Clear();
+
             foreach(var city in _cities)
             {
                 if (!city.IsOpen && !city.IsCounted)
                 {
                     ScoreBoard.CheckOwnerOfCity(city);
-                    city.RemoveMeeples();
+                    RemovableMeeples.AddRange(city.RemoveMeeples());
                     city.IsCounted = true;
                 }
             }
@@ -1194,7 +1197,7 @@ namespace CarcassTwwo.Models
                 if (!road.IsOpen && !road.IsCounted)
                 {
                     ScoreBoard.CheckOwnerOfRoad(road);
-                    road.RemoveMeeples();
+                    RemovableMeeples.AddRange(road.RemoveMeeples());
                     road.IsCounted = true;
                 }
             }
@@ -1204,17 +1207,19 @@ namespace CarcassTwwo.Models
                 if (monastery.IsFinished && !monastery.IsCounted)
                 {
                     ScoreBoard.AddPointsForMonastery(monastery);
-                    monastery.RemoveMeeples();
+                    RemovableMeeples.AddRange(monastery.RemoveMeeples());
                     monastery.IsCounted = true;
                 }
             }
+
+            return ScoreBoard.Players;
         }
 
-        internal void CountEndScores()
+        internal Dictionary<Client,int> CountEndScores()
         {
             foreach (var city in _cities)
             {
-                if (city.IsOpen && !city.CanPlaceMeeple)
+                if (!city.CanPlaceMeeple && !city.IsCounted)
                 {
                     ScoreBoard.CheckOwnerOfCity(city);
                 }
@@ -1222,7 +1227,7 @@ namespace CarcassTwwo.Models
 
             foreach (var road in _roads)
             {
-                if (road.IsOpen && !road.CanPlaceMeeple)
+                if (!road.IsCounted && !road.CanPlaceMeeple)
                 {
                     ScoreBoard.CheckOwnerOfRoad(road);
                 }
@@ -1230,7 +1235,7 @@ namespace CarcassTwwo.Models
 
             foreach (var monastery in _monasteries)
             {
-                if (!monastery.IsFinished && !monastery.CanPlaceMeeple)
+                if (!monastery.IsCounted && !monastery.CanPlaceMeeple)
                 {
                     ScoreBoard.AddPointsForMonastery(monastery);
                 }
@@ -1238,23 +1243,28 @@ namespace CarcassTwwo.Models
 
             foreach (var grassland in _grassLands)
             {
-                //TODO if grassland has finished cities...
+                int finishedCities = GetFinishedCitiesOfLand(grassland);
+                ScoreBoard.CheckOwnerOfLand(grassland, finishedCities);
             }
+
+            return ScoreBoard.Players;
         }
 
-        internal void CheckWinner()
+        internal Client CheckWinner()
         {
-            Console.WriteLine("And the winner(s) is(/are): ");
-            foreach(var player in ScoreBoard.GetWinner())
+            return ScoreBoard.GetWinner();
+        }
+
+        private int GetFinishedCitiesOfLand(GrassLand land)
+        {
+            int cityCount = 0;
+            foreach(var city in land.SurroundingCities)
             {
-                Console.WriteLine(player.Name);
+                if(!_cities.First(c => c.Id == city).IsOpen)
+                    cityCount++;
             }
 
-            Console.WriteLine("Points: ");
-            foreach(var player in ScoreBoard.Players)
-            {
-                Console.WriteLine($"{player.Key.Name}: {player.Value}");
-            }
+            return cityCount;
         }
     }
 }

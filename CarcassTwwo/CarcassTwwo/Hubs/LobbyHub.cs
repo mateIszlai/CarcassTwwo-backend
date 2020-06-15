@@ -98,9 +98,9 @@ namespace CarcassTwwo.Hubs
             var card = group.Game.PickRandomCard();
             if(card == null)
             {
-                await Clients.Group(groupName).SendAsync("GameOver", "Game over!");
-                _manager.GetGroup(groupName).Game.CheckEndScores();
-                _manager.GetGroup(groupName).Game.CheckWinner();
+                var scores = _manager.GetGroup(groupName).Game.CheckEndScores();
+                var winner = _manager.GetGroup(groupName).Game.CheckWinner();
+                await Clients.Group(groupName).SendAsync("GameOver", "Game over!", scores, winner);
 
             } else
             {
@@ -118,20 +118,32 @@ namespace CarcassTwwo.Hubs
                 await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", group.Game.GenerateMeeplePlaces(card.CardId));
             else
             {
-                _manager.GetGroup(groupName).Game.CheckScores();
-                await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
-                StartTurn(groupName);
+                EndTurn(groupName, -1, card);
             }
 
         }
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
         {
             var group = _manager.GetGroup(groupName);
-            group.Game.PlaceMeeple(placeOfMeeple, card);
+            if(placeOfMeeple > 0) group.Game.PlaceMeeple(placeOfMeeple, card);
             group.Game.CheckScores();
             await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
+            /*
+            var meepleCount = game.LastPlayer.MeepleCount;
+            var scores = game.CheckScores();
+            var meeplesToRemove = game.GetRemovableMeeples();
+            /*
+             * need to send: 
+             * - coordinate of card (meeple.card.coordinate)
+             * - field of meeple on card (meeple.fieldId)
+             * - owner of meeple (meeple.owner)
+             */
+
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, scores, meepleCount, meeplesToRemove);
+            
+            */
         }
     }
 }

@@ -16,15 +16,19 @@ namespace CarcassTwwo.Models.Places
             IsCounted = false;
         }
         public abstract void PlaceMeeple(Client owner, int field, Card card);
-        public void RemoveMeeples()
+        public List<Meeple> RemoveMeeples()
         {
+            List<Meeple> removeableMeeples = new List <Meeple>();
+
             foreach(var meeple in Meeples)
             {
+                removeableMeeples.Add(meeple);
                 meeple.Card.RemoveMeeple();
                 meeple.Owner.MeepleCount++;
                 meeple.Owner.Meeples.Remove(meeple);
             }
             Meeples.Clear();
+            return removeableMeeples;
         }
     }
 }
