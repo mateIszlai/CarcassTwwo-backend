@@ -1243,7 +1243,8 @@ namespace CarcassTwwo.Models
 
             foreach (var grassland in _grassLands)
             {
-                ScoreBoard.CheckOwnerOfLand(grassland);
+                int finishedCities = GetFinishedCitiesOfLand(grassland);
+                ScoreBoard.CheckOwnerOfLand(grassland, finishedCities);
             }
 
             return ScoreBoard.Players;
@@ -1252,6 +1253,18 @@ namespace CarcassTwwo.Models
         internal Client CheckWinner()
         {
             return ScoreBoard.GetWinner();
+        }
+
+        private int GetFinishedCitiesOfLand(GrassLand land)
+        {
+            int cityCount = 0;
+            foreach(var city in land.SurroundingCities)
+            {
+                if(!_cities.First(c => c.Id == city).IsOpen)
+                    cityCount++;
+            }
+
+            return cityCount;
         }
     }
 }
