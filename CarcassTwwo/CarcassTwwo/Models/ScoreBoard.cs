@@ -13,6 +13,7 @@ namespace CarcassTwwo.Models
 
         public ScoreBoard(HashSet<Client> players)
         {
+            Players = new Dictionary<Client, int>();
             players.ToList().ForEach(pl => Players[pl] = 0);
         }
 
