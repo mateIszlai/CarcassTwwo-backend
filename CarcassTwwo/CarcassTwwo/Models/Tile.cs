@@ -10,17 +10,8 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; set; }
         public string Image { get; set; }
-        public List<Field> Fields { get { return new List<Field> { Field1, Field2, Field3, Field4, Field5, Field6, Field7, Field8, Field9 }; } }
-        public Field Field1 { get; set; }
-        public Field Field2 { get; set; }
-        public Field Field3 { get; set; }
-        public Field Field4 { get; set; }
-        public Field Field5 { get; set; }
-        public Field Field6 { get; set; }
-        public Field Field7 { get; set; }
-        public Field Field8 { get; set; }
-        public Field Field9 { get; set; }
-=======
+        public List<LandType> Fields { get { return new List<LandType> { Field1, Field2, Field3, Field4, Field5, Field6, Field7, Field8, Field9 }; } }
+
         public LandType Field1 { get; set; }
         public LandType Field2 { get; set; }
         public LandType Field3 { get; set; }
@@ -30,20 +21,6 @@ namespace CarcassTwwo.Models
         public LandType Field7 { get; set; }
         public LandType Field8 { get; set; }
         public LandType Field9 { get; set; }
->>>>>>> origin/regionStore
-
-        public LandType Top1 { get; set; }
-        public LandType Top2 { get; set; }
-        public LandType Top3 { get; set; }
-        public LandType Left1 { get; set; }
-        public LandType Left2 { get; set; }
-        public LandType Left3 { get; set; }
-        public LandType Bottom1 { get; set; }
-        public LandType Bottom2 { get; set; }
-        public LandType Bottom3 { get; set; }
-        public LandType Right1 { get; set; }
-        public LandType Right2 { get; set; }
-        public LandType Right3 { get; set; }
 
         public int[] FieldsPlaceIds
         {
