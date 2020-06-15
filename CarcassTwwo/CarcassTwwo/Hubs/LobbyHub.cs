@@ -82,10 +82,12 @@ namespace CarcassTwwo.Hubs
         public async void StartGame(string groupName)
         {
             _manager.StartGame(groupName);
-            var card = _manager.GetGroup(groupName).Game.PlaceFirstCard();
+            var group = _manager.GetGroup(groupName);
+            var card = group.Game.PlaceFirstCard();
             var cardToSend = new CardToSend(card.Tile.Id,card.Id);
             cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
+            await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
             StartTurn(groupName);
         }
 
@@ -124,8 +126,10 @@ namespace CarcassTwwo.Hubs
         }
         public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
         {
-            _manager.GetGroup(groupName).Game.PlaceMeeple(placeOfMeeple, card);
-            _manager.GetGroup(groupName).Game.CheckScores();
+            var group = _manager.GetGroup(groupName);
+            group.Game.PlaceMeeple(placeOfMeeple, card);
+            group.Game.CheckScores();
+            await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
             StartTurn(groupName);
         }
