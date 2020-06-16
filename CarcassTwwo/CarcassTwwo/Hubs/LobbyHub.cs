@@ -88,10 +88,9 @@ namespace CarcassTwwo.Hubs
             cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
             var playerInfos = group.Game.GeneratePlayerInfos();
-            foreach(var player in playerInfos)
-            {
-                await Clients.Client(player.Id).SendAsync("UpdatePlayers", playerInfos, Context.ConnectionId);
-            }
+
+                await Clients.Group(groupName).SendAsync("UpdatePlayers", playerInfos);
+
             StartTurn(groupName);
         }
 
@@ -140,6 +139,11 @@ namespace CarcassTwwo.Hubs
 
            
             
+        }
+
+        public async Task<string> GetConnectionId()
+        {
+            return Context.ConnectionId;
         }
     }
 }
