@@ -90,9 +90,7 @@ namespace CarcassTwwo.Hubs
             var playerInfos = group.Game.GeneratePlayerInfos();
             foreach(var player in playerInfos)
             {
-                player.Me = true;
-                await Clients.Client(player.Id).SendAsync("UpdatePlayers", player);
-                player.Me = false;
+                await Clients.Client(player.Id).SendAsync("UpdatePlayers", playerInfos, Context.ConnectionId);
             }
             StartTurn(groupName);
         }
