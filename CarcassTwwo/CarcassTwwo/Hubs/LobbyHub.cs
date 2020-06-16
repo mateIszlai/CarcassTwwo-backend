@@ -87,23 +87,27 @@ namespace CarcassTwwo.Hubs
             var cardToSend = new CardToSend(card.Tile.Id,card.Id);
             cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
-            var playerInfos = group.Game.GeneratePlayerInfos();
-             await Clients.Group(groupName).SendAsync("UpdatePlayers", playerInfos);
-
         }
 
         public void Ready(string groupName)
         {
             var connections = _manager.GetConnections(groupName);
             connections.First(player => player.ConnectionId == Context.ConnectionId).Ready = true;
-            if(connections.Where(c => !c.Ready).Count() == 0)
+            if(connections.Where(c => !c.Ready).Count() != 0)
                 StartTurn(groupName);
 
         }
 
         public async void StartTurn(string groupName)
         {
+
+            if (_manager.GetConnections(groupName).Where(c => !c.Ready).Count() != 0)
+                return;
             var group = _manager.GetGroup(groupName);
+
+            var playerInfos = group.Game.GeneratePlayerInfos();
+
+            await Clients.Group(groupName).SendAsync("UpdatePlayers", playerInfos);
             var player = group.Game.PickPlayer();
             var card = group.Game.PickRandomCard();
             if(card == null)
