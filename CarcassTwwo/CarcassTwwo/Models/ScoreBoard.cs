@@ -24,7 +24,7 @@ namespace CarcassTwwo.Models
             {
                 foreach(var meeple in city.Meeples)
                 {
-                    _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                    _ = meepleCountByPlayers.Keys.Contains(meeple.Owner) ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
                 }
                 int maxCount = meepleCountByPlayers.Values.Max();
                 var cityOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
@@ -56,7 +56,7 @@ namespace CarcassTwwo.Models
             {
                 foreach (var meeple in road.Meeples)
                 {
-                    _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                    _ = meepleCountByPlayers.Keys.Contains(meeple.Owner) ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
                 }
                 int maxCount = meepleCountByPlayers.Values.Max();
                 var roadOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
@@ -80,7 +80,7 @@ namespace CarcassTwwo.Models
             {
                 foreach (var meeple in land.Meeples)
                 {
-                    _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                    _ = meepleCountByPlayers.Keys.Contains(meeple.Owner) ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
                 }
                 int maxCount = meepleCountByPlayers.Values.Max();
                 var landOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
