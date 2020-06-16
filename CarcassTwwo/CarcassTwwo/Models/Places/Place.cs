@@ -6,7 +6,10 @@ namespace CarcassTwwo.Models.Places
     {
         public int Id { get; private set; }
         public List<Meeple> Meeples { get; private set; }
-        public bool CanPlaceMeeple { get; set; }
+        public bool CanPlaceMeeple
+        { 
+            get { return Meeples.Count == 0; }
+        }
         public bool IsCounted { get; set; }
 
         public Place(int id)
