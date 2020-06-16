@@ -18,5 +18,6 @@ namespace CarcassTwwo.Models
         public int Points { get; set; }
         public List<Meeple> Meeples { get; set; }
         public int MeepleCount { get; set; } = 7;
+        public bool Ready { get; set; } = false;
     }
 }
