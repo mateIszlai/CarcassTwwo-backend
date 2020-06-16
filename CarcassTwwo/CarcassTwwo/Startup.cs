@@ -28,7 +28,12 @@ namespace CarcassTwwo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR();
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = true;
+                hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
+                hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(30);
+            });
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<IHubNotificationHelper, HubNotificationHelper>();
             services.AddCors(options =>
