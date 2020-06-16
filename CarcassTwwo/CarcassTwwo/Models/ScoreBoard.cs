@@ -20,13 +20,16 @@ namespace CarcassTwwo.Models
         internal void CheckOwnerOfCity(City city)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
-            foreach(var meeple in city.Meeples)
+            if(city.Meeples.Count > 0)
             {
-                _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                foreach(var meeple in city.Meeples)
+                {
+                    _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                }
+                int maxCount = meepleCountByPlayers.Values.Max();
+                var cityOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
+                AddPointsForCity(cityOwners, city);
             }
-            int maxCount = meepleCountByPlayers.Values.Max();
-            var cityOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
-            AddPointsForCity(cityOwners, city);
         }
 
         private void AddPointsForCity(List<Client> players, City city)
@@ -49,13 +52,16 @@ namespace CarcassTwwo.Models
         internal void CheckOwnerOfRoad(Road road)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
-            foreach (var meeple in road.Meeples)
+            if(road.Meeples.Count > 0)
             {
-                _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                foreach (var meeple in road.Meeples)
+                {
+                    _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                }
+                int maxCount = meepleCountByPlayers.Values.Max();
+                var roadOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
+                AddPointsForRoad(roadOwners, road);
             }
-            int maxCount = meepleCountByPlayers.Values.Max();
-            var roadOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
-            AddPointsForRoad(roadOwners, road);
         }
 
         private void AddPointsForRoad(List<Client> players, Road road)
@@ -70,13 +76,16 @@ namespace CarcassTwwo.Models
         internal void CheckOwnerOfLand(GrassLand land, int cities)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
-            foreach (var meeple in land.Meeples)
+            if(land.Meeples.Count > 0)
             {
-                _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                foreach (var meeple in land.Meeples)
+                {
+                    _ = meepleCountByPlayers[meeple.Owner] != 0 ? meepleCountByPlayers[meeple.Owner]++ : meepleCountByPlayers[meeple.Owner] = 1;
+                }
+                int maxCount = meepleCountByPlayers.Values.Max();
+                var landOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
+                AddPointsForLand(landOwners, cities);
             }
-            int maxCount = meepleCountByPlayers.Values.Max();
-            var landOwners = meepleCountByPlayers.Keys.Where(k => meepleCountByPlayers[k] == maxCount).ToList();
-            AddPointsForLand(landOwners, cities);
         }
 
         private void AddPointsForLand(List<Client> players, int finishedCities)
@@ -89,10 +98,13 @@ namespace CarcassTwwo.Models
 
         internal void AddPointsForMonastery(Monastery monastery)
         {
-            if(monastery.IsFinished)
-                Players[monastery.Meeples[0].Owner] += (int)Points.FINISHEDMONASTERY;
-            else
-                Players[monastery.Meeples[0].Owner] += (9 - monastery.SurroundingCoordinates.Count) * (int)Points.MONASTERYTILE;
+            if(monastery.Meeples.Count > 0)
+            {
+                if(monastery.IsFinished)
+                    Players[monastery.Meeples[0].Owner] += (int)Points.FINISHEDMONASTERY;
+                else
+                    Players[monastery.Meeples[0].Owner] += (9 - monastery.SurroundingCoordinates.Count) * (int)Points.MONASTERYTILE;
+            }
 
         }
 
