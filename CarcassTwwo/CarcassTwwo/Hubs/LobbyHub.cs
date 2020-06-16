@@ -91,11 +91,20 @@ namespace CarcassTwwo.Hubs
 
                 await Clients.Group(groupName).SendAsync("UpdatePlayers", playerInfos);
 
+        }
+
+        public void Ready(string groupName)
+        {
+            _manager.GetConnections(groupName).First(player => player.ConnectionId == Context.ConnectionId).Ready = true;
+
             StartTurn(groupName);
+
         }
 
         public async void StartTurn(string groupName)
         {
+            if (_manager.GetConnections(groupName).Where(c => !c.Ready).Count() != 0)
+                return;
             var group = _manager.GetGroup(groupName);
             var player = group.Game.PickPlayer();
             var card = group.Game.PickRandomCard();
