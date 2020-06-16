@@ -14,6 +14,7 @@ namespace CarcassTwwo.Models.Places
             Id = id;
             Meeples = new List<Meeple>();
             IsCounted = false;
+            CanPlaceMeeple = true;
         }
         public abstract void PlaceMeeple(Client owner, int field, Card card);
         public List<Meeple> RemoveMeeples()
