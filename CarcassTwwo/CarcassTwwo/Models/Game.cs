@@ -220,8 +220,7 @@ namespace CarcassTwwo.Models
 
         public void PlaceMeeple(int placeOfMeeple, CardToRecieve placedCard)
         {
-            var card = _gameboard.CardCoordinates.Values.First(c => c.Id == placedCard.CardId);
-            _gameboard.PlaceMeeple(placeOfMeeple, card, LastPlayer);
+            _gameboard.PlaceMeeple(placeOfMeeple, placedCard.CardId, LastPlayer);
         }
         public void CheckScores()
         {
