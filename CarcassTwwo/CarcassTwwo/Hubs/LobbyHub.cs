@@ -144,9 +144,13 @@ namespace CarcassTwwo.Hubs
             var meeplesToRemove = group.Game.GetRemovableMeeples();
 
             await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
-            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, placeOfMeeple, meeplesToRemove);
+            var lastPlayer = _manager.GetGroup(groupName).Game.LastPlayer;
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, placeOfMeeple, meeplesToRemove, lastPlayer);
             StartTurn(groupName);
         }
+
+
+
 
         public string GetConnectionId()
         {

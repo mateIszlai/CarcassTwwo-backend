@@ -163,8 +163,11 @@ namespace CarcassTwwo.Models
 
         internal List<PlayerInfo> GeneratePlayerInfos()
         {
-            return Players.Select(player => new PlayerInfo { Name = player.Name, Score = player.Points, MeepleCount = player.MeepleCount, Id = player.ConnectionId }).ToList();
+            var colors = GetColors(); 
+            return Players.Select((player,i) => new PlayerInfo { Name = player.Name, Score = player.Points, MeepleCount = player.MeepleCount, Id = player.ConnectionId, Color = colors.Skip(i).Take(1).First() }).ToList();
         }
+
+
 
         internal List<int> GenerateMeeplePlaces(int cardId)
         {
@@ -243,6 +246,23 @@ namespace CarcassTwwo.Models
                 meeples.Add(new MeepleInfo(meeple.Owner, meeple.Card.Coordinate, meeple.FieldId));
             }
             return meeples;
+        }
+
+
+        public IEnumerable<string> GetColors()
+        {
+            yield return "#eab803";
+            yield return "#643358";
+            yield return "#181412";
+            yield return "#dc6401";
+            yield return "#38891d";
+            yield return "#5d3a32";
+            yield return "#0059a5";
+            yield return "#5d3a32";
+            yield return "#5d3a32";
+            yield return "#b20f24";
+            yield return "#ca4c8a";
+
         }
     }
 }
