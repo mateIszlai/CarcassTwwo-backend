@@ -151,6 +151,7 @@ namespace CarcassTwwo.Models
                     monastery.SurroundingCoordinates.Remove(coord);
             });
             _monasteries.Add(monastery);
+            card.SetField(Side.MIDDLE, id);
         }
 
         internal List<int> GetMeeplePlaces(int cardId)
@@ -720,6 +721,21 @@ namespace CarcassTwwo.Models
             { 
                 var around = roadsAround.First();
                 var road = _roads.First(r => r.Id == around.Value);
+                switch (around.Key)
+                {
+                    case Side.TOP:
+                        road.SetSides(topCard.Id);
+                        break;
+                    case Side.MIDDLELEFT:
+                        road.SetSides(leftCard.Id);
+                        break;
+                    case Side.BOTTOM:
+                        road.SetSides(botCard.Id);
+                        break;
+                    case Side.MIDDLERIGHT:
+                        road.SetSides(rightCard.Id);
+                        break;
+                }
                 road.ExpandRoad(new RoadPart(card.Id) { LeftOpen = false, RightOpen = true });
                 card.SetField(around.Key, road.Id);
                 visitedSides.Add(around.Key);
@@ -736,6 +752,7 @@ namespace CarcassTwwo.Models
                     roadToAdd.ExpandRoad(new RoadPart(card.Id) { LeftOpen = false, RightOpen = true });
                     card.SetField(side, roadToAdd.Id);
                     AddRoadToLand(side, roadToAdd.Id, card);
+                    _roads.Add(roadToAdd);
                 }
                 return;
             }
@@ -1177,36 +1194,37 @@ namespace CarcassTwwo.Models
             return newLand;
         }
 
-        internal void PlaceMeeple(int placeOfMeeple, Card placedCard, Client owner)
+        internal void PlaceMeeple(int placeOfMeeple, int cardId, Client owner)
         {
+            var placedCard = CardCoordinates.First(c => c.Value.Id == cardId).Value;
             var landtype = placedCard.Tile.Fields[placeOfMeeple - 1];
 
             switch (landtype.Name)
             {
                 case "City":
-                    var city = _cities.FirstOrDefault(c => c.CityParts.Where(part => part.CardId == placedCard.Id) != null);
-                    if (city != null && city.CanPlaceMeeple)
+                    var city = _cities.First(c => c.Id == landtype.PlaceId);
+                    if (city.CanPlaceMeeple)
                     {
                         city.PlaceMeeple(owner, placeOfMeeple, placedCard);
                     }
                     break;
                 case "Road":
-                    var road = _roads.FirstOrDefault(r => r.RoadParts.Where(part => part.CardId == placedCard.Id) != null);
-                    if (road != null && road.CanPlaceMeeple)
+                    var road = _roads.First(r => r.Id == landtype.PlaceId);
+                    if (road.CanPlaceMeeple)
                     {
                         road.PlaceMeeple(owner, placeOfMeeple, placedCard);
                     }
                     break;
                 case "Land":
-                    var land = _grassLands.FirstOrDefault(g => g.CardIds.Contains(placedCard.Id));
-                    if(land != null && land.CanPlaceMeeple)
+                    var land = _grassLands.First(l => l.Id == landtype.PlaceId);
+                    if(land.CanPlaceMeeple)
                     {
                         land.PlaceMeeple(owner, placeOfMeeple, placedCard);
                     }
                     break;
                 case "Monastery":
-                    var monastery = _monasteries.FirstOrDefault(m => m.CardId == placedCard.Id);
-                    if (monastery != null && monastery.CanPlaceMeeple)
+                    var monastery = _monasteries.First(m => m.Id == landtype.PlaceId);
+                    if (monastery.CanPlaceMeeple)
                     {
                         monastery.PlaceMeeple(owner, placeOfMeeple, placedCard);
                     }
