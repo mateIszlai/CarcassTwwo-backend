@@ -144,13 +144,9 @@ namespace CarcassTwwo.Hubs
             await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
             await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, meeplesToRemove);
             StartTurn(groupName);
-            
-
-           
-            
         }
 
-        public async Task<string> GetConnectionId()
+        public string GetConnectionId()
         {
             return Context.ConnectionId;
         }
