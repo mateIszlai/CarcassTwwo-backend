@@ -93,7 +93,7 @@ namespace CarcassTwwo.Hubs
         {
             var connections = _manager.GetConnections(groupName);
             connections.First(player => player.ConnectionId == Context.ConnectionId).Ready = true;
-            if(connections.Where(c => !c.Ready).Count() != 0)
+            if(connections.Where(c => !c.Ready).Count() == 0)
                 StartTurn(groupName);
 
         }
