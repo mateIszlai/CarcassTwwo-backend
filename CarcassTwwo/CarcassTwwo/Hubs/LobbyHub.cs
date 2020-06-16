@@ -95,16 +95,15 @@ namespace CarcassTwwo.Hubs
 
         public void Ready(string groupName)
         {
-            _manager.GetConnections(groupName).First(player => player.ConnectionId == Context.ConnectionId).Ready = true;
-
-            StartTurn(groupName);
+            var connections = _manager.GetConnections(groupName);
+            connections.First(player => player.ConnectionId == Context.ConnectionId).Ready = true;
+            if(connections.Where(c => !c.Ready).Count() != 0)
+                StartTurn(groupName);
 
         }
 
         public async void StartTurn(string groupName)
         {
-            if (_manager.GetConnections(groupName).Where(c => !c.Ready).Count() != 0)
-                return;
             var group = _manager.GetGroup(groupName);
             var player = group.Game.PickPlayer();
             var card = group.Game.PickRandomCard();
