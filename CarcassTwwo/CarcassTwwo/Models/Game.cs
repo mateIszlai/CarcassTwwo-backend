@@ -230,7 +230,7 @@ namespace CarcassTwwo.Models
             _gameboard.CountScores();
             foreach (var player in _gameboard.ScoreBoard.Players)
             {
-                Players.First(p => p == player.Key).Points += player.Value;
+                Players.First(p => p == player.Key).Points = player.Value;
             }
         }
         internal Dictionary<Client, int> CheckEndScores()
