@@ -32,7 +32,6 @@ namespace CarcassTwwo.Models.Places
             {
                 var highwayman = new Meeple(MeepleType.HIGHWAYMAN, owner, field, card, Id);
                 Meeples.Add(highwayman);
-                owner.Meeples.Add(highwayman);
                 card.AddMeeple(highwayman, field);
                 owner.MeepleCount--;
             }
