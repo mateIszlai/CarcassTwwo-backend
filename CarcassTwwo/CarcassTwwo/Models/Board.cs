@@ -1114,7 +1114,7 @@ namespace CarcassTwwo.Models
 
                 if (CardCoordinates.TryGetValue(rightCoord, out Card rightCard))
                 {
-                    var city = _cities.FirstOrDefault(c => c.Id == rightCard.Right.PlaceId);
+                    var city = _cities.FirstOrDefault(c => c.Id == rightCard.Left.PlaceId);
                     card.SetField(Side.MIDDLERIGHT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
                         city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
