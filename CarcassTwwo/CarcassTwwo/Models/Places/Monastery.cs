@@ -46,6 +46,7 @@ namespace CarcassTwwo.Models.Places
             {
                 var monk = new Meeple(MeepleType.MONK, owner, field, card, Id);
                 Meeples.Add(monk);
+                owner.Meeples.Add(monk);
                 card.AddMeeple(monk, field);
                 owner.MeepleCount--;
             }
