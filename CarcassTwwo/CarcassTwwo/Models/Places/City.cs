@@ -60,7 +60,6 @@ namespace CarcassTwwo.Models.Places
                 var knight = new Meeple(MeepleType.KNIGHT, owner, field, card, Id);
                 Meeples.Add(knight);
                 card.AddMeeple(knight, field);
-                owner.Meeples.Add(knight);
                 owner.MeepleCount--;
             }
         }
