@@ -16,7 +16,7 @@ namespace CarcassTwwo.Models
         public bool IsWaitingForMove { get; set; }
         public string ConnectionId { get; set; }
         public int Points { get; set; }
-        public List<Meeple> Meeples { get; set; }
+        public List<Meeple> Meeples { get; set; } = new List<Meeple>();
         public int MeepleCount { get; set; } = 7;
         public bool Ready { get; set; } = false;
     }
