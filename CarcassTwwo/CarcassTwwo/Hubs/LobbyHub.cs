@@ -104,8 +104,6 @@ namespace CarcassTwwo.Hubs
         public async void StartTurn(string groupName)
         {
 
-            if (_manager.GetConnections(groupName).Where(c => !c.Ready).Count() != 0)
-                return;
             var group = _manager.GetGroup(groupName);
 
             var playerInfos = group.Game.GeneratePlayerInfos();
