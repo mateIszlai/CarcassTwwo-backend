@@ -895,6 +895,7 @@ namespace CarcassTwwo.Models
                 citiesAround.Add(Side.MIDDLERIGHT, rightCard.Left.PlaceId);
 
             var cityPart = new CityPart(card.Id);
+            cityPart.HasCrest = card.HasCrest;
             if (card.Top.Name != "City")
                 cityPart.TopIsOpen = false;
             if (card.Left.Name != "City")
@@ -1048,7 +1049,7 @@ namespace CarcassTwwo.Models
                     var city = _cities.FirstOrDefault(c => c.Id == topCard.Bottom.PlaceId);
                     card.SetField(Side.TOP, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
-                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false, HasCrest = card.HasCrest });
                     city.SetSides(topCard.Id, Side.BOTTOM);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
                 }
@@ -1056,7 +1057,7 @@ namespace CarcassTwwo.Models
                 {
                     id++;
                     var city = new City(id);
-                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = true, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = true, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false, HasCrest = card.HasCrest });
                     _cities.Add(city);
                     card.SetField(Side.TOP, id);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
@@ -1072,7 +1073,7 @@ namespace CarcassTwwo.Models
                     var city = _cities.FirstOrDefault(c => c.Id == leftCard.Right.PlaceId);
                     card.SetField(Side.MIDDLELEFT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
-                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false, HasCrest = card.HasCrest });
                     city.SetSides(leftCard.Id, Side.MIDDLERIGHT);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
 
@@ -1081,7 +1082,7 @@ namespace CarcassTwwo.Models
                 {
                     id++;
                     var city = new City(id);
-                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = true, BottomIsOpen = false, RightIsOpen = false });
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = true, BottomIsOpen = false, RightIsOpen = false, HasCrest = card.HasCrest });
                     _cities.Add(city);
                     card.SetField(Side.MIDDLELEFT, id);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
@@ -1095,7 +1096,7 @@ namespace CarcassTwwo.Models
                     var city = _cities.FirstOrDefault(c => c.Id == botCard.Top.PlaceId);
                     card.SetField(Side.BOTTOM, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
-                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false, HasCrest = card.HasCrest });
                     city.SetSides(botCard.Id, Side.TOP);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
 
@@ -1104,7 +1105,7 @@ namespace CarcassTwwo.Models
                 {
                     id++;
                     var city = new City(id);
-                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = true, RightIsOpen = false });
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = true, RightIsOpen = false, HasCrest = card.HasCrest });
                     _cities.Add(city);
                     card.SetField(Side.BOTTOM, id);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
@@ -1120,7 +1121,7 @@ namespace CarcassTwwo.Models
                     var city = _cities.FirstOrDefault(c => c.Id == rightCard.Left.PlaceId);
                     card.SetField(Side.MIDDLERIGHT, city.Id);
                     if (city.GetCityPartByCardId(card.Id) == null)
-                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false });
+                        city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = false, HasCrest = card.HasCrest });
                     city.SetSides(rightCard.Id, Side.MIDDLELEFT);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
 
@@ -1129,7 +1130,7 @@ namespace CarcassTwwo.Models
                 {
                     id++;
                     var city = new City(id);
-                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = true });
+                    city.ExpandCity(new CityPart(card.Id) { TopIsOpen = false, LeftIsOpen = false, BottomIsOpen = false, RightIsOpen = true, HasCrest = card.HasCrest });
                     _cities.Add(city);
                     card.SetField(Side.MIDDLERIGHT, id);
                     _grassLands.First(l => l.Id == card.Tile.Field5.PlaceId).SurroundingCities.Add(city.Id);
