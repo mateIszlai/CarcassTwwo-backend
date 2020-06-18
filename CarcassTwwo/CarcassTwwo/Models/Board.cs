@@ -396,7 +396,10 @@ namespace CarcassTwwo.Models
             }
 
 
-            if (landsAround.Count == 3)
+            if (landsAround.Count == 3 && (landsAround.ContainsKey(Side.TOP) ||
+                landsAround.ContainsKey(Side.MIDDLELEFT) ||
+                landsAround.ContainsKey(Side.BOTTOM) ||
+                landsAround.ContainsKey(Side.MIDDLERIGHT)))
             {
                 var land = _grassLands.FirstOrDefault(l => l.Id == landsAround.First().Value.First());
                 land.ExpandLand(card.Id);
