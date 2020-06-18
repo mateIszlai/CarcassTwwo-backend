@@ -84,13 +84,12 @@ namespace CarcassTwwo.Models
         public bool BottomIsFree { get; set; }
         public bool LeftIsFree { get; set; }
         public bool RightIsFree { get; set; }
-        public bool HasCrest { get; set; }
+        public bool HasCrest { get { return Tile.HasCrest; } }
 
         public Card(Tile tile, int id)
         {
             Id = id;
             Tile = tile;
-            HasCrest = Tile.HasCrest;
             Rotations = new Dictionary<string, LandType[]>();
             SetRotations();
             MonasteryId = -1;

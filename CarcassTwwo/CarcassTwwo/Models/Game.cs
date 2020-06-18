@@ -26,9 +26,7 @@ namespace CarcassTwwo.Models
             IsOver = false;
             IsStarted = true;
             LastPlayer = Players[Players.Count - 1];
-            DataSeeder.SeedLandTypes();
-            DataSeeder.SeedTiles();
-            _cards = GenerateDeck();
+            _cards = DataSeeder.SeedCards();
             _gameboard = new Board(players);
         }
 
@@ -46,21 +44,6 @@ namespace CarcassTwwo.Models
                     _cards[n] = card;
                 }
             }
-        }
-
-        private List<Card> GenerateDeck()
-        {
-            List<Card> cards = new List<Card>();
-            var id = 1;
-            foreach(var tile in DataSeeder.tiles)
-            {
-                for(int i = 0; i< tile.Amount; i++)
-                {
-                    cards.Add(new Card(tile, id));
-                    id++;
-                }
-            }
-            return cards;
         }
 
         public Client CheckWinner()
@@ -98,6 +81,7 @@ namespace CarcassTwwo.Models
             _cards.Remove(card);
             card.Coordinate = placedCard.Coordinate;
             card.Rotate(placedCard.Rotation);
+            Console.WriteLine($"id: {card.Id}, rot : {placedCard.Rotation}");
             _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
             _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
             _gameboard.SetSideOccupation(placedCard.Coordinate);
