@@ -10,6 +10,7 @@ namespace CarcassTwwo.Models.Places
         public bool BottomIsOpen { get; set; }
         public bool RightIsOpen { get; set; }
         public List<int> Lands { get; set; }
+        public bool HasCrest { get; set; }
 
         public CityPart(int cardId)
         {

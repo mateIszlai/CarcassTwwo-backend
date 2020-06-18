@@ -36,6 +36,10 @@ namespace CarcassTwwo.Models
         {
             int numOfCards = city.Size;
             int numOfMeeples = city.Meeples.Count;
+            int numOfCrests = 0;
+
+            city.CityParts.ToList().ForEach(cp => { if (cp.HasCrest) numOfCrests++; });
+
             foreach(Client player in players)
             {
                 if (!city.IsOpen){
@@ -46,6 +50,7 @@ namespace CarcassTwwo.Models
                     Players[player] += numOfCards * (int)Points.OPENCITYTILE;
                     Players[player] += numOfMeeples * (int)Points.OPENCITYMEEPLE;
                 }
+                Players[player] += numOfCrests * (int)Points.CREST;
             }
         }
 
@@ -123,6 +128,7 @@ namespace CarcassTwwo.Models
         CITYMEEPLE = 2,
         OPENCITYTILE = 1,
         OPENCITYMEEPLE = 1,
+        CREST = 2,
         MONASTERYTILE = 1,
         FINISHEDMONASTERY = 9,
         FINISHEDCITYONLAND = 3

@@ -116,7 +116,7 @@ namespace CarcassTwwo.Models
 
             foreach(var place in _gameboard.AvailableCoordinates)
             {
-                if(SidesMatches(place.Key, rot0) == true)
+                if(SidesMatches(place.Key, rot0))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -126,7 +126,7 @@ namespace CarcassTwwo.Models
                         placementsWithRotations.Add(place.Value, new List<int> { 0 });
                 }
 
-                if (SidesMatches(place.Key, rot90) == true)
+                if (SidesMatches(place.Key, rot90))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -136,7 +136,7 @@ namespace CarcassTwwo.Models
                         placementsWithRotations.Add(place.Value, new List<int> { 90 });
                 }
 
-                if (SidesMatches(place.Key, rot180) == true)
+                if (SidesMatches(place.Key, rot180))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -146,7 +146,7 @@ namespace CarcassTwwo.Models
                         placementsWithRotations.Add(place.Value, new List<int> { 180 });
                 }
 
-                if (SidesMatches(place.Key, rot270) == true)
+                if (SidesMatches(place.Key, rot270))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -181,19 +181,19 @@ namespace CarcassTwwo.Models
 
             if(req.Top != null)
             {
-                topIsGood = sides[1].Name == req.Top.Name ? true : false;
+                topIsGood = sides[1].Name == req.Top.Name;
             }
             if(req.Left != null)
             {
-                leftIsGood = sides[3].Name == req.Left.Name ? true : false;
+                leftIsGood = sides[3].Name == req.Left.Name;
             }
             if (req.Bottom != null)
             {
-                bottomIsGood = sides[7].Name == req.Bottom.Name ? true : false;
+                bottomIsGood = sides[7].Name == req.Bottom.Name;
             }
             if (req.Right != null)
             {
-                rightIsGood = sides[5].Name == req.Right.Name ? true : false;
+                rightIsGood = sides[5].Name == req.Right.Name;
             }
 
             return topIsGood && leftIsGood && bottomIsGood && rightIsGood;
@@ -230,7 +230,7 @@ namespace CarcassTwwo.Models
             _gameboard.CountScores();
             foreach (var player in _gameboard.ScoreBoard.Players)
             {
-                Players.First(p => p == player.Key).Points += player.Value;
+                Players.First(p => p == player.Key).Points = player.Value;
             }
         }
         internal Dictionary<Client, int> CheckEndScores()
