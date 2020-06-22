@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CarcassTwwo.Data;
 using CarcassTwwo.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,7 +37,6 @@ namespace CarcassTwwo
                     builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader()
                                 .AllowAnyMethod().AllowCredentials());
             });
-            services.AddDbContextPool<CarcassTwwoDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("CarcassTwwoDBConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

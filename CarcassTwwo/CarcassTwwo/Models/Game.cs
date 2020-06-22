@@ -1,4 +1,5 @@
-﻿using CarcassTwwo.Models.Requests;
+﻿using CarcassTwwo.Models.Places;
+using CarcassTwwo.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +22,12 @@ namespace CarcassTwwo.Models
 
         public Game(HashSet<Client> players)
         {
-            _gameboard = new Board();
             Players = players.ToList();
             IsOver = false;
             IsStarted = true;
             LastPlayer = Players[Players.Count - 1];
-            DataSeeder.SeedLandTypes();
-            DataSeeder.SeedTiles();
-            _cards = GenerateDeck();
+            _cards = DataSeeder.SeedCards();
+            _gameboard = new Board(players);
         }
 
         public void ShuffleCards(int times)
@@ -47,43 +46,15 @@ namespace CarcassTwwo.Models
             }
         }
 
-        private List<Card> GenerateDeck()
+        public Client CheckWinner()
         {
-            List<Card> cards = new List<Card>();
-            var id = 1;
-            foreach(var tile in DataSeeder.tiles)
-            {
-                for(int i = 0; i< tile.Amount; i++)
-                {
-                    cards.Add(new Card(tile, id));
-                    id++;
-                }
-            }
-            return cards;
-        }
-
-        public void CheckWinner(List<Client> players)
-        {
-            int maxPoint = 0;
-            foreach (var player in players)
-            {
-                if (player.Points > maxPoint)
-                {
-                    maxPoint = player.Points;
-                    WinnerName = player.Name;
-                }
-            }
+            return _gameboard.CheckWinner();
         }
 
         public Client PickPlayer()
         {
             var lastPlayerIndex = Players.FindIndex(c => c.Equals(LastPlayer));
-
-            if (lastPlayerIndex == Players.Count - 1)
-                LastPlayer = Players[0];
-            else
-                LastPlayer = Players[lastPlayerIndex + 1];
-
+            LastPlayer = lastPlayerIndex == Players.Count - 1 ? Players[0] : Players[lastPlayerIndex + 1];
             return LastPlayer;
         }
 
@@ -107,19 +78,16 @@ namespace CarcassTwwo.Models
         public void PlaceCard(CardToRecieve placedCard)
         {
             var card = _cards.First(c => c.Id == placedCard.CardId);
+            _cards.Remove(card);
             card.Coordinate = placedCard.Coordinate;
-            var sides = card.Rotations[placedCard.Rotation];
-            card.Top = sides[0];
-            card.Left = sides[1];
-            card.Bottom = sides[2];
-            card.Right = sides[3];
+            card.Rotate(placedCard.Rotation);
+            Console.WriteLine($"id: {card.Id}, rot : {placedCard.Rotation}");
             _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
             _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
             _gameboard.SetSideOccupation(placedCard.Coordinate);
             _gameboard.AddAvailableCoordinates(card);
-            _cards.Remove(card);
+            _gameboard.SetRegions(placedCard.Coordinate);
         }
-
 
         public Dictionary<Coordinate, List<int>> GetPossiblePlacements(Card card)
         {
@@ -132,7 +100,7 @@ namespace CarcassTwwo.Models
 
             foreach(var place in _gameboard.AvailableCoordinates)
             {
-                if(SidesMatches(place.Key, rot0) == true)
+                if(SidesMatches(place.Key, rot0))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -142,7 +110,7 @@ namespace CarcassTwwo.Models
                         placementsWithRotations.Add(place.Value, new List<int> { 0 });
                 }
 
-                if (SidesMatches(place.Key, rot90) == true)
+                if (SidesMatches(place.Key, rot90))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -152,7 +120,7 @@ namespace CarcassTwwo.Models
                         placementsWithRotations.Add(place.Value, new List<int> { 90 });
                 }
 
-                if (SidesMatches(place.Key, rot180) == true)
+                if (SidesMatches(place.Key, rot180))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -162,7 +130,7 @@ namespace CarcassTwwo.Models
                         placementsWithRotations.Add(place.Value, new List<int> { 180 });
                 }
 
-                if (SidesMatches(place.Key, rot270) == true)
+                if (SidesMatches(place.Key, rot270))
                 {
                     if (placementsWithRotations.ContainsKey(place.Value))
                     {
@@ -177,26 +145,39 @@ namespace CarcassTwwo.Models
 
         }
 
-        public bool SidesMatches(RequiredCard req, List<LandType> sides)
+        internal List<PlayerInfo> GeneratePlayerInfos()
+        {
+            var colors = GetColors(); 
+            return Players.Select((player,i) => new PlayerInfo { Name = player.Name, Score = player.Points, MeepleCount = player.MeepleCount, Id = player.ConnectionId, Color = colors.Skip(i).Take(1).First() }).ToList();
+        }
+
+
+
+        internal List<int> GenerateMeeplePlaces(int cardId)
+        {
+            return _gameboard.GetMeeplePlaces(cardId);
+        }
+
+        public bool SidesMatches(RequiredCard req, LandType[] sides)
         {
             bool topIsGood, leftIsGood, bottomIsGood, rightIsGood;
             topIsGood = leftIsGood = bottomIsGood = rightIsGood = true;
 
             if(req.Top != null)
             {
-                topIsGood = sides[0] == req.Top ? true : false;
+                topIsGood = sides[1].Name == req.Top.Name;
             }
             if(req.Left != null)
             {
-                leftIsGood = sides[1] == req.Left ? true : false;
+                leftIsGood = sides[3].Name == req.Left.Name;
             }
             if (req.Bottom != null)
             {
-                bottomIsGood = sides[2] == req.Bottom ? true : false;
+                bottomIsGood = sides[7].Name == req.Bottom.Name;
             }
             if (req.Right != null)
             {
-                rightIsGood = sides[3] == req.Right ? true : false;
+                rightIsGood = sides[5].Name == req.Right.Name;
             }
 
             return topIsGood && leftIsGood && bottomIsGood && rightIsGood;
@@ -222,6 +203,50 @@ namespace CarcassTwwo.Models
         public Card GetFirstCard()
         {
             return _cards[0];
+        }
+
+        public void PlaceMeeple(int placeOfMeeple, CardToRecieve placedCard)
+        {
+            _gameboard.PlaceMeeple(placeOfMeeple, placedCard.CardId, LastPlayer);
+        }
+        public void CheckScores()
+        {
+            _gameboard.CountScores();
+            foreach (var player in _gameboard.ScoreBoard.Players)
+            {
+                Players.First(p => p == player.Key).Points = player.Value;
+            }
+        }
+        internal Dictionary<Client, int> CheckEndScores()
+        {
+            return _gameboard.CountEndScores();
+        }
+
+        internal List<MeepleInfo> GetRemovableMeeples()
+        {
+            List<MeepleInfo> meeples = new List<MeepleInfo>();
+            foreach(var meeple in _gameboard.RemovableMeeples)
+            {
+                meeples.Add(new MeepleInfo(meeple.Owner, meeple.Card.Coordinate, meeple.FieldId));
+            }
+            return meeples;
+        }
+
+
+        public IEnumerable<string> GetColors()
+        {
+            yield return "#eab803";
+            yield return "#643358";
+            yield return "#181412";
+            yield return "#dc6401";
+            yield return "#38891d";
+            yield return "#5d3a32";
+            yield return "#0059a5";
+            yield return "#5d3a32";
+            yield return "#5d3a32";
+            yield return "#b20f24";
+            yield return "#ca4c8a";
+
         }
     }
 }

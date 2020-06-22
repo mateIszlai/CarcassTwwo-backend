@@ -82,34 +82,81 @@ namespace CarcassTwwo.Hubs
         public async void StartGame(string groupName)
         {
             _manager.StartGame(groupName);
-            var card = _manager.GetGroup(groupName).Game.PlaceFirstCard();
+            var group = _manager.GetGroup(groupName);
+            var card = group.Game.PlaceFirstCard();
             var cardToSend = new CardToSend(card.Tile.Id,card.Id);
             cardToSend.CoordinatesWithRotations.Add(new CoordinatesWithRotation { Coordinate = card.Coordinate, Rotations = new List<int> { 0 } });
             await Clients.Group(groupName).SendAsync("StartGame", "The game is started", cardToSend);
-            StartTurn(groupName);
+        }
+
+        public void Ready(string groupName)
+        {
+            lock (_manager)
+            {
+                var connections = _manager.GetConnections(groupName);
+                connections.First(player => player.ConnectionId == Context.ConnectionId).Ready = true;
+                if(connections.Where(c => !c.Ready).Count() == 0)
+                    StartTurn(groupName);
+            }
+
         }
 
         public async void StartTurn(string groupName)
         {
+
             var group = _manager.GetGroup(groupName);
+
+            var playerInfos = group.Game.GeneratePlayerInfos();
+
+            await Clients.Group(groupName).SendAsync("UpdatePlayers", playerInfos);
             var player = group.Game.PickPlayer();
             var card = group.Game.PickRandomCard();
             if(card == null)
             {
-                await Clients.Group(groupName).SendAsync("GameOver", "Game over!");
+                var scores = _manager.GetGroup(groupName).Game.CheckEndScores();
+                var winner = _manager.GetGroup(groupName).Game.CheckWinner();
+                await Clients.Group(groupName).SendAsync("GameOver", "Game over!", scores, winner);
 
             } else
             {
                 var cardToSend = group.Game.GenerateCardToSend(card);
-                await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend, true);
+
+                await Clients.Client(player.ConnectionId).SendAsync("Turn", cardToSend);
             }
         }
-        public async void EndTurn(string groupName, CardToRecieve card)
+
+        public async void EndPlacement(string groupName, CardToRecieve card)
         {
-            _manager.GetGroup(groupName).Game.PlaceCard(card);
-            await Clients.Client(Context.ConnectionId).SendAsync("EndTurn", "Your turn is ended, waiting for the others", false);
-            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card);
+            var group = _manager.GetGroup(groupName);
+            group.Game.PlaceCard(card);
+            if(_manager.GetGroup(groupName).Game.LastPlayer.MeepleCount > 0)
+                await Clients.Client(Context.ConnectionId).SendAsync("PlaceMeeple", group.Game.GenerateMeeplePlaces(card.CardId));
+            else
+            {
+                EndTurn(groupName, -1, card);
+            }
+
+        }
+        public async void EndTurn(string groupName, int placeOfMeeple, CardToRecieve card)
+        {
+            var group = _manager.GetGroup(groupName);
+            if(placeOfMeeple > 0) group.Game.PlaceMeeple(placeOfMeeple, card);
+            group.Game.CheckScores();
+            var meeplesToRemove = group.Game.GetRemovableMeeples();
+            var lastPlayer = _manager.GetGroup(groupName).Game.LastPlayer;
+
+            await Clients.Group(groupName).SendAsync("UpdatePlayers", group.Game.GeneratePlayerInfos());
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("RefreshBoard", card, placeOfMeeple, lastPlayer);
+            await Clients.Group(groupName).SendAsync("RemoveMeeples", meeplesToRemove);
             StartTurn(groupName);
+        }
+
+
+
+
+        public string GetConnectionId()
+        {
+            return Context.ConnectionId;
         }
     }
 }
