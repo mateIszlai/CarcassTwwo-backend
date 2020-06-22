@@ -1,8 +1,6 @@
 ﻿using CarcassTwwo.Models.Places;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Requests
 {
@@ -11,14 +9,154 @@ namespace CarcassTwwo.Models.Requests
         public HashSet<City> Cities { get; private set; }
 
         private ILandHandler _landHandler;
+        private IBoard _board;
 
-        public CityHandler(ILandHandler landHandler)
+        public CityHandler(ILandHandler landHandler, IBoard board)
         {
             Cities = new HashSet<City>();
             _landHandler = landHandler;
+            _board = board;
         }
 
-        private void PlaceTwoCity(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int id)
+        public override int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed)
+        {
+            int cityCounts = GetCityCount(card);
+
+            if (cityCounts == 0)
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+
+            if (cityCounts == 2)
+            {
+                id =  PlaceTwoCity(topCard, botCard, leftCard, rightCard, card, id);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+            var citiesAround = new Dictionary<Side, int>();
+
+            if (topCard != null && topCard.Bottom.Name == "City")
+                citiesAround.Add(Side.TOP, topCard.Bottom.PlaceId);
+            if (leftCard != null && leftCard.Right.Name == "City")
+                citiesAround.Add(Side.MIDDLELEFT, leftCard.Right.PlaceId);
+            if (botCard != null && botCard.Top.Name == "City")
+                citiesAround.Add(Side.BOTTOM, botCard.Top.PlaceId);
+            if (rightCard != null && rightCard.Left.Name == "City")
+                citiesAround.Add(Side.MIDDLERIGHT, rightCard.Left.PlaceId);
+
+            var cityPart = new CityPart(card.Id);
+            cityPart.HasCrest = card.HasCrest;
+            if (card.Top.Name != "City")
+                cityPart.TopIsOpen = false;
+            if (card.Left.Name != "City")
+                cityPart.LeftIsOpen = false;
+            if (card.Bottom.Name != "City")
+                cityPart.BottomIsOpen = false;
+            if (card.Right.Name != "City")
+                cityPart.RightIsOpen = false;
+
+            if (citiesAround.Count == 0)
+            {
+                id++;
+                var city = new City(id);
+                city.ExpandCity(cityPart);
+                Cities.Add(city);
+                foreach (var side in card.Tile.Sides)
+                {
+                    if (side.Value.Name == "City")
+                        card.SetField(side.Key, id);
+                }
+                AddCityToLand(card, landCounts, city.Id);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+            if (citiesAround.Values.Distinct().Count() == 1)
+            {
+                var city = Cities.First(c => c.Id == citiesAround.First().Value);
+                foreach (var around in citiesAround)
+                {
+                    switch (around.Key)
+                    {
+                        case Side.TOP:
+                            cityPart.TopIsOpen = false;
+                            city.SetSides(topCard.Id, Side.BOTTOM);
+                            break;
+                        case Side.MIDDLELEFT:
+                            cityPart.LeftIsOpen = false;
+                            city.SetSides(leftCard.Id, Side.MIDDLERIGHT);
+                            break;
+                        case Side.BOTTOM:
+                            cityPart.BottomIsOpen = false;
+                            city.SetSides(botCard.Id, Side.TOP);
+                            break;
+                        case Side.MIDDLERIGHT:
+                            cityPart.RightIsOpen = false;
+                            city.SetSides(rightCard.Id, Side.MIDDLELEFT);
+                            break;
+                    }
+                }
+                city.ExpandCity(cityPart);
+                card.Tile.Sides.Where(s => s.Value.Name == "City").Select(t => t.Key).ToList().ForEach(side => card.SetField(side, city.Id));
+                AddCityToLand(card, landCounts, city.Id);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+            id++;
+            var newCity = new City(id);
+            foreach (var around in citiesAround)
+            {
+                var city = Cities.First(c => c.Id == around.Value);
+                switch (around.Key)
+                {
+                    case Side.TOP:
+                        cityPart.TopIsOpen = false;
+                        city.SetSides(topCard.Id, Side.BOTTOM);
+                        break;
+                    case Side.MIDDLELEFT:
+                        cityPart.LeftIsOpen = false;
+                        city.SetSides(leftCard.Id, Side.MIDDLERIGHT);
+                        break;
+                    case Side.BOTTOM:
+                        cityPart.BottomIsOpen = false;
+                        city.SetSides(botCard.Id, Side.TOP);
+                        break;
+                    case Side.MIDDLERIGHT:
+                        cityPart.RightIsOpen = false;
+                        city.SetSides(rightCard.Id, Side.MIDDLELEFT);
+                        break;
+                }
+
+                foreach (var cp in city.CityParts)
+                {
+                    newCity.ExpandCity(cp);
+                    var cityCard = _board.CardCoordinates.Values.First(c => c.Id == cp.CardId);
+                    foreach (var side in cityCard.Tile.Sides)
+                    {
+                        if (side.Value.PlaceId == city.Id)
+                            cityCard.SetField(side.Key, newCity.Id);
+                        if (side.Value.Name == "Land")
+                        {
+                            var land = _landHandler.Lands.First(l => l.Id == side.Value.PlaceId);
+                            if (land.SurroundingCities.Remove(city.Id))
+                                land.SurroundingCities.Add(newCity.Id);
+                        }
+                    }
+                }
+                Cities.Remove(city);
+            }
+
+            newCity.ExpandCity(cityPart);
+            Cities.Add(newCity);
+
+            foreach (var side in card.Tile.Sides)
+            {
+                if (side.Value.Name == "City")
+                    card.SetField(side.Key, newCity.Id);
+            }
+            
+            AddCityToLand(card, landCounts, newCity.Id);
+            return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+        }
+
+        private int PlaceTwoCity(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int id)
         {
             if (card.Top.Name == "City")
             {
@@ -115,7 +253,7 @@ namespace CarcassTwwo.Models.Requests
                 }
             }
 
-            return;
+            return id;
         }
 
 
