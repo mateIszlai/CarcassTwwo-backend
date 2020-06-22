@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CarcassTwwo.Models
 {
-    public class Board
+    public class Board : IBoard
     {
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
         public Dictionary<RequiredCard, Coordinate> AvailableCoordinates { get; set; }
