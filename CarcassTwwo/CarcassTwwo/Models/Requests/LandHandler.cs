@@ -10,6 +10,19 @@ namespace CarcassTwwo.Models.Requests
     {
         public HashSet<GrassLand> Lands { get; set; }
 
+        private HashSet<int> LandIdsAround(Dictionary<Side, HashSet<int>> landsAround)
+        {
+            var lands = new HashSet<int>();
+            foreach (var land in landsAround)
+            {
+                foreach (var id in land.Value)
+                {
+                    lands.Add(id);
+                }
+            }
+            return lands;
+        }
+
         private HashSet<Side> GetSidesClosedByRoads(Card card)
         {
             var sides = new HashSet<Side>();
