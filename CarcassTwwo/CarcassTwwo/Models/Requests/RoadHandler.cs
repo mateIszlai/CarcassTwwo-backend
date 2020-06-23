@@ -12,5 +12,12 @@ namespace CarcassTwwo.Models.Requests
 
         private ILandHandler _landHandler;
         private IBoard _board;
+
+        public RoadHandler(ILandHandler landHandler, IBoard board)
+        {
+            Roads = new HashSet<Road>();
+            _board = board;
+            _landHandler = landHandler;
+        }
     }
 }
