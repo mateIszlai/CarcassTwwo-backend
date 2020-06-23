@@ -9,5 +9,24 @@ namespace CarcassTwwo.Models.Requests
     public class LandHandler : AbstractHandler, ILandHandler
     {
         public HashSet<GrassLand> Lands { get; set; }
+
+        private HashSet<Side> GetSidesClosedByRoads(Card card)
+        {
+            var sides = new HashSet<Side>();
+            if (card.Top.Name == "Road" && card.Left.Name == "Road")
+                sides.Add(Side.TOPLEFT);
+
+            if (card.Left.Name == "Road" && card.Bottom.Name == "Road")
+                sides.Add(Side.BOTTOMLEFT);
+
+            if (card.Bottom.Name == "Road" && card.Right.Name == "Road")
+                sides.Add(Side.BOTTOMRIGHT);
+
+            if (card.Right.Name == "Road" && card.Top.Name == "Road")
+                sides.Add(Side.TOPRIGHT);
+
+            return sides;
+        }
+
     }
 }
