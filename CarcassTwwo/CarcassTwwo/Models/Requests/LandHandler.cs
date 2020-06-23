@@ -10,6 +10,9 @@ namespace CarcassTwwo.Models.Requests
     {
         public HashSet<GrassLand> Lands { get; set; }
 
+        private IBoard _board;
+
+
         private HashSet<int> LandIdsAround(Dictionary<Side, HashSet<int>> landsAround)
         {
             var lands = new HashSet<int>();
@@ -40,6 +43,34 @@ namespace CarcassTwwo.Models.Requests
 
             return sides;
         }
+
+        private GrassLand MergeLands(HashSet<int> around, int cardId, int id)
+        {
+            id++;
+            var newLand = new GrassLand(id);
+            newLand.ExpandLand(cardId);
+            foreach (var landId in around)
+            {
+                var land = Lands.First(l => l.Id == landId);
+                newLand.Meeples.AddRange(land.Meeples);
+                land.Roads.ToList().ForEach(r => newLand.Roads.Add(r));
+                land.SurroundingCities.ToList().ForEach(s => newLand.SurroundingCities.Add(s));
+                foreach (var landCardId in land.CardIds)
+                {
+                    newLand.ExpandLand(landCardId);
+                    var landCard = _board.CardCoordinates.Values.First(c => c.Id == landCardId);
+                    foreach (var side in landCard.Tile.Sides.Where(s => s.Value.Name == "Land"))
+                    {
+                        if (side.Value.PlaceId == land.Id)
+                            landCard.SetField(side.Key, newLand.Id);
+                    }
+                }
+                Lands.Remove(land);
+            }
+            Lands.Add(newLand);
+            return newLand;
+        }
+
 
     }
 }
