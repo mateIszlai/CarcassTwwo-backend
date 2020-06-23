@@ -12,6 +12,11 @@ namespace CarcassTwwo.Models.Requests
 
         private IBoard _board;
 
+        public LandHandler(IBoard board)
+        {
+            Lands = new HashSet<GrassLand>();
+            _board = board;
+        }
 
         private HashSet<int> LandIdsAround(Dictionary<Side, HashSet<int>> landsAround)
         {
