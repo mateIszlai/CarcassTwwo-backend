@@ -19,5 +19,29 @@ namespace CarcassTwwo.Models.Requests
             _board = board;
             _landHandler = landHandler;
         }
+
+        private void AddRoadToLand(Side side, int tempId, Card card)
+        {
+            switch (side)
+            {
+                case Side.TOP:
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field1.PlaceId).Roads.Add(tempId);
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field3.PlaceId).Roads.Add(tempId);
+                    break;
+                case Side.MIDDLELEFT:
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field1.PlaceId).Roads.Add(tempId);
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field7.PlaceId).Roads.Add(tempId);
+                    break;
+                case Side.BOTTOM:
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field7.PlaceId).Roads.Add(tempId);
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field9.PlaceId).Roads.Add(tempId);
+                    break;
+                case Side.MIDDLERIGHT:
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field3.PlaceId).Roads.Add(tempId);
+                    _landHandler.Lands.First(l => l.Id == card.Tile.Field9.PlaceId).Roads.Add(tempId);
+                    break;
+            }
+        }
+
     }
 }
