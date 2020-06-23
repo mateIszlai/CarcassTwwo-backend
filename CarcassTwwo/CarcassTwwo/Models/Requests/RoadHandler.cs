@@ -9,5 +9,8 @@ namespace CarcassTwwo.Models.Requests
     public class RoadHandler : AbstractHandler
     {
         public HashSet<Road> Roads { get; set; }
+
+        private ILandHandler _landHandler;
+        private IBoard _board;
     }
 }
