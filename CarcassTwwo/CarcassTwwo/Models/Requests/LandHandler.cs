@@ -2,20 +2,492 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Requests
 {
     public class LandHandler : AbstractHandler, ILandHandler
     {
-        public HashSet<GrassLand> Lands { get; set; }
+        public HashSet<GrassLand> Lands { get; private set; }
 
         private IBoard _board;
+
+        private readonly Side[] LEFT = new Side[] { Side.BOTTOMLEFT, Side.MIDDLELEFT, Side.TOPLEFT };
+        private readonly Side[] RIGHT = new Side[] { Side.BOTTOMRIGHT, Side.MIDDLERIGHT, Side.TOPRIGHT };
+        private readonly Side[] TOP = new Side[] { Side.TOPLEFT, Side.TOPRIGHT, Side.TOP };
+        private readonly Side[] BOTTOM = new Side[] { Side.BOTTOMRIGHT, Side.BOTTOM, Side.BOTTOMLEFT };
 
         public LandHandler(IBoard board)
         {
             Lands = new HashSet<GrassLand>();
             _board = board;
+        }
+
+        public override int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed)
+        {
+            var landsAround = new Dictionary<Side, HashSet<int>>();
+
+            if (landCounts == 0)
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+
+            if (topCard != null)
+            {
+                switch (topCard.Bottom.Name)
+                {
+                    case "Land":
+                        landsAround.Add(Side.TOP, new HashSet<int> { topCard.Bottom.PlaceId });
+                        if (landsAround.ContainsKey(Side.TOPLEFT))
+                            landsAround[Side.TOPLEFT].Add(topCard.Tile.Field7.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPLEFT, new HashSet<int> { topCard.Tile.Field7.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.TOPRIGHT))
+                            landsAround[Side.TOPRIGHT].Add(topCard.Tile.Field9.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPRIGHT, new HashSet<int> { topCard.Tile.Field9.PlaceId });
+                        break;
+
+                    case "Road":
+                        if (landsAround.ContainsKey(Side.TOPLEFT))
+                            landsAround[Side.TOPLEFT].Add(topCard.Tile.Field7.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPLEFT, new HashSet<int> { topCard.Tile.Field7.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.TOPRIGHT))
+                            landsAround[Side.TOPRIGHT].Add(topCard.Tile.Field9.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPRIGHT, new HashSet<int> { topCard.Tile.Field9.PlaceId });
+                        break;
+                }
+            }
+
+            if (leftCard != null)
+            {
+                switch (leftCard.Right.Name)
+                {
+                    case "Land":
+                        landsAround.Add(Side.MIDDLELEFT, new HashSet<int> { leftCard.Right.PlaceId });
+                        if (landsAround.ContainsKey(Side.TOPLEFT))
+                            landsAround[Side.TOPLEFT].Add(leftCard.Tile.Field3.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPLEFT, new HashSet<int> { leftCard.Tile.Field3.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.BOTTOMLEFT))
+                            landsAround[Side.BOTTOMLEFT].Add(leftCard.Tile.Field9.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMLEFT, new HashSet<int> { leftCard.Tile.Field9.PlaceId });
+                        break;
+
+                    case "Road":
+                        if (landsAround.ContainsKey(Side.TOPLEFT))
+                            landsAround[Side.TOPLEFT].Add(leftCard.Tile.Field3.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPLEFT, new HashSet<int> { leftCard.Tile.Field3.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.BOTTOMLEFT))
+                            landsAround[Side.BOTTOMLEFT].Add(leftCard.Tile.Field9.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMLEFT, new HashSet<int> { leftCard.Tile.Field9.PlaceId });
+                        break;
+                }
+            }
+
+            if (botCard != null)
+            {
+                switch (botCard.Top.Name)
+                {
+                    case "Land":
+                        landsAround.Add(Side.BOTTOM, new HashSet<int> { botCard.Top.PlaceId });
+                        if (landsAround.ContainsKey(Side.BOTTOMLEFT))
+                            landsAround[Side.BOTTOMLEFT].Add(botCard.Tile.Field1.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMLEFT, new HashSet<int> { botCard.Tile.Field1.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.BOTTOMRIGHT))
+                            landsAround[Side.BOTTOMRIGHT].Add(botCard.Tile.Field3.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMRIGHT, new HashSet<int> { botCard.Tile.Field3.PlaceId });
+                        break;
+
+                    case "Road":
+                        if (landsAround.ContainsKey(Side.BOTTOMLEFT))
+                            landsAround[Side.BOTTOMLEFT].Add(botCard.Tile.Field1.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMLEFT, new HashSet<int> { botCard.Tile.Field1.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.BOTTOMRIGHT))
+                            landsAround[Side.BOTTOMRIGHT].Add(botCard.Tile.Field3.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMRIGHT, new HashSet<int> { botCard.Tile.Field3.PlaceId });
+                        break;
+                }
+            }
+
+            if (rightCard != null)
+            {
+                switch (rightCard.Left.Name)
+                {
+                    case "Land":
+                        landsAround.Add(Side.MIDDLERIGHT, new HashSet<int> { rightCard.Left.PlaceId });
+                        if (landsAround.ContainsKey(Side.TOPRIGHT))
+                            landsAround[Side.TOPRIGHT].Add(rightCard.Tile.Field1.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPRIGHT, new HashSet<int> { rightCard.Tile.Field1.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.BOTTOMRIGHT))
+                            landsAround[Side.BOTTOMRIGHT].Add(rightCard.Tile.Field7.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMRIGHT, new HashSet<int> { rightCard.Tile.Field7.PlaceId });
+                        break;
+
+                    case "Road":
+                        if (landsAround.ContainsKey(Side.TOPRIGHT))
+                            landsAround[Side.TOPRIGHT].Add(rightCard.Tile.Field1.PlaceId);
+                        else
+                            landsAround.Add(Side.TOPRIGHT, new HashSet<int> { rightCard.Tile.Field1.PlaceId });
+
+                        if (landsAround.ContainsKey(Side.BOTTOMRIGHT))
+                            landsAround[Side.BOTTOMRIGHT].Add(rightCard.Tile.Field7.PlaceId);
+                        else
+                            landsAround.Add(Side.BOTTOMRIGHT, new HashSet<int> { rightCard.Tile.Field7.PlaceId });
+                        break;
+                }
+            }
+
+            if (landsAround.Count == 0)
+            {
+                if (landCounts == 1)
+                {
+                    id++;
+                    Lands.Add(new GrassLand(id, card.Id));
+                    foreach (var field in card.Tile.Sides)
+                    {
+                        if (field.Value.Name == "Land")
+                            card.SetField(field.Key, id);
+                    }
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                }
+
+                var closedSides = GetSidesClosedByRoads(card);
+
+                if (closedSides.Count != 0)
+                {
+                    id++;
+                    var newLand = new GrassLand(id, card.Id);
+                    Lands.Add(newLand);
+                    foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
+                    {
+                        if (closedSides.Contains(side))
+                        {
+                            id++;
+                            Lands.Add(new GrassLand(id, card.Id));
+                            card.SetField(side, id);
+                        }
+                        card.SetField(side, newLand.Id);
+                    }
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                }
+
+                if (card.Sides.Count(s => s.Name == "City") == 3)
+                {
+                    foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
+                    {
+                        id++;
+                        Lands.Add(new GrassLand(id, card.Id));
+                        card.SetField(side, id);
+                    }
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                }
+
+                for (int i = 0; i < 2; i++)
+                {
+                    id++;
+                    Lands.Add(new GrassLand(id, card.Id));
+                }
+
+                if (card.Top.Name == "Road" && card.Bottom.Name == "Road" || card.Top.Name == "City" && card.Bottom.Name == "City")
+                {
+                    foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
+                    {
+                        if (LEFT.Contains(side))
+                            card.SetField(side, id);
+                        else
+                            card.SetField(side, id - 1);
+                    }
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                }
+
+                foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
+                {
+                    if (TOP.Contains(side))
+                        card.SetField(side, id);
+                    else
+                        card.SetField(side, id - 1);
+                }
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+
+            if (landsAround.Count == 3 && (landsAround.ContainsKey(Side.TOP) ||
+                landsAround.ContainsKey(Side.MIDDLELEFT) ||
+                landsAround.ContainsKey(Side.BOTTOM) ||
+                landsAround.ContainsKey(Side.MIDDLERIGHT)))
+            {
+                var land = Lands.FirstOrDefault(l => l.Id == landsAround.First().Value.First());
+                land.ExpandLand(card.Id);
+                if (landCounts == 1)
+                {
+                    foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land").Select(s => s.Key))
+                    {
+                        card.SetField(side, land.Id);
+                    }
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                }
+
+                foreach (var l in landsAround)
+                {
+                    card.SetField(l.Key, l.Value.First());
+                }
+
+                if (landCounts == 2)
+                {
+                    id++;
+                    Lands.Add(new GrassLand(id, card.Id));
+                    if (card.Top.Name == "Road" && card.Bottom.Name == "Road"
+                        || card.Left.Name == "Road" && card.Right.Name == "Road"
+                        || card.Tile.Field5.Name == "City")
+                    {
+                        foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land").Select(s => s.Key))
+                        {
+                            if (!landsAround.ContainsKey(side))
+                                card.SetField(side, id);
+                        }
+                        return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    }
+
+                    var closedSide = GetSidesClosedByRoads(card).First();
+                    card.SetField(closedSide, id);
+                    foreach (var field in card.Tile.Sides)
+                    {
+                        if (field.Key != closedSide && field.Value.Name == "Land")
+                            card.SetField(field.Key, land.Id);
+                    }
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                }
+
+                foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land").Select(s => s.Key))
+                {
+                    if (!landsAround.ContainsKey(side))
+                    {
+                        id++;
+                        Lands.Add(new GrassLand(id, card.Id));
+                        card.SetField(side, id);
+                    }
+                }
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+            if (landCounts == 1)
+            {
+                var surroundingLandIds = LandIdsAround(landsAround);
+                var land = Lands.First(l => l.Id == surroundingLandIds.First());
+
+                if (surroundingLandIds.Count == 1)
+                    land.ExpandLand(card.Id);
+                else
+                {
+                    land = MergeLands(surroundingLandIds, card.Id, id);
+                    id = land.Id;
+                }
+
+                foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land").Select(s => s.Key))
+                {
+                    card.SetField(side, land.Id);
+                }
+
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+            var cornerClosedLands = GetSidesClosedByRoads(card);
+
+            if (cornerClosedLands.Count == 0 && card.Tile.Field5.Name == "City")
+            {
+                foreach (var around in landsAround)
+                {
+                    var land = Lands.First(l => l.Id == around.Value.First());
+                    land.ExpandLand(card.Id);
+                    card.SetField(around.Key, land.Id);
+                }
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+            var visitedSides = new HashSet<Side>();
+
+            if (cornerClosedLands.Count != 0)
+            {
+                var notCorners = new HashSet<int>();
+                foreach (var around in landsAround)
+                {
+                    if (cornerClosedLands.Contains(around.Key))
+                    {
+                        if (around.Value.Count == 1)
+                        {
+                            var gland = Lands.First(l => l.Id == around.Value.First());
+                            visitedSides.Add(around.Key);
+                            gland.ExpandLand(card.Id);
+                            card.SetField(around.Key, gland.Id);
+                            continue;
+                        }
+                        var landToAdd = MergeLands(around.Value, card.Id, id);
+                        id = landToAdd.Id;
+                        Lands.Add(landToAdd);
+                        card.SetField(around.Key, landToAdd.Id);
+                        visitedSides.Add(around.Key);
+                        continue;
+                    }
+                    foreach (var landId in around.Value)
+                        notCorners.Add(landId);
+                }
+
+                GrassLand land;
+
+                if (notCorners.Count != 0)
+                {
+                    land = Lands.First(l => l.Id == notCorners.First());
+                    if (notCorners.Count == 1)
+                        land.ExpandLand(card.Id);
+                    else if (notCorners.Count > 1)
+                    {
+                        land = MergeLands(notCorners, card.Id, id);
+                        id = land.Id;
+                    }
+                }
+                else
+                {
+                    id++;
+                    land = new GrassLand(id, card.Id);
+                    Lands.Add(land);
+                }
+
+
+                foreach (var side in card.Tile.Sides.Where(s => !visitedSides.Contains(s.Key) && s.Value.Name == "Land").Select(t => t.Key))
+                {
+                    if (cornerClosedLands.Contains(side))
+                    {
+                        id++;
+                        var newLand = new GrassLand(id, card.Id);
+                        card.SetField(side, newLand.Id);
+                        Lands.Add(newLand);
+                        continue;
+                    }
+
+                    card.SetField(side, land.Id);
+                }
+
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            }
+
+
+            var lefts = new HashSet<int>();
+            var rights = new HashSet<int>();
+            var bottoms = new HashSet<int>();
+            var tops = new HashSet<int>();
+
+            foreach (var around in landsAround)
+            {
+                foreach (var landId in around.Value)
+                {
+                    if (card.Top.Name == "Road" && card.Bottom.Name == "Road")
+                    {
+                        if (LEFT.Contains(around.Key))
+                            lefts.Add(landId);
+                        else
+                            rights.Add(landId);
+                        continue;
+                    }
+                    if (TOP.Contains(around.Key))
+                        tops.Add(landId);
+                    else
+                        bottoms.Add(landId);
+                }
+            }
+
+            if (lefts.Count != 0)
+            {
+                var land = Lands.First(l => l.Id == lefts.First());
+                if (lefts.Count == 1)
+                {
+                    land.ExpandLand(card.Id);
+                }
+                else
+                {
+                    land = MergeLands(lefts, card.Id, id);
+                    id = land.Id;
+                }
+
+                foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land" && LEFT.Contains(f.Key)).Select(s => s.Key))
+                {
+                    card.SetField(side, land.Id);
+                }
+
+            }
+
+            if (rights.Count != 0)
+            {
+                var land = Lands.First(l => l.Id == rights.First());
+                if (rights.Count == 1)
+                {
+                    land.ExpandLand(card.Id);
+                }
+                else
+                {
+                    land = MergeLands(rights, card.Id, id);
+                    id = land.Id;
+                }
+
+                foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land" && RIGHT.Contains(f.Key)).Select(s => s.Key))
+                {
+                    card.SetField(side, land.Id);
+                }
+            }
+
+            if (tops.Count != 0)
+            {
+                var land = Lands.First(l => l.Id == tops.First());
+                if (tops.Count == 1)
+                {
+                    land.ExpandLand(card.Id);
+                }
+                else
+                {
+                    land = MergeLands(tops, card.Id, id);
+                    id = land.Id;
+                }
+
+                foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land" && TOP.Contains(f.Key)).Select(s => s.Key))
+                {
+                    card.SetField(side, land.Id);
+                }
+            }
+
+            if (bottoms.Count != 0)
+            {
+                var land = Lands.First(l => l.Id == bottoms.First());
+                if (bottoms.Count == 1)
+                {
+                    land.ExpandLand(card.Id);
+                }
+                else
+                {
+                    land = MergeLands(bottoms, card.Id, id);
+                    id = land.Id;
+                }
+
+                foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land" && BOTTOM.Contains(f.Key)).Select(s => s.Key))
+                {
+                    card.SetField(side, land.Id);
+                }
+            }
+            return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
         }
 
         private HashSet<int> LandIdsAround(Dictionary<Side, HashSet<int>> landsAround)
