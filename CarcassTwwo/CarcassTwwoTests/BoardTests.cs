@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace CarcassTwwoTests
 {
-    [TestFixture]
+    /*[TestFixture]
     class BoardTests
     {
         Board board;
@@ -110,5 +110,5 @@ namespace CarcassTwwoTests
 
         }
 
-    }
+    }*/
 }
