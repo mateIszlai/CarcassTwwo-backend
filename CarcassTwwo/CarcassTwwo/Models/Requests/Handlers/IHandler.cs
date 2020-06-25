@@ -4,6 +4,7 @@
     {
         IHandler SetNext(IHandler handler);
 
-        int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords);
+        int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords);
+        void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner);
     }
 }

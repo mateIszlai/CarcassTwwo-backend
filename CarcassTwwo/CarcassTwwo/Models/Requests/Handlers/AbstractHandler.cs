@@ -10,11 +10,11 @@
             _board = board;
         }
 
-        public virtual int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
+        public virtual int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
         {
             if(_nextHandler != null)
             {
-                _nextHandler.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                _nextHandler.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             }
             return id;
         }
@@ -23,6 +23,12 @@
         {
             _nextHandler = handler;
             return handler;
+        }
+
+        public virtual void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
+        {
+            if (_nextHandler != null)
+                _nextHandler.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
         }
     }
 }

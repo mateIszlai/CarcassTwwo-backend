@@ -19,11 +19,21 @@ namespace CarcassTwwo.Models.Requests.Handlers
             Monasteries = new HashSet<Monastery>();
         }
 
-        public override int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
+        public override void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
+        {
+            var meeplePlace = placedCard.Tile.Fields[placeOfMeeple - 1];
+
+            if (meeplePlace.Name == "Monastery")
+                _monasteries.First(m => m.Id == meeplePlace.PlaceId).PlaceMeeple(owner, placeOfMeeple, placedCard);
+
+             base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
+        }
+
+        public override int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
         {
             SetNearMonasteries(card.Coordinate);
             if (surroundingCoords == null)
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             
             id++;
             var monastery = new Monastery(id, card.Coordinate);
@@ -34,7 +44,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             });
             _monasteries.Add(monastery);
             card.SetField(Side.MIDDLE, id);
-            return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+            return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
         }
 
         private void SetNearMonasteries(Coordinate coordinate)
