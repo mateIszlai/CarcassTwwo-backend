@@ -1,4 +1,4 @@
-﻿namespace CarcassTwwo.Models.Requests
+﻿namespace CarcassTwwo.Models.Requests.Handlers
 {
     public interface ICityAdder
     {

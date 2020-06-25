@@ -1,6 +1,6 @@
 ﻿using CarcassTwwo.Models.Places;
 
-namespace CarcassTwwo.Models.Requests
+namespace CarcassTwwo.Models.Requests.Handlers
 {
     public interface IRoadAdder
     {

@@ -3,31 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CarcassTwwo.Models.Requests
+namespace CarcassTwwo.Models.Requests.Handlers
 {
-    public class LandHandler : AbstractHandler, ILandHandler
+    public class LandHandler : AbstractHandler, IRoadAdder, ICityAdder
     {
-        public HashSet<GrassLand> Lands { get; private set; }
+        private HashSet<GrassLand> _lands;
 
-        private IBoard _board;
+        public HashSet<GrassLand> Lands
+        {
+            get { return new HashSet<GrassLand>(_lands); }
+            private set { _lands = value; }
+        }
 
         private readonly Side[] LEFT = new Side[] { Side.BOTTOMLEFT, Side.MIDDLELEFT, Side.TOPLEFT };
         private readonly Side[] RIGHT = new Side[] { Side.BOTTOMRIGHT, Side.MIDDLERIGHT, Side.TOPRIGHT };
         private readonly Side[] TOP = new Side[] { Side.TOPLEFT, Side.TOPRIGHT, Side.TOP };
         private readonly Side[] BOTTOM = new Side[] { Side.BOTTOMRIGHT, Side.BOTTOM, Side.BOTTOMLEFT };
 
-        public LandHandler(IBoard board)
+        public LandHandler(IBoard board) : base(board)
         {
             Lands = new HashSet<GrassLand>();
-            _board = board;
         }
 
-        public override int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed)
+        public override int Handle(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
         {
             var landsAround = new Dictionary<Side, HashSet<int>>();
 
             if (landCounts == 0)
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
 
             if (topCard != null)
             {
@@ -158,13 +161,13 @@ namespace CarcassTwwo.Models.Requests
                 if (landCounts == 1)
                 {
                     id++;
-                    Lands.Add(new GrassLand(id, card.Id));
+                    _lands.Add(new GrassLand(id, card.Id));
                     foreach (var field in card.Tile.Sides)
                     {
                         if (field.Value.Name == "Land")
                             card.SetField(field.Key, id);
                     }
-                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                 }
 
                 var closedSides = GetSidesClosedByRoads(card);
@@ -173,18 +176,18 @@ namespace CarcassTwwo.Models.Requests
                 {
                     id++;
                     var newLand = new GrassLand(id, card.Id);
-                    Lands.Add(newLand);
+                    _lands.Add(newLand);
                     foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
                     {
                         if (closedSides.Contains(side))
                         {
                             id++;
-                            Lands.Add(new GrassLand(id, card.Id));
+                            _lands.Add(new GrassLand(id, card.Id));
                             card.SetField(side, id);
                         }
                         card.SetField(side, newLand.Id);
                     }
-                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                 }
 
                 if (card.Sides.Count(s => s.Name == "City") == 3)
@@ -192,16 +195,16 @@ namespace CarcassTwwo.Models.Requests
                     foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
                     {
                         id++;
-                        Lands.Add(new GrassLand(id, card.Id));
+                        _lands.Add(new GrassLand(id, card.Id));
                         card.SetField(side, id);
                     }
-                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                 }
 
                 for (int i = 0; i < 2; i++)
                 {
                     id++;
-                    Lands.Add(new GrassLand(id, card.Id));
+                    _lands.Add(new GrassLand(id, card.Id));
                 }
 
                 if (card.Top.Name == "Road" && card.Bottom.Name == "Road" || card.Top.Name == "City" && card.Bottom.Name == "City")
@@ -213,7 +216,7 @@ namespace CarcassTwwo.Models.Requests
                         else
                             card.SetField(side, id - 1);
                     }
-                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                 }
 
                 foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land").Select(t => t.Key))
@@ -223,7 +226,7 @@ namespace CarcassTwwo.Models.Requests
                     else
                         card.SetField(side, id - 1);
                 }
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             }
 
 
@@ -232,7 +235,7 @@ namespace CarcassTwwo.Models.Requests
                 landsAround.ContainsKey(Side.BOTTOM) ||
                 landsAround.ContainsKey(Side.MIDDLERIGHT)))
             {
-                var land = Lands.FirstOrDefault(l => l.Id == landsAround.First().Value.First());
+                var land = _lands.FirstOrDefault(l => l.Id == landsAround.First().Value.First());
                 land.ExpandLand(card.Id);
                 if (landCounts == 1)
                 {
@@ -240,7 +243,7 @@ namespace CarcassTwwo.Models.Requests
                     {
                         card.SetField(side, land.Id);
                     }
-                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                 }
 
                 foreach (var l in landsAround)
@@ -251,7 +254,7 @@ namespace CarcassTwwo.Models.Requests
                 if (landCounts == 2)
                 {
                     id++;
-                    Lands.Add(new GrassLand(id, card.Id));
+                    _lands.Add(new GrassLand(id, card.Id));
                     if (card.Top.Name == "Road" && card.Bottom.Name == "Road"
                         || card.Left.Name == "Road" && card.Right.Name == "Road"
                         || card.Tile.Field5.Name == "City")
@@ -261,7 +264,7 @@ namespace CarcassTwwo.Models.Requests
                             if (!landsAround.ContainsKey(side))
                                 card.SetField(side, id);
                         }
-                        return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                        return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                     }
 
                     var closedSide = GetSidesClosedByRoads(card).First();
@@ -271,7 +274,7 @@ namespace CarcassTwwo.Models.Requests
                         if (field.Key != closedSide && field.Value.Name == "Land")
                             card.SetField(field.Key, land.Id);
                     }
-                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                    return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
                 }
 
                 foreach (var side in card.Tile.Sides.Where(f => f.Value.Name == "Land").Select(s => s.Key))
@@ -279,17 +282,17 @@ namespace CarcassTwwo.Models.Requests
                     if (!landsAround.ContainsKey(side))
                     {
                         id++;
-                        Lands.Add(new GrassLand(id, card.Id));
+                        _lands.Add(new GrassLand(id, card.Id));
                         card.SetField(side, id);
                     }
                 }
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             }
 
             if (landCounts == 1)
             {
                 var surroundingLandIds = LandIdsAround(landsAround);
-                var land = Lands.First(l => l.Id == surroundingLandIds.First());
+                var land = _lands.First(l => l.Id == surroundingLandIds.First());
 
                 if (surroundingLandIds.Count == 1)
                     land.ExpandLand(card.Id);
@@ -304,7 +307,7 @@ namespace CarcassTwwo.Models.Requests
                     card.SetField(side, land.Id);
                 }
 
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             }
 
             var cornerClosedLands = GetSidesClosedByRoads(card);
@@ -313,11 +316,11 @@ namespace CarcassTwwo.Models.Requests
             {
                 foreach (var around in landsAround)
                 {
-                    var land = Lands.First(l => l.Id == around.Value.First());
+                    var land = _lands.First(l => l.Id == around.Value.First());
                     land.ExpandLand(card.Id);
                     card.SetField(around.Key, land.Id);
                 }
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             }
 
             var visitedSides = new HashSet<Side>();
@@ -331,7 +334,7 @@ namespace CarcassTwwo.Models.Requests
                     {
                         if (around.Value.Count == 1)
                         {
-                            var gland = Lands.First(l => l.Id == around.Value.First());
+                            var gland = _lands.First(l => l.Id == around.Value.First());
                             visitedSides.Add(around.Key);
                             gland.ExpandLand(card.Id);
                             card.SetField(around.Key, gland.Id);
@@ -339,7 +342,7 @@ namespace CarcassTwwo.Models.Requests
                         }
                         var landToAdd = MergeLands(around.Value, card.Id, id);
                         id = landToAdd.Id;
-                        Lands.Add(landToAdd);
+                        _lands.Add(landToAdd);
                         card.SetField(around.Key, landToAdd.Id);
                         visitedSides.Add(around.Key);
                         continue;
@@ -352,7 +355,7 @@ namespace CarcassTwwo.Models.Requests
 
                 if (notCorners.Count != 0)
                 {
-                    land = Lands.First(l => l.Id == notCorners.First());
+                    land = _lands.First(l => l.Id == notCorners.First());
                     if (notCorners.Count == 1)
                         land.ExpandLand(card.Id);
                     else if (notCorners.Count > 1)
@@ -365,7 +368,7 @@ namespace CarcassTwwo.Models.Requests
                 {
                     id++;
                     land = new GrassLand(id, card.Id);
-                    Lands.Add(land);
+                    _lands.Add(land);
                 }
 
 
@@ -376,14 +379,14 @@ namespace CarcassTwwo.Models.Requests
                         id++;
                         var newLand = new GrassLand(id, card.Id);
                         card.SetField(side, newLand.Id);
-                        Lands.Add(newLand);
+                        _lands.Add(newLand);
                         continue;
                     }
 
                     card.SetField(side, land.Id);
                 }
 
-                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+                return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
             }
 
 
@@ -413,7 +416,7 @@ namespace CarcassTwwo.Models.Requests
 
             if (lefts.Count != 0)
             {
-                var land = Lands.First(l => l.Id == lefts.First());
+                var land = _lands.First(l => l.Id == lefts.First());
                 if (lefts.Count == 1)
                 {
                     land.ExpandLand(card.Id);
@@ -433,7 +436,7 @@ namespace CarcassTwwo.Models.Requests
 
             if (rights.Count != 0)
             {
-                var land = Lands.First(l => l.Id == rights.First());
+                var land = _lands.First(l => l.Id == rights.First());
                 if (rights.Count == 1)
                 {
                     land.ExpandLand(card.Id);
@@ -452,7 +455,7 @@ namespace CarcassTwwo.Models.Requests
 
             if (tops.Count != 0)
             {
-                var land = Lands.First(l => l.Id == tops.First());
+                var land = _lands.First(l => l.Id == tops.First());
                 if (tops.Count == 1)
                 {
                     land.ExpandLand(card.Id);
@@ -471,7 +474,7 @@ namespace CarcassTwwo.Models.Requests
 
             if (bottoms.Count != 0)
             {
-                var land = Lands.First(l => l.Id == bottoms.First());
+                var land = _lands.First(l => l.Id == bottoms.First());
                 if (bottoms.Count == 1)
                 {
                     land.ExpandLand(card.Id);
@@ -487,7 +490,7 @@ namespace CarcassTwwo.Models.Requests
                     card.SetField(side, land.Id);
                 }
             }
-            return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed);
+            return base.Handle(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
         }
 
         private HashSet<int> LandIdsAround(Dictionary<Side, HashSet<int>> landsAround)
@@ -528,7 +531,7 @@ namespace CarcassTwwo.Models.Requests
             newLand.ExpandLand(cardId);
             foreach (var landId in around)
             {
-                var land = Lands.First(l => l.Id == landId);
+                var land = _lands.First(l => l.Id == landId);
                 newLand.Meeples.AddRange(land.Meeples);
                 land.Roads.ToList().ForEach(r => newLand.Roads.Add(r));
                 land.SurroundingCities.ToList().ForEach(s => newLand.SurroundingCities.Add(s));
@@ -542,12 +545,86 @@ namespace CarcassTwwo.Models.Requests
                             landCard.SetField(side.Key, newLand.Id);
                     }
                 }
-                Lands.Remove(land);
+                _lands.Remove(land);
             }
-            Lands.Add(newLand);
+            _lands.Add(newLand);
             return newLand;
         }
 
+        public void AddRoadToLand(Side side, int tempId, Card card)
+        {
+            switch (side)
+            {
+                case Side.TOP:
+                    _lands.First(l => l.Id == card.Tile.Field1.PlaceId).Roads.Add(tempId);
+                    _lands.First(l => l.Id == card.Tile.Field3.PlaceId).Roads.Add(tempId);
+                    break;
+                case Side.MIDDLELEFT:
+                    _lands.First(l => l.Id == card.Tile.Field1.PlaceId).Roads.Add(tempId);
+                    _lands.First(l => l.Id == card.Tile.Field7.PlaceId).Roads.Add(tempId);
+                    break;
+                case Side.BOTTOM:
+                    _lands.First(l => l.Id == card.Tile.Field7.PlaceId).Roads.Add(tempId);
+                    _lands.First(l => l.Id == card.Tile.Field9.PlaceId).Roads.Add(tempId);
+                    break;
+                case Side.MIDDLERIGHT:
+                    _lands.First(l => l.Id == card.Tile.Field3.PlaceId).Roads.Add(tempId);
+                    _lands.First(l => l.Id == card.Tile.Field9.PlaceId).Roads.Add(tempId);
+                    break;
+            }
+        }
 
+        public void ChangeRoadIdInLand(int landId, int roadIdToChange, int newRoadId)
+        {
+            var land = _lands.First(l => l.Id == landId);
+            if (land.Roads.Remove(roadIdToChange))
+                land.Roads.Add(newRoadId);
+        }
+
+        public void AddCityToLand(Card card, int landCounts, int cityId)
+        {
+            if (landCounts == 0)
+                return;
+            if (landCounts == 1)
+            {
+                _lands.First(l => l.Id == card.Tile.Sides.First(t => t.Value.Name == "Land").Value.PlaceId).SurroundingCities.Add(cityId);
+                return;
+            }
+            if (card.Sides.Count(s => s.Name == "Road") < 2)
+            {
+                var lands = new HashSet<int>();
+                foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Land"))
+                {
+                    if (!lands.Contains(side.Value.PlaceId))
+                    {
+                        lands.Add(side.Value.PlaceId);
+                        _lands.First(l => l.Id == side.Value.PlaceId).SurroundingCities.Add(cityId);
+                    }
+                }
+                return;
+            }
+            var closedLands = GetSidesClosedByRoads(card);
+            if (closedLands.Count != 0)
+            {
+                _lands.First(l => l.Id == card.Tile.Sides.First(s => s.Value.Name == "Land" && !closedLands.Contains(s.Key)).Value.PlaceId).SurroundingCities.Add(cityId);
+                return;
+            }
+            if (card.Top.Name == "City" || card.Left.Name == "City")
+                _lands.First(l => l.Id == card.Tile.Field1.PlaceId).SurroundingCities.Add(cityId);
+            else
+                _lands.First(l => l.Id == card.Tile.Field9.PlaceId).SurroundingCities.Add(cityId);
+        }
+
+        public void ChangeCityIdInLand(int landId, int cityIdToChange, int newCityId)
+        {
+            var land = _lands.First(l => l.Id == landId);
+            if (land.Roads.Remove(cityIdToChange))
+                land.Roads.Add(newCityId);
+        }
+
+        public void AddCityToLand(int landId, int cityId)
+        {
+            _lands.First(l => l.Id == landId).SurroundingCities.Add(cityId);
+        }
     }
 }
