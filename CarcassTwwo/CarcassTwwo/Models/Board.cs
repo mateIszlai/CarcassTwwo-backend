@@ -1,7 +1,4 @@
-﻿using CarcassTwwo.Models.Places;
-using CarcassTwwo.Models.Requests;
-using CarcassTwwo.Models.Requests.Handlers;
-using Microsoft.AspNetCore.Mvc.Razor;
+﻿using CarcassTwwo.Models.Requests.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
