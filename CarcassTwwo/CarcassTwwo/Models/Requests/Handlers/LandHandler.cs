@@ -7,6 +7,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
 {
     public class LandHandler : AbstractHandler, IRoadAdder, ICityAdder
     {
+        private ILandScoreCounter _landScoreCounter;
         private HashSet<GrassLand> _lands;
 
         public HashSet<GrassLand> Lands
@@ -20,9 +21,10 @@ namespace CarcassTwwo.Models.Requests.Handlers
         private readonly Side[] TOP = new Side[] { Side.TOPLEFT, Side.TOPRIGHT, Side.TOP };
         private readonly Side[] BOTTOM = new Side[] { Side.BOTTOMRIGHT, Side.BOTTOM, Side.BOTTOMLEFT };
 
-        public LandHandler(IBoard board) : base(board)
+        public LandHandler(IBoard board, ILandScoreCounter landScoreCounter) : base(board)
         {
             Lands = new HashSet<GrassLand>();
+            _landScoreCounter = landScoreCounter;
         }
 
         public override void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
