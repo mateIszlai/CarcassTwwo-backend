@@ -6,6 +6,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
 {
     public class RoadHandler : AbstractHandler
     {
+        private IRoadScoreCounter _roadScoreCounter;
         private HashSet<Road> _roads;
 
         public HashSet<Road> Roads
@@ -17,10 +18,11 @@ namespace CarcassTwwo.Models.Requests.Handlers
 
         private IRoadAdder _roadAdder;
 
-        public RoadHandler(IRoadAdder roadAdder, IBoard board) : base(board)
+        public RoadHandler(IRoadAdder roadAdder, IBoard board, IRoadScoreCounter roadScoreCounter) : base(board)
         {
             Roads = new HashSet<Road>();
             _roadAdder = roadAdder;
+            _roadScoreCounter = roadScoreCounter;
         }
 
         public override void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
