@@ -283,16 +283,24 @@ namespace CarcassTwwo.Models.Requests.Handlers
             return 1;
         }
 
-        public int GetFinishedCitiesOfLand(GrassLand land)
+        public int GetFinishedCitiesOfLand(int[] cityIds)
         {
+            return cityIds.Aggregate(0, (prev, next) => {
+                if (!_cities.First(c => c.Id == next).IsOpen)
+                    prev++;
+                return prev;
+            });
+
+            /*
             int cityCount = 0;
-            foreach (var city in land.SurroundingCities)
+            foreach (var cityId in cityIds)
             {
-                if (!_cities.First(c => c.Id == city).IsOpen)
+                if (!_cities.First(c => c.Id == cityId).IsOpen)
                     cityCount++;
             }
 
             return cityCount;
+            */
         }
     }
 }
