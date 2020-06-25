@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CarcassTwwo.Models.Requests.Handlers
 {
-    public class CityHandler : AbstractHandler
+    public class CityHandler : AbstractHandler, ICityCounter
     {
         private ICityScoreCounter _cityScoreCounter;
         private HashSet<City> _cities;
@@ -281,6 +281,18 @@ namespace CarcassTwwo.Models.Requests.Handlers
                 return card.Sides.Count(s => s.Name == "City");
             }
             return 1;
+        }
+
+        public int GetFinishedCitiesOfLand(GrassLand land)
+        {
+            int cityCount = 0;
+            foreach (var city in land.SurroundingCities)
+            {
+                if (!_cities.First(c => c.Id == city).IsOpen)
+                    cityCount++;
+            }
+
+            return cityCount;
         }
     }
 }
