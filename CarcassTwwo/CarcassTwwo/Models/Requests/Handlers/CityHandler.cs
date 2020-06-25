@@ -25,6 +25,32 @@ namespace CarcassTwwo.Models.Requests.Handlers
             _cityScoreCounter = cityScoreCounter;
         }
 
+        public override List<Meeple> HandleScore(List<Meeple> meeples)
+        {
+            foreach (var city in _cities)
+            {
+                if (!city.IsOpen && !city.IsCounted)
+                {
+                    _cityScoreCounter.CheckOwnerOfCity(city);
+                    meeples.AddRange(city.RemoveMeeples());
+                    city.IsCounted = true;
+                }
+            }
+            return base.HandleScore(meeples);
+        }
+
+        public override void HandleEndScore()
+        {
+            foreach (var city in _cities)
+            {
+                if (!city.CanPlaceMeeple && !city.IsCounted)
+                {
+                    _cityScoreCounter.CheckOwnerOfCity(city);
+                }
+            }
+            base.HandleEndScore();
+        }
+
         public override void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
         {
             var meeplePlace = placedCard.Tile.Fields[placeOfMeeple - 1];
