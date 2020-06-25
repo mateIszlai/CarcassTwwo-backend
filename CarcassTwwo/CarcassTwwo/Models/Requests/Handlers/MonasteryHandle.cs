@@ -6,6 +6,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
 {
     public class MonasteryHandle : AbstractHandler
     {
+        private IMonasteryScoreCounter _monasteryScoreCounter;
         private HashSet<Monastery> _monasteries;
 
         public HashSet<Monastery> Monasteries
@@ -14,9 +15,10 @@ namespace CarcassTwwo.Models.Requests.Handlers
             private set { _monasteries = value; }
         }
 
-        public MonasteryHandle(IBoard board) : base(board)
+        public MonasteryHandle(IBoard board, IMonasteryScoreCounter monasteryScoreCounter) : base(board)
         {
             Monasteries = new HashSet<Monastery>();
+            _monasteryScoreCounter = monasteryScoreCounter;
         }
 
         public override void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
