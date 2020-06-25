@@ -81,7 +81,6 @@ namespace CarcassTwwo.Models
             _cards.Remove(card);
             card.Coordinate = placedCard.Coordinate;
             card.Rotate(placedCard.Rotation);
-            Console.WriteLine($"id: {card.Id}, rot : {placedCard.Rotation}");
             _gameboard.CardCoordinates.Add(placedCard.Coordinate, card);
             _gameboard.RemoveFromAvailableCoordinates(placedCard.Coordinate);
             _gameboard.SetSideOccupation(placedCard.Coordinate);
