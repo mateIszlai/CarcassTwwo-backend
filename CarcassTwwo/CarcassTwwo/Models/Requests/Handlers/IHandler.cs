@@ -1,4 +1,6 @@
-﻿namespace CarcassTwwo.Models.Requests
+﻿using System.Collections.Generic;
+
+namespace CarcassTwwo.Models.Requests
 {
     public interface IHandler
     {
@@ -6,5 +8,8 @@
 
         int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords);
         void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner);
+
+        List<Meeple> HandleScore(List<Meeple> meeples);
+        void HandleEndScore();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CarcassTwwo.Models.Requests.Handlers
+﻿using System.Collections.Generic;
+
+namespace CarcassTwwo.Models.Requests.Handlers
 {
     public abstract class AbstractHandler : IHandler
     {
@@ -29,6 +31,20 @@
         {
             if (_nextHandler != null)
                 _nextHandler.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
+        }
+
+        public virtual List<Meeple> HandleScore(List<Meeple> meeples)
+        {
+            if (_nextHandler != null)
+                _nextHandler.HandleScore(meeples);
+
+            return meeples;
+        }
+
+        public virtual void HandleEndScore()
+        {
+            if (_nextHandler != null)
+                _nextHandler.HandleEndScore();
         }
     }
 }
