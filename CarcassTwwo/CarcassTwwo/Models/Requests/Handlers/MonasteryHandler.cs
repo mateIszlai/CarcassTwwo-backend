@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CarcassTwwo.Models.Requests.Handlers
 {
-    public class MonasteryHandle : AbstractHandler
+    public class MonasteryHandler : AbstractHandler
     {
         private IMonasteryScoreCounter _monasteryScoreCounter;
         private HashSet<Monastery> _monasteries;
@@ -15,7 +15,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             private set { _monasteries = value; }
         }
 
-        public MonasteryHandle(IBoard board, IMonasteryScoreCounter monasteryScoreCounter) : base(board)
+        public MonasteryHandler(IBoard board, IMonasteryScoreCounter monasteryScoreCounter) : base(board)
         {
             Monasteries = new HashSet<Monastery>();
             _monasteryScoreCounter = monasteryScoreCounter;

@@ -12,7 +12,7 @@ namespace CarcassTwwo.Models
     {
         private CityHandler _cityHandler;
         private LandHandler _landHandler;
-        private MonasteryHandle _monasteryHandle;
+        private MonasteryHandler _monasteryHandle;
         private RoadHandler _roadHandler;
 
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
@@ -27,7 +27,7 @@ namespace CarcassTwwo.Models
             CardCoordinates = new Dictionary<Coordinate, Card>();
             AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
             ScoreBoard = new ScoreBoard(clients);
-            _monasteryHandle = new MonasteryHandle(this, ScoreBoard);
+            _monasteryHandle = new MonasteryHandler(this, ScoreBoard);
             _landHandler = new LandHandler(this, ScoreBoard);
             _cityHandler = new CityHandler(_landHandler, this, ScoreBoard);
             _roadHandler = new RoadHandler(_landHandler, this, ScoreBoard);
