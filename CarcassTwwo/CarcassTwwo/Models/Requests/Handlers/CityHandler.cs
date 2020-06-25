@@ -6,6 +6,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
 {
     public class CityHandler : AbstractHandler
     {
+        private ICityScoreCounter _cityScoreCounter;
         private HashSet<City> _cities;
 
         public HashSet<City> Cities
@@ -17,10 +18,11 @@ namespace CarcassTwwo.Models.Requests.Handlers
 
         private ICityAdder _cityAdder;
 
-        public CityHandler(ICityAdder cityAdder, IBoard board): base(board)
+        public CityHandler(ICityAdder cityAdder, IBoard board, ICityScoreCounter cityScoreCounter): base(board)
         {
             Cities = new HashSet<City>();
             _cityAdder = cityAdder;
+            _cityScoreCounter = cityScoreCounter;
         }
 
         public override void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner)
