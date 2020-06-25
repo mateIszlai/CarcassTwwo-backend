@@ -4,6 +4,6 @@ namespace CarcassTwwo.Models.Requests.Handlers
 {
     public interface ICityCounter
     {
-        int GetFinishedCitiesOfLand(GrassLand land);
+        int GetFinishedCitiesOfLand(int[] cityIds);
     }
 }
