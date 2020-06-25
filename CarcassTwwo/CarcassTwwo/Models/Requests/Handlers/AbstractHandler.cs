@@ -5,6 +5,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
     public abstract class AbstractHandler : IHandler
     {
         private IHandler _nextHandler;
+        protected static int id = 0;
         protected IBoard _board;
 
         public AbstractHandler(IBoard board)
@@ -12,13 +13,13 @@ namespace CarcassTwwo.Models.Requests.Handlers
             _board = board;
         }
 
-        public virtual int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
+        public virtual object HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, bool roadClosed, Coordinate[] surroundingCoords)
         {
             if(_nextHandler != null)
             {
-                _nextHandler.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                _nextHandler.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
             }
-            return id;
+            return null;
         }
 
         public IHandler SetNext(IHandler handler)

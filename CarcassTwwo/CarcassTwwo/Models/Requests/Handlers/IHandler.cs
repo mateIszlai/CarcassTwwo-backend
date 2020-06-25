@@ -6,7 +6,7 @@ namespace CarcassTwwo.Models.Requests
     {
         IHandler SetNext(IHandler handler);
 
-        int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords);
+        object HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, bool roadClosed, Coordinate[] surroundingCoords);
         void HandleMeeplePlacement(int placeOfMeeple, Card placedCard, Client owner);
 
         List<Meeple> HandleScore(List<Meeple> meeples);

@@ -66,17 +66,17 @@ namespace CarcassTwwo.Models.Requests.Handlers
             base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
         }
 
-        public override int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
+        public override object HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, bool roadClosed, Coordinate[] surroundingCoords)
         {
             int cityCounts = GetCityCount(card);
 
             if (cityCounts == 0)
-                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
 
             if (cityCounts == 2)
             {
                 id =  PlaceTwoCity(topCard, botCard, leftCard, rightCard, card, id);
-                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
             }
 
             var citiesAround = new Dictionary<Side, int>();
@@ -113,7 +113,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                         card.SetField(side.Key, id);
                 }
                 _cityAdder.AddCityToLand(card, landCounts, city.Id);
-                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
             }
 
             if (citiesAround.Values.Distinct().Count() == 1)
@@ -144,7 +144,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                 city.ExpandCity(cityPart);
                 card.Tile.Sides.Where(s => s.Value.Name == "City").Select(t => t.Key).ToList().ForEach(side => card.SetField(side, city.Id));
                 _cityAdder.AddCityToLand(card, landCounts, city.Id);
-                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
             }
 
             id++;
@@ -199,7 +199,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             }
             
             _cityAdder.AddCityToLand(card, landCounts, newCity.Id);
-            return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+            return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
         }
 
         private int PlaceTwoCity(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int id)

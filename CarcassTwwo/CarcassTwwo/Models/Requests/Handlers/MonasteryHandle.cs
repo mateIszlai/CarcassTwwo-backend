@@ -57,11 +57,11 @@ namespace CarcassTwwo.Models.Requests.Handlers
              base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
         }
 
-        public override int HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, int id, bool roadClosed, Coordinate[] surroundingCoords)
+        public override object HandlePlacement(Card topCard, Card botCard, Card leftCard, Card rightCard, Card card, int landCounts, bool roadClosed, Coordinate[] surroundingCoords)
         {
             SetNearMonasteries(card.Coordinate);
             if (surroundingCoords == null)
-                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+                return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
             
             id++;
             var monastery = new Monastery(id, card.Coordinate);
@@ -72,7 +72,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             });
             _monasteries.Add(monastery);
             card.SetField(Side.MIDDLE, id);
-            return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, id, roadClosed, surroundingCoords);
+            return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
         }
 
         private void SetNearMonasteries(Coordinate coordinate)
