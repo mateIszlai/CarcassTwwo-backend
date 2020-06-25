@@ -1,14 +1,23 @@
 ﻿using CarcassTwwo.Models.Places;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models.Requests.Handlers
 {
     public class MonasteryHandle : AbstractHandler
     {
-        public HashSet<Monastery> Monasteries { get; private set; }
-        
+        private HashSet<Monastery> _monasteries;
+
+        public HashSet<Monastery> Monasteries
+        {
+            get { return new HashSet<Monastery>(_monasteries); }
+            private set { _monasteries = value; }
+        }
+
+        private void SetNearMonasteries(Coordinate coordinate)
+        {
+            var monasteries = _monasteries.Where(m => m.SurroundingCoordinates.Contains(coordinate)).ToList();
+            monasteries.ForEach(m => m.SurroundingCoordinates.Remove(coordinate));
+        }
     }
 }
