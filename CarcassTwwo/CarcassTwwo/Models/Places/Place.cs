@@ -23,13 +23,12 @@ namespace CarcassTwwo.Models.Places
         {
             List<Meeple> removeableMeeples = new List <Meeple>();
 
-            foreach(var meeple in Meeples)
+            Meeples.ForEach(meeple =>
             {
                 removeableMeeples.Add(meeple);
-                meeple.Card.RemoveMeeple();
                 meeple.Owner.MeepleCount++;
-                meeple.Owner.Meeples.Remove(meeple);
-            }
+            });
+
             Meeples.Clear();
             return removeableMeeples;
         }
