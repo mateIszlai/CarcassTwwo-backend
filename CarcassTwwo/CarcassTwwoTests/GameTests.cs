@@ -23,32 +23,46 @@ namespace CarcassTwwoTests
             _game = null;
         }
 
-        //[Test]
-        //public void GetFirstCard_ReturnsFirstCard()
-        //{
-        //    var land = new LandType { Name = "Land", Meeple = MeepleType.PEASANT };
-        //    var monastery = new LandType { Name = "Monastery", Meeple = MeepleType.MONK };
+        [Test]
+        public void GetFirstCard_ReturnsFirstCard()
+        {
+            var land = new LandType { Name = "Land", Meeple = MeepleType.PEASANT };
+            var monastery = new LandType { Name = "Monastery", Meeple = MeepleType.MONK };
 
-        //    var expected = new Card(new Tile
-        //    {
-        //        Field1 = new LandType {  = land },
-        //        Field2 = new Field { LandType = land },
-        //        Field3 = new Field { LandType = land },
-        //        Field4 = new Field { LandType = land },
-        //        Field5 = new Field { LandType = monastery },
-        //        Field6 = new Field { LandType = land },
-        //        Field7 = new Field { LandType = land },
-        //        Field8 = new Field { LandType = land },
-        //        Field9 = new Field { LandType = land },
-        //        Amount = 4,
-        //        Remaining = 4,
-        //        Image = "../wwwroot/image/1_4.png",
-        //        HasCrest = false
-        //    }, 1);
-        //    var actual = _game.GetFirstCard();
+            var expected = new Card(new Tile
+            {
+                Id = 1,
+                Field1 = land,
+                Field2 = land,
+                Field3 = land,
+                Field4 = land,
+                Field5 = monastery,
+                Field6 = land,
+                Field7 = land,
+                Field8 = land,
+                Field9 = land,
+                Image = "../wwwroot/image/1_4.png",
+                HasCrest = false
+            }, 1);
 
-        //    Assert.AreEqual(expected.Id, actual.Id);
-        //}
+            var actual = _game.GetFirstCard();
+
+            Assert.AreEqual(expected.Id, actual.Id);
+
+            Assert.AreEqual(expected.Tile.Field1.Name, actual.Tile.Field1.Name);
+            Assert.AreEqual(expected.Tile.Field2.Name, actual.Tile.Field2.Name);
+            Assert.AreEqual(expected.Tile.Field3.Name, actual.Tile.Field3.Name);
+            Assert.AreEqual(expected.Tile.Field4.Name, actual.Tile.Field4.Name);
+            Assert.AreEqual(expected.Tile.Field5.Name, actual.Tile.Field5.Name);
+            Assert.AreEqual(expected.Tile.Field6.Name, actual.Tile.Field6.Name);
+            Assert.AreEqual(expected.Tile.Field7.Name, actual.Tile.Field7.Name);
+            Assert.AreEqual(expected.Tile.Field8.Name, actual.Tile.Field8.Name);
+            Assert.AreEqual(expected.Tile.Field9.Name, actual.Tile.Field9.Name);
+
+            Assert.AreEqual(expected.Tile.Id, actual.Tile.Id);
+            Assert.AreEqual(expected.Tile.Image, actual.Tile.Image);
+            Assert.AreEqual(expected.Tile.HasCrest, actual.Tile.HasCrest);
+        }
 
 
         [Test]
