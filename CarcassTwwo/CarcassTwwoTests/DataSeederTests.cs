@@ -7,58 +7,37 @@ using NUnit.Framework;
 
 namespace CarcassTwwoTests
 {
-   /* [TestFixture]
+    [TestFixture]
     class DataSeederTests
     {
         [SetUp]
         public void SetUp()
         {
-            DataSeeder.SeedLandTypes();
-            DataSeeder.SeedTiles();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            DataSeeder.landTypes = null;
-            DataSeeder.tiles = null;
+            DataSeeder.SeedCards();
         }
 
         [Test]
-        public void SeedLandTypesGiveBackData()
+        public void SeedCardsGiveBackData()
         {
-            Assert.IsNotNull(DataSeeder.landTypes);
+            Assert.IsNotNull(DataSeeder.Cards);
         }
 
         [Test]
-        public void LandTypesCountAre5()
+        public void CardCountIs72()
         {
-            int count = DataSeeder.landTypes.Count;
-            Assert.AreEqual(count, 5);
+            int count = DataSeeder.Cards.Count;
+            Assert.AreEqual(count, 72);
         }
 
         [Test]
-        public void SecondLandtypeInlandTypesIsCity()
+        public void SeventhCardIsCorrectlySeeded()
         {
-            string wanted = "City";
-            string actual = DataSeeder.landTypes[1].Name;
-            Assert.AreEqual(wanted, actual);
+            Assert.AreEqual(DataSeeder.Cards[6].Tile.Field5.Name, "City");
+            Assert.AreEqual(DataSeeder.Cards[6].HasCrest, true);
+            Assert.AreEqual(DataSeeder.Cards[6].Tile.Id, 3);
+            Assert.AreEqual(DataSeeder.Cards[6].Id, 7);
+            Assert.AreEqual(DataSeeder.Cards[6].Tile.Image, "../wwwroot/image/3_1.png");
         }
 
-        [Test]
-        public void SeedTilesGiveBackData()
-        {
-            Assert.IsNotNull(DataSeeder.tiles);
-        }
-
-        [Test]
-        public void SeventhTileIsCorrectlySeeded()
-        {
-            Assert.AreEqual(DataSeeder.tiles[6].Amount, 2);
-            Assert.AreEqual(DataSeeder.tiles[6].HasCrest, true);
-            Assert.AreEqual(DataSeeder.tiles[6].Id, 7);
-            Assert.AreEqual(DataSeeder.tiles[6].Image, "../wwwroot/image/7_2.png");
-        }
-        
-    }*/
+    }
 }

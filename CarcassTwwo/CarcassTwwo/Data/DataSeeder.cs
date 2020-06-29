@@ -9,6 +9,7 @@ namespace CarcassTwwo
     public class DataSeeder
     {
         private static List<Card> _cards;
+        public static List<Card> Cards { get { return _cards;} }
         private static  int id = 0;
 
         public static List<Card> SeedCards()
