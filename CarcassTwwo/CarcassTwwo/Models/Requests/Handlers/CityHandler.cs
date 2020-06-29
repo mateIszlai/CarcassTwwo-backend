@@ -25,7 +25,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             _cityScoreCounter = cityScoreCounter;
         }
 
-        public override void HandleScore(List<Meeple> meeples)
+        public override List<Meeple> HandleScore(List<Meeple> meeples)
         {
             foreach (var city in _cities)
             {
@@ -36,7 +36,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                     city.IsCounted = true;
                 }
             }
-            base.HandleScore(meeples);
+            return base.HandleScore(meeples);
         }
 
         public override void HandleEndScore()
@@ -61,7 +61,6 @@ namespace CarcassTwwo.Models.Requests.Handlers
 
                 if (city.CanPlaceMeeple)
                     city.PlaceMeeple(owner, placeOfMeeple, placedCard);
-                return;
             }
 
             base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);

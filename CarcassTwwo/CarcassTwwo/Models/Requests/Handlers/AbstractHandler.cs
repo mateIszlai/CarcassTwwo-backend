@@ -34,12 +34,12 @@ namespace CarcassTwwo.Models.Requests.Handlers
                 _nextHandler.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
         }
 
-        public virtual void HandleScore(List<Meeple> meeples)
+        public virtual List<Meeple> HandleScore(List<Meeple> meeples)
         {
             if (_nextHandler != null)
                 _nextHandler.HandleScore(meeples);
-            else
-                return;
+
+            return meeples;
         }
 
         public virtual void HandleEndScore()
