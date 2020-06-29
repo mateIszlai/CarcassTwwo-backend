@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CarcassTwwo.Models
 {
-    public class ScoreBoard
+    public class ScoreBoard : IRoadScoreCounter, ICityScoreCounter, IMonasteryScoreCounter, ILandScoreCounter
     {
         public Dictionary<Client, int> Players { get; private set; }
 
@@ -17,7 +17,7 @@ namespace CarcassTwwo.Models
             players.ToList().ForEach(pl => Players[pl] = 0);
         }
 
-        internal void CheckOwnerOfCity(City city)
+        public void CheckOwnerOfCity(City city)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
             if(city.Meeples.Count > 0)
@@ -54,7 +54,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        internal void CheckOwnerOfRoad(Road road)
+        public void CheckOwnerOfRoad(Road road)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
             if(road.Meeples.Count > 0)
@@ -78,7 +78,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        internal void CheckOwnerOfLand(GrassLand land, int cities)
+        public void CheckOwnerOfLand(GrassLand land, int cities)
         {
             Dictionary<Client, int> meepleCountByPlayers = new Dictionary<Client, int>();
             if(land.Meeples.Count > 0)
@@ -101,7 +101,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        internal void AddPointsForMonastery(Monastery monastery)
+        public void AddPointsForMonastery(Monastery monastery)
         {
             if(monastery.Meeples.Count > 0)
             {

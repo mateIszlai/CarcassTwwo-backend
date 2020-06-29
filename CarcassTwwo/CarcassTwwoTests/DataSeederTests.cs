@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace CarcassTwwoTests
 {
-    [TestFixture]
+   /* [TestFixture]
     class DataSeederTests
     {
         [SetUp]
@@ -60,5 +60,5 @@ namespace CarcassTwwoTests
             Assert.AreEqual(DataSeeder.tiles[6].Image, "../wwwroot/image/7_2.png");
         }
         
-    }
+    }*/
 }
