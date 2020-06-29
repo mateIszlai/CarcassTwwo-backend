@@ -9,7 +9,7 @@ namespace CarcassTwwo.Models
     {
         private CityHandler _cityHandler;
         private LandHandler _landHandler;
-        private MonasteryHandler _monasteryHandler;
+        private MonasteryHandler _monasteryHandle;
         private RoadHandler _roadHandler;
 
         public Dictionary<Coordinate, Card> CardCoordinates { get; set; }
@@ -24,12 +24,12 @@ namespace CarcassTwwo.Models
             CardCoordinates = new Dictionary<Coordinate, Card>();
             AvailableCoordinates = new Dictionary<RequiredCard, Coordinate>();
             ScoreBoard = new ScoreBoard(clients);
-            _monasteryHandler = new MonasteryHandler(this, ScoreBoard);
+            _monasteryHandle = new MonasteryHandler(this, ScoreBoard);
             _landHandler = new LandHandler(this, ScoreBoard);
             _cityHandler = new CityHandler(_landHandler, this, ScoreBoard);
             _roadHandler = new RoadHandler(_landHandler, this, ScoreBoard);
             _landHandler.SetCityCounter(_cityHandler);
-            _monasteryHandler.SetNext(_landHandler).SetNext(_cityHandler).SetNext(_roadHandler);
+            _monasteryHandle.SetNext(_landHandler).SetNext(_cityHandler).SetNext(_roadHandler);
         }
 
         public void AddAvailableCoordinates(Card card)
@@ -117,7 +117,7 @@ namespace CarcassTwwo.Models
                 new Coordinate { x = coordinate.x + 1, y = coordinate.y - 1}
             };
 
-            _monasteryHandler.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoordinates);
+            _monasteryHandle.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoordinates);
         }
 
         internal List<int> GetMeeplePlaces(int cardId)
@@ -203,18 +203,18 @@ namespace CarcassTwwo.Models
         internal void PlaceMeeple(int placeOfMeeple, int cardId, Client owner)
         {
             var placedCard = CardCoordinates.First(c => c.Value.Id == cardId).Value;
-            _monasteryHandler.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
+            _monasteryHandle.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
         }
 
         internal void CountScores()
         {
             RemovableMeeples.Clear();
-            RemovableMeeples = _monasteryHandler.HandleScore(RemovableMeeples);
+            RemovableMeeples = _monasteryHandle.HandleScore(RemovableMeeples);
         }
 
         internal Dictionary<Client,int> CountEndScores()
         {
-            _monasteryHandler.HandleEndScore();
+            _monasteryHandle.HandleEndScore();
             return ScoreBoard.Players;
         }
 
