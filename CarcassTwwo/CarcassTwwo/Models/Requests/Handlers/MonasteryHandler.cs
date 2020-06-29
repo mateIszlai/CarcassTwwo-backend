@@ -21,7 +21,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             _monasteryScoreCounter = monasteryScoreCounter;
         }
 
-        public override List<Meeple> HandleScore(List<Meeple> meeples)
+        public override void HandleScore(List<Meeple> meeples)
         {
             foreach (var monastery in _monasteries)
             {
@@ -32,7 +32,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                     monastery.IsCounted = true;
                 }
             }
-            return base.HandleScore(meeples);
+            base.HandleScore(meeples);
         }
 
         public override void HandleEndScore()
@@ -52,7 +52,10 @@ namespace CarcassTwwo.Models.Requests.Handlers
             var meeplePlace = placedCard.Tile.Fields[placeOfMeeple - 1];
 
             if (meeplePlace.Name == "Monastery")
+            {
                 _monasteries.First(m => m.Id == meeplePlace.PlaceId).PlaceMeeple(owner, placeOfMeeple, placedCard);
+                return;
+            }
 
              base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
         }

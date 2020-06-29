@@ -25,7 +25,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             _roadScoreCounter = roadScoreCounter;
         }
 
-        public override List<Meeple> HandleScore(List<Meeple> meeples)
+        public override void HandleScore(List<Meeple> meeples)
         {
             foreach (var road in _roads)
             {
@@ -36,7 +36,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                     road.IsCounted = true;
                 }
             }
-            return base.HandleScore(meeples);
+            base.HandleScore(meeples);
         }
 
         public override void HandleEndScore()
@@ -61,6 +61,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
 
                 if (road.CanPlaceMeeple)
                     road.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                return;
             }
 
             base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);

@@ -53,6 +53,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
 
                 if (land.CanPlaceMeeple)
                     land.PlaceMeeple(owner, placeOfMeeple, placedCard);
+                return;
             }
 
             base.HandleMeeplePlacement(placeOfMeeple, placedCard, owner);
