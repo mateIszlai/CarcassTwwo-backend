@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace CarcassTwwoTests
 {
-    /*[TestFixture]
+    [TestFixture]
     class BoardTests
     {
         Board board;
@@ -18,19 +18,19 @@ namespace CarcassTwwoTests
         [SetUp]
         public void SetUp()
         {
-            DataSeeder.SeedLandTypes();
-            DataSeeder.SeedTiles();
-            board = new Board(null);
+            DataSeeder.SeedCards();
+            var players = new HashSet<Client>();
+            board = new Board(players);
 
-            testCard = new Card(DataSeeder.tiles[7], 0);
+            testCard = new Card(DataSeeder.Cards[7].Tile, 0);
             testCard.BottomIsFree = false;
             testCard.LeftIsFree = testCard.TopIsFree = testCard.RightIsFree = true;
             testCard.Coordinate = new Coordinate() { x = 0, y = 0 };
             board.CardCoordinates.Add(testCard.Coordinate, testCard);
 
-            testCard2 = new Card(DataSeeder.tiles[6], 1);
-            testCard2.TopIsFree = testCard2.BottomIsFree = 
-                testCard2.LeftIsFree = testCard2.RightIsFree = true;
+            testCard2 = new Card(DataSeeder.Cards[6].Tile, 1);
+            testCard2.TopIsFree = testCard2.BottomIsFree =
+            testCard2.LeftIsFree = testCard2.RightIsFree = true;
             testCard2.Coordinate = new Coordinate() { x = -1, y = 0 };
             board.CardCoordinates.Add(testCard2.Coordinate, testCard2);
         }
@@ -40,14 +40,13 @@ namespace CarcassTwwoTests
         {
             board = null;
             testCard = null;
-            DataSeeder.tiles = null;
-            DataSeeder.landTypes = null;
         }
 
         [Test]
         public void AvailableCoordinatesAreAdded()
         {
-            var top = new Coordinate() {
+            var top = new Coordinate()
+            {
                 x = testCard.Coordinate.x,
                 y = testCard.Coordinate.y + 1
             };
@@ -80,7 +79,7 @@ namespace CarcassTwwoTests
 
             board.AddAvailableCoordinates(testCard);
             Assert.IsFalse(board.AvailableCoordinates.Values.Contains(bottom));
-            }
+        }
 
         [Test]
         public void CoordinateIsRemovedFromAvailables()
@@ -110,5 +109,5 @@ namespace CarcassTwwoTests
 
         }
 
-    }*/
+    }
 }
