@@ -48,12 +48,12 @@ namespace CarcassTwwo
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
