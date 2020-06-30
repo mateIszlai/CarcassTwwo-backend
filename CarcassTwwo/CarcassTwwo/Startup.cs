@@ -36,7 +36,7 @@ namespace CarcassTwwo
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("http://localhost:3000", "https://carcasstwwo.netlify.com").AllowAnyHeader()
+                    builder => builder.WithOrigins("http://localhost:3000", "https://carcasstwwo.netlify.app").AllowAnyHeader()
                                 .AllowAnyMethod().AllowCredentials());
             });
         }
