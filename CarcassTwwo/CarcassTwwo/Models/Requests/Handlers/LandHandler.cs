@@ -652,8 +652,8 @@ namespace CarcassTwwo.Models.Requests.Handlers
         public void ChangeCityIdInLand(int landId, int cityIdToChange, int newCityId)
         {
             var land = _lands.First(l => l.Id == landId);
-            if (land.Roads.Remove(cityIdToChange))
-                land.Roads.Add(newCityId);
+            if (land.SurroundingCities.Remove(cityIdToChange))
+                land.SurroundingCities.Add(newCityId);
         }
 
         public void AddCityToLand(int landId, int cityId)
