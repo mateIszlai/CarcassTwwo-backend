@@ -218,6 +218,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                             id++;
                             _lands.Add(new GrassLand(id, card.Id));
                             card.SetField(side, id);
+                            continue;
                         }
                         card.SetField(side, newLand.Id);
                     }
@@ -392,7 +393,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                     land = _lands.First(l => l.Id == notCorners.First());
                     if (notCorners.Count == 1)
                         land.ExpandLand(card.Id);
-                    else if (notCorners.Count > 1)
+                    else
                     {
                         land = MergeLands(notCorners, card.Id, id);
                         id = land.Id;
@@ -567,16 +568,15 @@ namespace CarcassTwwo.Models.Requests.Handlers
             {
                 var land = _lands.First(l => l.Id == landId);
                 newLand.Meeples.AddRange(land.Meeples);
-                land.Roads.ToList().ForEach(r => newLand.Roads.Add(r));
-                land.SurroundingCities.ToList().ForEach(s => newLand.SurroundingCities.Add(s));
+                newLand.Roads.UnionWith(land.Roads);
+                newLand.SurroundingCities.UnionWith(land.SurroundingCities);
                 foreach (var landCardId in land.CardIds)
                 {
                     newLand.ExpandLand(landCardId);
                     var landCard = _board.CardCoordinates.Values.First(c => c.Id == landCardId);
-                    foreach (var side in landCard.Tile.Sides.Where(s => s.Value.Name == "Land"))
+                    foreach (var side in landCard.Tile.Sides.Where(s => s.Value.PlaceId == land.Id).Select(t => t.Key))
                     {
-                        if (side.Value.PlaceId == land.Id)
-                            landCard.SetField(side.Key, newLand.Id);
+                            landCard.SetField(side, newLand.Id);
                     }
                 }
                 _lands.Remove(land);
