@@ -146,6 +146,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                     _roadAdder.AddRoadToLand(around.Key, road.Id, card);
                     return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
                 }
+                road.SetSides(card.Id);
                 foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Road" && !visitedSides.Contains(s.Key)).Select(t => t.Key))
                 {
                     id++;
@@ -208,6 +209,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             {
                 visitedSides.Add(around.Key);
                 var road = _roads.First(r => r.Id == around.Value);
+                newRoad.Meeples.AddRange(road.Meeples);
                 switch (around.Key)
                 {
                     case Side.TOP:

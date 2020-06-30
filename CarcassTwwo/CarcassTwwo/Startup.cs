@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CarcassTwwo.Hubs;
+using CarcassTwwo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,7 @@ namespace CarcassTwwo
         {
             services.AddControllers();
             services.AddSignalR();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<IHubNotificationHelper, HubNotificationHelper>();
             services.AddCors(options =>
