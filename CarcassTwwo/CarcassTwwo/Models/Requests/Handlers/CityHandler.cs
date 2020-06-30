@@ -153,6 +153,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             foreach (var around in citiesAround)
             {
                 var city = _cities.First(c => c.Id == around.Value);
+                newCity.Meeples.AddRange(city.Meeples);
                 switch (around.Key)
                 {
                     case Side.TOP:
@@ -312,13 +313,6 @@ namespace CarcassTwwo.Models.Requests.Handlers
 
         public int GetFinishedCitiesOfLand(int[] cityIds)
         {
-            return cityIds.Aggregate(0, (prev, next) => {
-                if (!_cities.First(c => c.Id == next).IsOpen)
-                    prev++;
-                return prev;
-            });
-
-            /*
             int cityCount = 0;
             foreach (var cityId in cityIds)
             {
@@ -327,7 +321,6 @@ namespace CarcassTwwo.Models.Requests.Handlers
             }
 
             return cityCount;
-            */
         }
     }
 }
