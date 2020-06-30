@@ -120,7 +120,7 @@ namespace CarcassTwwo.Models
             Tile.Field9 = Rotations[rotation][8];
         }
 
-        internal void SetField(Side side, int placeId)
+        public void SetField(Side side, int placeId)
         {
             switch (side)
             {
