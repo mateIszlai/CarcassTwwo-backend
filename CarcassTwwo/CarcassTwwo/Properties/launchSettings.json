@@ -3,19 +3,23 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:5000",
-      "sslPort": 0
-    }
-  },
-  "profiles": {
-    "CarcassTwwo": {
-      "commandName": "Project",
-      "launchBrowser": false,
-      "applicationUrl": "http://localhost:5000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+    "environmentVariables": {
+      "PASSWORD_HASH": "10000.HzkVWoPT+WyMEL6uL7JUOw==.6XtoOrUwDIWerD2Cdt0HeESgZzCibkPhaQPntRSx6tY="
+    },
+      "iisExpress": {
+        "applicationUrl": "http://localhost:5000",
+        "sslPort": 0
+      }
+    },
+    "profiles": {
+      "CarcassTwwo": {
+        "commandName": "Project",
+        "launchBrowser": false,
+        "applicationUrl": "http://localhost:5000",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "PASSWORD_HASH": "10000.HzkVWoPT+WyMEL6uL7JUOw==.6XtoOrUwDIWerD2Cdt0HeESgZzCibkPhaQPntRSx6tY="
+        }
       }
     }
   }
-}
