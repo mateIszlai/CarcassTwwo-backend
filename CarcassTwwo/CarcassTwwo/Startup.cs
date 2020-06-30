@@ -35,7 +35,7 @@ namespace CarcassTwwo
             services.AddSingleton<IHubNotificationHelper, HubNotificationHelper>();
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy",
+                options.AddPolicy(name:"CorsPolicy",
                     builder => builder.WithOrigins("http://localhost:3000", "https://carcasstwwo.netlify.app").AllowAnyHeader()
                                 .AllowAnyMethod().AllowCredentials());
             });
@@ -48,10 +48,12 @@ namespace CarcassTwwo
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("CorsPolicy");
+           
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 
