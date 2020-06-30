@@ -1,5 +1,4 @@
 ﻿using CarcassTwwo.Models.Places;
-using System;
 using System.Collections.Generic;
 
 namespace CarcassTwwo.Models
@@ -8,9 +7,7 @@ namespace CarcassTwwo.Models
     {
         public int Id { get; private set; }
         public Tile Tile { get; set; }
-        public Meeple Meeple { get; set; }
         public bool HasMeeple { get; set; }
-        public LandType MeepleField { get; set; }
         public Coordinate Coordinate { get; set; }
         public LandType Top
         {
@@ -109,24 +106,6 @@ namespace CarcassTwwo.Models
             Rotations["270"] = new LandType[] { Tile.Field7, Tile.Field4, Tile.Field1, Tile.Field8, Tile.Field5, Tile.Field2, Tile.Field9, Tile.Field6, Tile.Field3 };
         }
 
-        public void AddMeeple(Meeple meeple, int field)
-        {
-            Meeple = meeple;
-            HasMeeple = true;
-            SetMeepleField(field);
-        }
-
-        public void RemoveMeeple()
-        {
-            Meeple = null;
-            HasMeeple = false;
-            MeepleField = null;
-        }
-
-        public void SetMeepleField(int field)
-        {
-            MeepleField = Tile.Fields[field - 1];
-        }
 
         public void Rotate(string rotation)
         {

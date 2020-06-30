@@ -30,9 +30,9 @@ namespace CarcassTwwo.Models.Places
         {
             if (!card.HasMeeple)
             {
-                var highwayman = new Meeple(MeepleType.HIGHWAYMAN, owner, field, card, Id);
+                var highwayman = new Meeple(MeepleType.HIGHWAYMAN, owner, field, card.Coordinate, Id);
                 Meeples.Add(highwayman);
-                card.AddMeeple(highwayman, field);
+                card.HasMeeple = true;
                 owner.MeepleCount--;
             }
         }

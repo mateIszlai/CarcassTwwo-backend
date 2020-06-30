@@ -226,7 +226,7 @@ namespace CarcassTwwo.Models
             List<MeepleInfo> meeples = new List<MeepleInfo>();
             foreach(var meeple in _gameboard.RemovableMeeples)
             {
-                meeples.Add(new MeepleInfo(meeple.Owner, meeple.Card.Coordinate, meeple.FieldId));
+                meeples.Add(new MeepleInfo(meeple.Owner, meeple.Coordinate, meeple.FieldId));
             }
             return meeples;
         }

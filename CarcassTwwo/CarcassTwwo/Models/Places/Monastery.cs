@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CarcassTwwo.Models.Places
 {
@@ -9,7 +6,7 @@ namespace CarcassTwwo.Models.Places
     {
         public List<Coordinate> SurroundingCoordinates { get; private set; }
         public int CardId { get; set; }
-        public bool IsFinished { get; set; }
+        public bool IsFinished { get { return SurroundingCoordinates.Count == 0; } }
         public Monastery(int id, Coordinate cardCoordinate) : base(id)
         {
             SurroundingCoordinates = new List<Coordinate>
@@ -36,17 +33,15 @@ namespace CarcassTwwo.Models.Places
         public void ExpandMonastery(Coordinate coordinate)
         {
             SurroundingCoordinates.Remove(coordinate);
-            if (SurroundingCoordinates.Count.Equals(0))  
-                IsFinished = true; 
         }
 
         public override void PlaceMeeple(Client owner, int field, Card card)
         {
             if (!card.HasMeeple)
             {
-                var monk = new Meeple(MeepleType.MONK, owner, field, card, Id);
+                var monk = new Meeple(MeepleType.MONK, owner, field, card.Coordinate, Id);
                 Meeples.Add(monk);
-                card.AddMeeple(monk, field);
+                card.HasMeeple = true;
                 owner.MeepleCount--;
             }
         }
