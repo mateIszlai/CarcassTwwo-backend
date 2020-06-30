@@ -153,6 +153,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             foreach (var around in citiesAround)
             {
                 var city = _cities.First(c => c.Id == around.Value);
+                newCity.Meeples.AddRange(city.Meeples);
                 switch (around.Key)
                 {
                     case Side.TOP:

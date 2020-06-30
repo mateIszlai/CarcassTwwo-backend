@@ -208,6 +208,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
             {
                 visitedSides.Add(around.Key);
                 var road = _roads.First(r => r.Id == around.Value);
+                newRoad.Meeples.AddRange(road.Meeples);
                 switch (around.Key)
                 {
                     case Side.TOP:
