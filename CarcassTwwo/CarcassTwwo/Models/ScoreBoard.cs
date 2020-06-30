@@ -30,7 +30,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        private void AddPointsForCity(List<Client> players, City city)
+        public void AddPointsForCity(List<Client> players, City city)
         {
             int numOfCards = city.Size;
             int numOfMeeples = city.Meeples.Count;
@@ -67,7 +67,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        private void AddPointsForRoad(List<Client> players, Road road)
+        public void AddPointsForRoad(List<Client> players, Road road)
         {
             int numOfCards = road.RoadParts.Count;
             foreach (Client player in players)
@@ -91,7 +91,7 @@ namespace CarcassTwwo.Models
             }
         }
 
-        private void AddPointsForLand(List<Client> players, int finishedCities)
+        public void AddPointsForLand(List<Client> players, int finishedCities)
         {
             foreach (Client player in players)
             {
@@ -111,11 +111,11 @@ namespace CarcassTwwo.Models
 
         }
 
-        internal Client GetWinner()
+        public Client GetWinner()
         {
             int maxPoint = Players.Values.Max();
-            var winners = Players.Keys.First(k => Players[k] == maxPoint);
-            return winners;
+            var winner = Players.Keys.First(k => Players[k] == maxPoint);
+            return winner;
         }
     }
 
