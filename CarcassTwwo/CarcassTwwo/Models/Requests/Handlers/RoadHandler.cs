@@ -146,6 +146,7 @@ namespace CarcassTwwo.Models.Requests.Handlers
                     _roadAdder.AddRoadToLand(around.Key, road.Id, card);
                     return base.HandlePlacement(topCard, botCard, leftCard, rightCard, card, landCounts, roadClosed, surroundingCoords);
                 }
+                road.SetSides(card.Id);
                 foreach (var side in card.Tile.Sides.Where(s => s.Value.Name == "Road" && !visitedSides.Contains(s.Key)).Select(t => t.Key))
                 {
                     id++;
