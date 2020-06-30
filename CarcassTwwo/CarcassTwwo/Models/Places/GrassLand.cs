@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CarcassTwwo.Models.Places
 {
@@ -40,9 +37,9 @@ namespace CarcassTwwo.Models.Places
         {
             if (!card.HasMeeple)
             {
-                var peasant = new Meeple(MeepleType.PEASANT, owner, field, card, Id);
+                var peasant = new Meeple(MeepleType.PEASANT, owner, field, card.Coordinate, Id);
                 Meeples.Add(peasant);
-                card.AddMeeple(peasant, field);
+                card.HasMeeple = true;
                 owner.MeepleCount--;
             }
         }

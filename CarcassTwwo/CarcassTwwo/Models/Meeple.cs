@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CarcassTwwo.Models
+﻿namespace CarcassTwwo.Models
 {
     public class Meeple
     {
-        public MeepleType Type { get; set; }
-        public Client Owner { get; set; }
-        public int FieldId { get; set; }
-        public Card Card { get; set; }
-        public int PlaceId { get; set; }
+        public MeepleType Type { get; private set; }
+        public Client Owner { get; private set; }
+        public int FieldId { get; private set; }
+        public Coordinate Coordinate { get; private set; }
+        public int PlaceId { get; private set; }
   
-        public Meeple( MeepleType type, Client owner, int fieldId, Card card, int placeId)
+        public Meeple( MeepleType type, Client owner, int fieldId, Coordinate coordinate, int placeId)
         {
             Type = type;
             Owner = owner;
             FieldId = fieldId;
-            Card = card;
             PlaceId = placeId;
+            Coordinate = coordinate;
         }
     }
 }

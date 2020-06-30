@@ -209,7 +209,7 @@ namespace CarcassTwwo.Models
         internal void CountScores()
         {
             RemovableMeeples.Clear();
-            RemovableMeeples = _monasteryHandle.HandleScore(RemovableMeeples);
+            _monasteryHandle.HandleScore(RemovableMeeples);
         }
 
         internal Dictionary<Client,int> CountEndScores()

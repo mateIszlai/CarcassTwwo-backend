@@ -57,9 +57,9 @@ namespace CarcassTwwo.Models.Places
         {
             if (!card.HasMeeple)
             {
-                var knight = new Meeple(MeepleType.KNIGHT, owner, field, card, Id);
+                var knight = new Meeple(MeepleType.KNIGHT, owner, field, card.Coordinate, Id);
                 Meeples.Add(knight);
-                card.AddMeeple(knight, field);
+                card.HasMeeple = true;
                 owner.MeepleCount--;
             }
         }
