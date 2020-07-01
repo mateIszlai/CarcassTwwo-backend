@@ -1,5 +1,6 @@
 ﻿using CarcassTwwo.Models.Requests;
 using CarcassTwwo.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -20,8 +21,6 @@ namespace CarcassTwwo.Controllers
             _passwordHasher = passwordHasher;
             hash = configuration["PASSWORD_HASH"];
         }
-
-
         [HttpPost("/identity")]
         public IActionResult Login([FromBody]LoginRequest request)
         {
