@@ -28,11 +28,6 @@ namespace CarcassTwwo.Models.Places
             CardIds.Add(cardId);
         }
 
-        public void AddNewCity(int id)
-        {
-            SurroundingCities.Add(id);
-        }
-
         public override void PlaceMeeple(Client owner, int field, Card card)
         {
             if (!card.HasMeeple)

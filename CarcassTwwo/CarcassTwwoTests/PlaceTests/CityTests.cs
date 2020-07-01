@@ -1,9 +1,8 @@
 ﻿using CarcassTwwo.Models;
 using CarcassTwwo.Models.Places;
 using NUnit.Framework;
-using System.Collections.Generic;
 
-namespace CarcassTwwoTests
+namespace CarcassTwwoTests.PlaceTests
 {
     [TestFixture]
     public class CityTests
