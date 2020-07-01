@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CarcassTwwo.Controllers
 {
-    [EnableCors("CorsPolicy")]
+    [EnableCors]
     public class IdentityController:Controller
     {
 
@@ -23,7 +23,7 @@ namespace CarcassTwwo.Controllers
             hash = configuration["PASSWORD_HASH"];
         }
 
-        [EnableCors("CorsPolicy")]
+        [EnableCors]
         [HttpPost("/identity")]
         public IActionResult Login([FromBody]LoginRequest request)
         {
