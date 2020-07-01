@@ -33,7 +33,16 @@ namespace CarcassTwwo
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<IHubNotificationHelper, HubNotificationHelper>();
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000", "https://carcasstwwo.netlify.app")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,16 +52,12 @@ namespace CarcassTwwo
             {
                 app.UseDeveloperExceptionPage();
             }
-           
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseCors(options =>
-            {
-                options.WithOrigins("http://localhost:3000", "https://carcasstwwo.netlify.app").AllowAnyHeader()
-                                .AllowAnyMethod().AllowCredentials();
-            });
+            app.UseCors();
 
             app.UseRouting();
 

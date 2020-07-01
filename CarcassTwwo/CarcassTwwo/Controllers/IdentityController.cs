@@ -21,8 +21,6 @@ namespace CarcassTwwo.Controllers
             _passwordHasher = passwordHasher;
             hash = configuration["PASSWORD_HASH"];
         }
-
-        [EnableCors]
         [HttpPost("/identity")]
         public IActionResult Login([FromBody]LoginRequest request)
         {
