@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace CarcassTwwo.Controllers
 {
-    [EnableCors]
     public class IdentityController:Controller
     {
 
